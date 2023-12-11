@@ -1,5 +1,5 @@
 {
-  "name": "fusion-table",
+  "name": "fusion-ui",
   "private": true,
   "scripts": {
     "build": "turbo build",
