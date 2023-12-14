@@ -7,7 +7,8 @@
   "main": "lib/index.js",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "dev:stup": "npm run build -- --watch",
+    "build": "tsup",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 30",
     "preview": "vite preview"
   },
@@ -15,7 +16,7 @@
     "es6-promise": "^4.2.8",
     "pick-react-known-prop": "^0.1.5",
     "react-tag-autocomplete": "^7.1.0",
-    "tabulator-tables": "^5.5.2"
+    "tabulator-tables": "5.5.2"
   },
   "license": "MIT",
   "peerDependencies": {
@@ -35,6 +36,7 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "tsup": "^8.0.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
   },

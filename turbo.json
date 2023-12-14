@@ -9,6 +9,7 @@
         "^build"
       ],
       "outputs": [
+        "lib/**",
         ".next/**",
         "!.next/cache/**",
         "storybook-static/**"
