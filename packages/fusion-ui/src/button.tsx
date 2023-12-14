@@ -1,16 +1,19 @@
 "use client";
 
+import { PropsWithChildren, ReactNode } from "react";
+
 interface Props {
   primary?: boolean;
   size?: "small" | "large";
   label?: string;
+  children?: React.ReactNode
 }
 
 export const Button = ({
   primary = false,
   label = "Boop",
   size = "small",
-}: Props) => {
+}: Props): ReactNode => {
   return (
     <button
       style={{
