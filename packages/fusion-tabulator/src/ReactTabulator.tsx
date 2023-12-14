@@ -8,12 +8,6 @@ import 'styles/index.css';
 /* tslint:disable-next-line */
 import { TabulatorFull as Tabulator, ColumnDefinition } from 'tabulator-tables';
 
-// export interface ReactTabulatorOptions extends TabulatorTypes.Options {
-//   [k: string]: any;
-// }
-
-// export interface ColumnDefinition extends TabulatorTypes.ColumnDefinition {}
-
 export interface ReactTabulatorProps {
   columns?: ColumnDefinition[];
   options?: any;
