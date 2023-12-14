@@ -48,7 +48,7 @@ class Editor extends React.Component<IProps> {
       if (result.indexOf('-') > 0) {
         // value is "yyyy-MM-dd" => parse it
         const valueDate = parse(value, 'YYYY-MM-DD');
-        result = format(valueDate, this.format);
+        result = format(valueDate!, this.format);
       }
     } catch (err) {
       console.error('ERROR', err);
@@ -87,8 +87,10 @@ class Editor extends React.Component<IProps> {
 
     let value = format(new Date(), DEFAULT_DATE_INPUT_FORMAT)
     try {
-      value = format(valueDt, DEFAULT_DATE_INPUT_FORMAT);
-    } catch (err) { }
+      value = format(valueDt!, DEFAULT_DATE_INPUT_FORMAT);
+    } catch (err) {
+      console.log(err);
+    }
 
     return (
       <input
