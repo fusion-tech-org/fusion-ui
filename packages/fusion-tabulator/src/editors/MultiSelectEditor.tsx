@@ -52,7 +52,7 @@ class Editor extends React.Component<IProps, EditorState> {
   }
 
   setValueOnSuccess = (values = this.state.values) => {
-    const { success, cancel } = this.props;
+    const { success } = this.props;
     // console.log('setValueOnSuccess: ', values);
     success(values);
     // cancel();
@@ -61,7 +61,7 @@ class Editor extends React.Component<IProps, EditorState> {
   handleDelete = (i: number) => {
     // console.log('- handleDelete ', i);
     const { values } = this.state;
-    const newValues = values.filter((item, index) => index !== i);
+    const newValues = values.filter((_, index) => index !== i);
     this.setState({ values: newValues }, () => {
       this.setValueOnSuccess(newValues);
     });
@@ -101,7 +101,6 @@ class Editor extends React.Component<IProps, EditorState> {
 
   render() {
     const { editorParams } = this.props;
-    const { values } = this.state;
     const suggestions = editorParams.values;
 
     return (

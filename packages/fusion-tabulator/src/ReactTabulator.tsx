@@ -25,7 +25,7 @@ export interface ReactTabulatorProps {
 const ReactTabulator = (props: ReactTabulatorProps) => {
   const ref = React.useRef();
   const instanceRef = React.useRef<Tabulator>();
-  const [mainId, setMainId] = React.useState(`tabulator-${+new Date()}-${Math.floor(Math.random() * 9999999)}`);
+  const [mainId, _setMainId] = React.useState(`tabulator-${+new Date()}-${Math.floor(Math.random() * 9999999)}`);
 
   const htmlProps = pickHTMLProps(props); // pick valid html props
   delete htmlProps['data']; // don't render data & columns as attributes
@@ -58,6 +58,7 @@ const ReactTabulator = (props: ReactTabulatorProps) => {
   React.useEffect(() => {
     // console.log('useEffect - onmount');
     initTabulator();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -65,6 +66,7 @@ const ReactTabulator = (props: ReactTabulatorProps) => {
     if (instanceRef && instanceRef.current) {
       initTabulator(); // re-init table
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.data]);
 
   return <div ref={ref} data-instance={mainId} {...htmlProps} className={props.className} />;

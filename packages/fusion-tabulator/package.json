@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "The Awesome table build with tabulator-tables",
   "type": "module",
+  "main": "lib/index.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -16,6 +17,7 @@
     "react-tag-autocomplete": "^7.1.0",
     "tabulator-tables": "^5.5.2"
   },
+  "license": "MIT",
   "peerDependencies": {
     "react": "^16.0.0 || ^17.0.0 || ^18.0.0",
     "react-dom": "^16.0.0 || ^17.0.0 || ^18.0.0"
@@ -35,5 +37,29 @@
     "react-dom": "^18.2.0",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
-  }
+  },
+  "homepage": "https://github.com/fusion-tech-org/fusion-ui",
+  "bugs": {
+    "url": "https://github.com/fusion-tech-org/fusion-ui/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fusion-tech-org/fusion-ui",
+    "directory": "https://github.com/fusion-tech-org/fusion-ui/tree/main/packages/fusion-ui"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "fusion",
+    "fusion-table",
+    "react",
+    "vite",
+    "tabulator-tables",
+    "table",
+    "react-component"
+  ]
 }

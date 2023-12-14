@@ -319,7 +319,7 @@ const format = (
   const literals: string[] = [];
 
   // Make literals inactive by replacing them with @@@
-  mask = mask.replace(literal, function ($0, $1) {
+  mask = mask.replace(literal, function (_, $1) {
     literals.push($1);
     return '@@@';
   });
@@ -379,7 +379,7 @@ function parse(
   const literals: string[] = [];
 
   // Replace all the literals with @@@. Hopefully a string that won't exist in the format
-  let newFormat = format.replace(literal, ($0, $1) => {
+  let newFormat = format.replace(literal, (_, $1) => {
     literals.push(regexEscape($1));
     return '@@@';
   });

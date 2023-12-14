@@ -21,7 +21,7 @@ export function isSameArray(a: unknown[], b: unknown[]) {
 // source: https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json
 function stringifyCensor(censor: unknown) {
   let i = 0;
-  return function (key: string, value: unknown) {
+  return function (_: string, value: unknown) {
     if (i !== 0 && typeof censor === 'object' && typeof value == 'object' && censor == value) {
       return '[Circular]';
     }
@@ -40,7 +40,7 @@ export function isSameObject(a: unknown, b: unknown) {
 
 export function reactFormatter(JSX: ReactElement) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return function customFormatter(cell: any, formatterParams: unknown, onRendered: (callback: () => void) => void) {
+  return function customFormatter(cell: any, _: unknown, onRendered: (callback: () => void) => void) {
     // cell - the cell component
     // formatterParams - parameters set for the column
     // onRendered - function to call when the formatter has been rendered

@@ -23,12 +23,14 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: 'lib',
+    sourcemap: true,
     lib: {
       // Could also be a dictionary or array of multiple entry points
       entry: resolve(__dirname, 'src/index.tsx'),
       name: 'FusionTabulator',
       // the proper extensions will be added
-      fileName: 'fusion-tabulator',
+      fileName: 'index',
     },
     rollupOptions: {
       // 确保外部化处理那些你不想打包进库的依赖

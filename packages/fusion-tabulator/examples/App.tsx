@@ -1,4 +1,3 @@
-import React from 'react';
 import { TabulatorExample } from './TabulatorExample';
 
 function App() {
