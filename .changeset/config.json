@@ -12,6 +12,7 @@
     "web",
     "workshop",
     "@repo/eslint-config",
-    "@repo/typescript-config"
+    "@repo/typescript-config",
+    "fusion-ui"
   ]
 }
