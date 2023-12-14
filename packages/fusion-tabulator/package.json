@@ -5,12 +5,14 @@
   "description": "The Awesome table build with tabulator-tables",
   "type": "module",
   "main": "lib/index.js",
+  "sideEffects": false,
   "scripts": {
     "dev": "vite",
     "dev:stup": "npm run build -- --watch",
     "build": "tsup",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 30",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {
     "es6-promise": "^4.2.8",
@@ -50,7 +52,7 @@
     "directory": "https://github.com/fusion-tech-org/fusion-ui/tree/main/packages/fusion-ui"
   },
   "files": [
-    "lib"
+    "lib/**"
   ],
   "publishConfig": {
     "access": "public"

@@ -15,4 +15,5 @@ export default defineConfig({
   external: ['react', 'react-dom'],
   platform: 'browser',
   format: 'esm',
+  dts: true,
 });
