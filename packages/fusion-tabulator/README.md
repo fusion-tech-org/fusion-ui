@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/fusion-tech-org/fusion-ui/tree/main/packages/fusion-tabulator" target="_blank">
-    <img alt="fusion tabulator logo" width="200" src=""/>
+    <img alt="fusion tabulator logo" width="200" src="https://raw.githubusercontent.com/fusion-tech-org/fusion-ui/e79954d55d2997ffd7313c19e17fb2d6526e1161/packages/fusion-tabulator/public/logo.svg"/>
   </a>
 </div>
 
