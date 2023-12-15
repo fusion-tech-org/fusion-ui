@@ -9,6 +9,7 @@
     "lint": "eslint . --max-warnings 0"
   },
   "dependencies": {
+    "fusion-tabulator": "workspace:^",
     "fusion-ui": "workspace:*",
     "next": "^14.0.3",
     "react": "^18.2.0",
@@ -20,8 +21,8 @@
     "@repo/typescript-config": "workspace:*",
     "@types/eslint": "^8.44.7",
     "@types/node": "^17.0.12",
-    "@types/react": "^18.0.22",
-    "@types/react-dom": "^18.0.7",
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.17",
     "eslint": "^8.53.0",
     "typescript": "^5.2.2"
   }

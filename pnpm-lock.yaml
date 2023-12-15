@@ -26,6 +26,9 @@ importers:
 
   apps/docs:
     dependencies:
+      fusion-tabulator:
+        specifier: workspace:^
+        version: link:../../packages/fusion-tabulator
       fusion-ui:
         specifier: workspace:*
         version: link:../../packages/fusion-ui
@@ -55,11 +58,11 @@ importers:
         specifier: ^17.0.12
         version: 17.0.45
       '@types/react':
-        specifier: ^18.0.22
-        version: 18.2.5
+        specifier: ^18.2.45
+        version: 18.2.45
       '@types/react-dom':
-        specifier: ^18.0.7
-        version: 18.2.3
+        specifier: ^18.2.17
+        version: 18.2.17
       eslint:
         specifier: ^8.53.0
         version: 8.53.0
@@ -4773,12 +4776,6 @@ packages:
       '@types/react': 18.2.45
     dev: true
 
-  /@types/react-dom@18.2.3:
-    resolution: {integrity: sha512-hxXEXWxFJXbY0LMj/T69mznqOZJXNtQMqVxIiirVAZnnpeYiD4zt+lPsgcr/cfWg2VLsxZ1y26vigG03prYB+Q==}
-    dependencies:
-      '@types/react': 18.2.45
-    dev: true
-
   /@types/react-tag-autocomplete@5.12.6:
     resolution: {integrity: sha512-7TH9bghG+O3fwiyUrpriUs9wrOs744ilay+omshoH9ZzzDOSrNDoGmE0SfFtsxxOe5si93riFc3KHCptzzNQFQ==}
     dependencies:
@@ -4799,14 +4796,6 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
       csstype: 3.1.2
-
-  /@types/react@18.2.5:
-    resolution: {integrity: sha512-RuoMedzJ5AOh23Dvws13LU9jpZHIc/k90AgmK7CecAYeWmSr3553L4u5rk4sWAPBuQosfT7HmTfG4Rg5o4nGEA==}
-    dependencies:
-      '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.3
-      csstype: 3.1.2
-    dev: true
 
   /@types/resolve@1.20.6:
     resolution: {integrity: sha512-A4STmOXPhMUtHH+S6ymgE2GiBSMqf4oTvcQZMcHzokuTLVYzXTB8ttjcgxOVaAp2lGwEdzZ0J+cRbbeevQj1UQ==}
