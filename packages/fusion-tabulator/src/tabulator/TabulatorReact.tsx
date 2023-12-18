@@ -16,7 +16,7 @@ export interface ReactTabulatorProps {
   [k: string]: any;
 }
 
-const ReactTabulator = (props: ReactTabulatorProps) => {
+const TabulatorReact = (props: ReactTabulatorProps) => {
   const ref = React.useRef();
   const instanceRef = React.useRef<Tabulator>();
   const [mainId, _setMainId] = React.useState(`tabulator-${+new Date()}-${Math.floor(Math.random() * 9999999)}`);
@@ -66,4 +66,4 @@ const ReactTabulator = (props: ReactTabulatorProps) => {
   return <div ref={ref} data-instance={mainId} {...htmlProps} className={props.className} />;
 };
 
-export default ReactTabulator;
+export default TabulatorReact;

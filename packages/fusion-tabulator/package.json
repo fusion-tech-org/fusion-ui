@@ -15,6 +15,8 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {
+    "@antv/s2": "^1.54.1",
+    "@antv/s2-react": "^1.46.0",
     "es6-promise": "^4.2.8",
     "pick-react-known-prop": "^0.1.5",
     "react-tag-autocomplete": "^7.1.0",
@@ -26,6 +28,7 @@
     "react-dom": "^16.0.0 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@types/tabulator-tables": "^5.5.4",
@@ -36,8 +39,11 @@
     "eslint": "^8.55.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "recoil": "^0.7.7",
+    "styled-components": "^6.1.1",
     "tsup": "^8.0.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
