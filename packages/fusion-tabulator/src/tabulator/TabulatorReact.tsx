@@ -6,6 +6,7 @@ import { propsToOptions } from 'utils/ConfigUtils';
 import 'styles/index.css';
 
 import { TabulatorFull as Tabulator, ColumnDefinition, Options, OptionsColumns, EventCallBackMethods } from 'tabulator-tables';
+import { isEmpty } from 'lodash';
 
 export interface TabulatorTableData {
   tuid: string | number;
@@ -13,7 +14,7 @@ export interface TabulatorTableData {
 }
 
 export interface ReactTabulatorProps {
-  columns: ColumnDefinition[];
+  columns?: ColumnDefinition[];
   options?: Options;
   eventMaps?: Record<string, <K extends keyof EventCallBackMethods>(event: K, callback?: EventCallBackMethods[K]) => void>;
   onRef?: (ref: any) => void;
@@ -42,13 +43,43 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       propOptions.data = data;
     }
 
-    instanceRef.current = new Tabulator(domEle, {
+    const initTabulatorOptions = {
       height: '100%',
-      columns,
       ...propOptions,
       layout, // fit columns to width of table (optional)
       ...options // props.options are passed to Tabulator's options.
-    });
+    };
+
+    if (isEmpty(columns)) {
+      initTabulatorOptions.autoColumns = true;
+
+      // initTabulatorOptions.autoColumnsDefinitions = function (definitions: ColumnDefinition[]) {
+      //   //definitions - array of column definition objects
+
+      //   definitions.forEach(column => {
+      //     column.headerFilter = true;
+      //   })
+
+      //   return definitions;
+
+      // }
+      /**
+      * NOTE: support array or object
+      */
+      initTabulatorOptions.autoColumnsDefinitions = [
+        { field: "name", editor: "input" }, //add input editor to the name column
+        { field: "age", headerFilter: true }, //add header filters to the age column
+      ];
+
+      //   initTabulatorOptions.autoColumnsDefinitions = {
+      //     name: {editor:"input"}, //add input editor to the name column
+      //     age: {headerFilter:true}, //add header filters to the age column
+      // };
+    } else {
+      initTabulatorOptions.columns = columns;
+    }
+
+    instanceRef.current = new Tabulator(domEle, initTabulatorOptions);
 
     if (eventMaps) {
       Object.keys(eventMaps).forEach((eventName: keyof EventCallBackMethods) => {

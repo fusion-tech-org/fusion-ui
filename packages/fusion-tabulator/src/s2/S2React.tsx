@@ -1,4 +1,5 @@
-import { SheetComponent } from '@antv/s2-react';
+import { SheetComponent, SheetComponentOptions } from '@antv/s2-react';
+import { S2DataConfig } from '@antv/s2';
 import '@antv/s2-react/dist/style.min.css';
 import { s2DataConfig } from './constants';
 
@@ -9,7 +10,13 @@ const s2Options = {
   // frozenRowHeader: true
 };
 
-export const S2React = () => {
+export type S2ReactProps = {
+  dataCfg: S2DataConfig;
+  options: SheetComponentOptions
+};
+
+export const S2React = (props: S2ReactProps) => {
+  console.log(props);
   return (
     <div>
       <SheetComponent

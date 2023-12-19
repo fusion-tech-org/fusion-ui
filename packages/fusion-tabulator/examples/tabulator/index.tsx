@@ -8,7 +8,10 @@ import {
 } from '../../src/index';
 import {
   baseTableData,
-  baseTableColumn
+  baseTableColumn,
+  autoTableData,
+  colConfigTableData,
+  colConfigTableColumns
 } from './constants';
 
 const TabPane = Tabs.TabPane;
@@ -23,11 +26,11 @@ export function TabulatorExamples() {
           <TabPane key='1' title='基本示例'>
             <TabulatorReact data={baseTableData} columns={baseTableColumn} />
           </TabPane>
-          <TabPane key='2' title='Tab 2' disabled>
-            Content of Tab Panel 2
+          <TabPane key='2' title='自动列'>
+            <TabulatorReact data={autoTableData} />
           </TabPane>
-          <TabPane key='3' title='Tab 3'>
-            Content of Tab Panel 3
+          <TabPane key='3' title='列配置'>
+            <TabulatorReact data={colConfigTableData} columns={colConfigTableColumns} />
           </TabPane>
         </Tabs>
       </Content>
