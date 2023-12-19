@@ -1,0 +1,19 @@
+[
+  {
+    "SEQUENCE_NO": "12641",
+    "ICD_CODE": "I22.100x002",
+    "SICD": "I22.100x002",
+    "SPELL_CODE": "JXXHBZFXJGS",
+    "WB_CODE": "QNGRNGNN",
+    "ICD_NAME": "急性下后壁再发心肌梗死",
+    "DISEASE_CODE": "D",
+    "INFECT_FLAG": "0",
+    "CANCER_FLAG": "0",
+    "VALID_STATE": "1",
+    "SORT_ID": null,
+    "OPER_CODE": "9999",
+    "OPER_DATE": "2021-02-24T10:00:00.000Z",
+    "SEXTYPE": "A",
+    "SICD_NAME": null
+  }
+]

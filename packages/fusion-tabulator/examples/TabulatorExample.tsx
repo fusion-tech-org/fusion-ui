@@ -4,11 +4,11 @@ import * as React from 'react';
 // for styles:
 // import 'react-tabulator/lib/styles.css'; // default theme
 // import 'react-tabulator/css/bootstrap/tabulator_bootstrap.min.css'; // use Theme(s)
-import { FusionTabulator, FusionTabulatorOptions, ColumnDefinition } from '../src';
+import { TabulatorReact, FusionTabulatorOptions, ColumnDefinition, } from '../src/index';
 
-import DateEditor from '../src/editors/DateEditor';
-import MultiSelectEditor from '../src/editors/MultiSelectEditor';
-import MultiValueFormatter from '../src/formatters/MultiValueFormatter';
+import DateEditor from '../src/tabulator/editors/DateEditor';
+import MultiSelectEditor from '../src/tabulator/editors/MultiSelectEditor';
+import MultiValueFormatter from '../src/tabulator/formatters/MultiValueFormatter';
 
 import { reactFormatter } from '../src/utils';
 
@@ -108,8 +108,8 @@ export const TabulatorExample = () => {
       { title: 'Last Name', field: 'last_name', width: 150 },
       { title: 'Email', field: 'email', width: 150 }
     ];
-    const options = {
-      height: 100,
+    const options: FusionTabulatorOptions = {
+      // height: 100,
       movableRows: true,
       progressiveLoad: 'scroll',
       progressiveLoadDelay: 200,
@@ -135,11 +135,12 @@ export const TabulatorExample = () => {
       }
     };
     return (
-      <FusionTabulator
+      <TabulatorReact
         onRef={(r) => (ref = r)}
         columns={columns}
+        data={[]}
         options={options}
-        events={{
+        eventMaps={{
           dataLoaded: function (data: any) {
             console.log('dataLoaded', data);
             // return data; //return the response data to tabulator
@@ -163,15 +164,15 @@ export const TabulatorExample = () => {
   };
   return (
     <div>
-      <FusionTabulator
+      <TabulatorReact
         columns={columns}
-        data={data}
-        events={{
+        data={[]}
+        eventMaps={{
           rowClick: rowClick
         }}
         options={options}
         data-custom-attr="test-custom-attribute"
-        className="custom-css-class"
+        classNames="custom-css-class"
       />
       <i>
         Selected Name: <strong>{state.selectedName}</strong>
@@ -181,15 +182,15 @@ export const TabulatorExample = () => {
         Asynchronous data: (e.g. fetch) - <button onClick={setData}>Set Data</button>{' '}
         <button onClick={clearData}>Clear</button> <button onClick={modifyData}>Modify Data</button>
       </h3>
-      <FusionTabulator columns={columns} data={state.data} />
+      <TabulatorReact columns={columns} data={state.data} />
 
       <h3>Editable Table</h3>
-      <FusionTabulator
+      <TabulatorReact
         columns={editableColumns}
-        data={data}
-        cellEdited={(cell: any) => console.log('cellEdited', cell)}
-        dataChanged={(newData: any) => console.log('dataChanged', newData)}
-        footerElement={<span>Footer</span>}
+        data={[]}
+        // cellEdited={(cell: any) => console.log('cellEdited', cell)}
+        // dataChanged={(newData: any) => console.log('dataChanged', newData)}
+        // footerElement={<span>Footer</span>}
         options={{ movableColumns: true, movableRows: true }}
       />
 

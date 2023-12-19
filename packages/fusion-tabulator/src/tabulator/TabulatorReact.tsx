@@ -1,69 +1,77 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as React from 'react';
+import { useRef, useState, useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
 import { pickHTMLProps } from 'pick-react-known-prop';
 import { propsToOptions } from 'utils/ConfigUtils';
 import 'styles/index.css';
 
-/* tslint:disable-next-line */
-import { TabulatorFull as Tabulator, ColumnDefinition } from 'tabulator-tables';
+import { TabulatorFull as Tabulator, ColumnDefinition, Options, OptionsColumns, EventCallBackMethods } from 'tabulator-tables';
 
-export interface ReactTabulatorProps {
-  columns?: ColumnDefinition[];
-  options?: any;
-  events?: any;
-  onRef?: (ref: any) => void
-  [k: string]: any;
+export interface TabulatorTableData {
+  tuid: string | number;
+  [key: string]: any;
 }
 
-const TabulatorReact = (props: ReactTabulatorProps) => {
-  const ref = React.useRef();
-  const instanceRef = React.useRef<Tabulator>();
-  const [mainId, _setMainId] = React.useState(`tabulator-${+new Date()}-${Math.floor(Math.random() * 9999999)}`);
+export interface ReactTabulatorProps {
+  columns: ColumnDefinition[];
+  options?: Options;
+  eventMaps?: Record<string, <K extends keyof EventCallBackMethods>(event: K, callback?: EventCallBackMethods[K]) => void>;
+  onRef?: (ref: any) => void;
+  classNames?: string;
+  data: TabulatorTableData[];
+  layout?: OptionsColumns['layout']
+}
+
+export const TabulatorReact = (props: ReactTabulatorProps) => {
+  const { layout = 'fitColumns', classNames, data = [], eventMaps } = props;
+  const wrapperRef = useRef();
+  const instanceRef = useRef<Tabulator>();
+  const [mainId] = useState(`tabulator-${+new Date()}-${Math.floor(Math.random() * 9999999)}`);
 
   const htmlProps = pickHTMLProps(props); // pick valid html props
   delete htmlProps['data']; // don't render data & columns as attributes
   delete htmlProps['columns'];
 
   const initTabulator = async () => {
-    const domEle: any = ReactDOM.findDOMNode(ref.current); // mounted DOM element
+    const domEle = ReactDOM.findDOMNode(wrapperRef.current) as HTMLElement; // mounted DOM element
     const { columns, data, options } = props;
+
     const propOptions = await propsToOptions(props);
+
     if (data) {
       propOptions.data = data;
     }
 
     instanceRef.current = new Tabulator(domEle, {
+      height: '100%',
       columns,
       ...propOptions,
-      layout: props.layout ?? 'fitColumns', // fit columns to width of table (optional)
+      layout, // fit columns to width of table (optional)
       ...options // props.options are passed to Tabulator's options.
     });
 
-    if (props.events) {
-      Object.keys(props.events).forEach((eventName: string) => {
-        const handler = props.events[eventName];
-        (instanceRef.current as any).on(eventName, handler);
+    if (eventMaps) {
+      Object.keys(eventMaps).forEach((eventName: keyof EventCallBackMethods) => {
+        const handler = eventMaps[eventName];
+
+        instanceRef.current.on(eventName, handler);
       });
     }
+
     props.onRef && props.onRef(instanceRef);
   };
 
-  React.useEffect(() => {
-    // console.log('useEffect - onmount');
+  useEffect(() => {
     initTabulator();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(() => {
-    // console.log('useEffect - props.data changed');
+  useEffect(() => {
     if (instanceRef && instanceRef.current) {
       initTabulator(); // re-init table
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.data]);
+  }, [data]);
 
-  return <div ref={ref} data-instance={mainId} {...htmlProps} className={props.className} />;
+  return <div ref={wrapperRef} data-instance={mainId} {...htmlProps} className={classNames} />;
 };
-
-export default TabulatorReact;
