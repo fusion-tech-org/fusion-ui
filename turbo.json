@@ -20,8 +20,14 @@
         "^lint"
       ]
     },
-    "test": {},
+    "test": {
+      "cache": false
+    },
     "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "vite:dev": {
       "cache": false,
       "persistent": true
     },

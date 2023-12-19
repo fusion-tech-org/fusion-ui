@@ -1,12 +1,30 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import './App.css'
 import CounterButtong from './components/CounterButton'
 import { doubleTheNum, funkyNum } from './utils'
 
 function App() {
-  const [count1, setCount1] = useState(1)
-  const [count2, setCount2] = useState(1)
+  const [count1, setCount1] = useState(1);
+  const [count2, setCount2] = useState(1);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    const x = e.clientX;
+    const y = e.clientY;
+
+    const elem = document.elementFromPoint(x, y);
+
+    // obtain the element
+    console.log(elem);
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('mousemove', handleMouseMove, false);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove, false);
+    }
+  }, []);
 
   return (
     <div className='card'>

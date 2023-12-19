@@ -4,6 +4,7 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "vite:dev": "turbo vite:dev",
     "lint": "turbo lint",
     "test": "turbo test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -17,7 +18,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "prettier": "^3.1.0",
-    "turbo": "latest"
+    "turbo": "^1.11.1"
   },
   "packageManager": "pnpm@8.9.0",
   "engines": {
