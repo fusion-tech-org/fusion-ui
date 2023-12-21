@@ -1,0 +1,13 @@
+{
+  "pagination": {
+    "first": "首页",
+    "first_title": "Première Page",
+    "last": "尾页",
+    "last_title": "Dernière Page",
+    "prev": "上一页",
+    "prev_title": "Page Précédente",
+    "next": "下一页",
+    "next_title": "Page Suivante",
+    "all": "共"
+  }
+}

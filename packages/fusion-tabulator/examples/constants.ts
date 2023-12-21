@@ -2,7 +2,7 @@ import {
   TabulatorReact,
   ColumnDefinition,
   TabulatorTableData,
-} from '../../src/index';
+} from '../src/index';
 
 export const baseTableData: TabulatorTableData[] = [
   { tuid: 1, id: 1, name: 'Oli Bob', age: '12', col: 'red', dob: '' },

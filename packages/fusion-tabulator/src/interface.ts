@@ -1,4 +1,4 @@
-export type TabulatorTableType = 'editable' | 'analysable';
+export type TabulatorTableType = 'tabulator' | 's2';
 
 export type PlatformAppMode = 'EDIT' | 'PUBLISHED' | 'INSTALL';
 

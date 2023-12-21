@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
 import { pickHTMLProps } from 'pick-react-known-prop';
 import { propsToOptions } from 'utils/ConfigUtils';
+import zhCNLang from 'langs/zh-cn.json';
 import 'styles/index.css';
 
 import { TabulatorFull as Tabulator, ColumnDefinition, Options, OptionsColumns, EventCallBackMethods } from 'tabulator-tables';
@@ -24,7 +25,8 @@ export interface ReactTabulatorProps {
 }
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
-  const { layout = 'fitColumns', classNames, data = [], eventMaps } = props;
+  const { layout = 'fitColumns', classNames, eventMaps, data } = props;
+  console.log(props);
   const wrapperRef = useRef();
   const instanceRef = useRef<Tabulator>();
   const [mainId] = useState(`tabulator-${+new Date()}-${Math.floor(Math.random() * 9999999)}`);
@@ -45,6 +47,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
     const initTabulatorOptions = {
       height: '100%',
+      locale: true,
+      pagination: true,
+      langs: {
+        'zh': zhCNLang
+      },
       ...propOptions,
       layout, // fit columns to width of table (optional)
       ...options // props.options are passed to Tabulator's options.
@@ -81,6 +88,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
     instanceRef.current = new Tabulator(domEle, initTabulatorOptions);
 
+    instanceRef.current.setLocale?.('zh');
+
+    console.log(instanceRef.current.getLang?.());
+
     if (eventMaps) {
       Object.keys(eventMaps).forEach((eventName: keyof EventCallBackMethods) => {
         const handler = eventMaps[eventName];
@@ -102,7 +113,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       initTabulator(); // re-init table
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [JSON.stringify(data)]);
 
   return <div ref={wrapperRef} data-instance={mainId} {...htmlProps} className={classNames} />;
 };

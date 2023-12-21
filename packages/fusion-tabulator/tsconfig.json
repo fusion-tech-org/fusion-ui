@@ -25,6 +25,7 @@
       "themes/*": ["./src/themes/*"],
       "types/*": ["./src/types/*"],
       "utils/*": ["./src/utils/*"],
+      "langs/*": ["./src/langs/*"],
     },
 
     /* Linting */

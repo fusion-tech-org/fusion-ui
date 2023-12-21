@@ -7,8 +7,9 @@ export const FilterContainer = styled.div`
 export const Footer = styled.div``;
 
 export const ConfigsContainer = styled.div`
-  width: 32px;
+  width: 18px;
   height: 100%;
+  overflow: hidden;
 `;
 
 export const Main = styled.div`
@@ -24,7 +25,7 @@ export const TableContainer = styled.div`
 `;
 
 export const Container = styled.div<{
-  widgetId: string;
+  'widget-id': string;
 }>`
   display: flex;
   flex-direction: row;

@@ -12,7 +12,7 @@ import {
   autoTableData,
   colConfigTableData,
   colConfigTableColumns
-} from './constants';
+} from '../constants';
 
 const TabPane = Tabs.TabPane;
 

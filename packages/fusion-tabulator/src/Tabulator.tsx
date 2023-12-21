@@ -22,22 +22,27 @@ import type { TabulatorProps } from './interface';
 import { ReactTabulatorProps, TabulatorReact } from './tabulator/TabulatorReact';
 import { S2React, S2ReactProps } from './s2/S2React';
 import { TabulatorTableType } from './interface';
+import { TableConfigBar } from 'components/TableConfigs';
 
-type RenderCompByTypeProps = ReactTabulatorProps | S2ReactProps;
+type RenderCompByTypeProps = {
+  s2Options?: S2ReactProps;
+  tabulatorOptions?: ReactTabulatorProps;
+};
 
 const renderCompByTableType = (tableType: TabulatorTableType, props: RenderCompByTypeProps) => {
+  const { tabulatorOptions = {}, s2Options = {} } = props;
   switch (tableType) {
-    case "analysable":
-      return <S2React {...(props as S2ReactProps)} />;
-    case "editable":
-      return <TabulatorReact {...(props as ReactTabulatorProps)} />;
+    case "s2":
+      return <S2React {...(s2Options as S2ReactProps)} />;
+    case "tabulator":
+      return <TabulatorReact {...(tabulatorOptions as ReactTabulatorProps)} />;
     default:
-      return <TabulatorReact {...(props as ReactTabulatorProps)} />;
+      return <TabulatorReact {...(tabulatorOptions as ReactTabulatorProps)} />;
   }
 };
 
 export const Tabulator: FC<RenderCompByTypeProps & TabulatorProps> = (props) => {
-  const { widgetId, tableType = 'editable', appMode = 'EDIT' } = props;
+  const { widgetId, tableType = 'tabulator', appMode = 'EDIT', ...restProps } = props;
   const tabulatorGlobalState = atom({
     key: `tabulator_${widgetId}`, // unique ID (with respect to other atoms/selectors)
     default: '', // default value (aka initial value)
@@ -45,21 +50,21 @@ export const Tabulator: FC<RenderCompByTypeProps & TabulatorProps> = (props) => 
 
   return (
     <RecoilRoot>
-      <Container widgetId='t001'>
+      <Container widget-id={widgetId}>
         <Main>
           <FilterContainer>
             过滤栏
           </FilterContainer>
           <TableContainer>
-            {renderCompByTableType(tableType, props)}
+            {renderCompByTableType(tableType, restProps)}
           </TableContainer>
-          <Footer>
+          {/* <Footer>
             footer
-          </Footer>
+          </Footer> */}
         </Main>
         {
           appMode === 'EDIT' && <ConfigsContainer>
-            Table Configuarations
+            <TableConfigBar />
           </ConfigsContainer>
         }
       </Container>

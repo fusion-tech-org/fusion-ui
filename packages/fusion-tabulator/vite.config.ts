@@ -20,6 +20,7 @@ export default defineConfig({
       themes: `${srcDir}/themes`,
       types: `${srcDir}/types`,
       utils: `${srcDir}/utils`,
+      langs: `${srcDir}/langs`,
     },
   },
   build: {
