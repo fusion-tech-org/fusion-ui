@@ -1,23 +1,20 @@
-import { FC, ReactNode } from 'react';
+import { FC, } from 'react';
 import {
   RecoilRoot,
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
+  // atom,
+  // selector,
+  // useRecoilState,
+  // useRecoilValue,
 } from 'recoil';
 
 import {
   FilterContainer,
-  Footer,
   ConfigsContainer,
   Container,
   Main,
   TableContainer
 } from 'styles/global-styles';
 import type { TabulatorProps } from './interface';
-
-// import { ReactNode } from 'react';
 
 import { ReactTabulatorProps, TabulatorReact } from './tabulator/TabulatorReact';
 import { S2React, S2ReactProps } from './s2/S2React';
@@ -43,10 +40,10 @@ const renderCompByTableType = (tableType: TabulatorTableType, props: RenderCompB
 
 export const Tabulator: FC<RenderCompByTypeProps & TabulatorProps> = (props) => {
   const { widgetId, tableType = 'tabulator', appMode = 'EDIT', ...restProps } = props;
-  const tabulatorGlobalState = atom({
-    key: `tabulator_${widgetId}`, // unique ID (with respect to other atoms/selectors)
-    default: '', // default value (aka initial value)
-  });
+  // const tabulatorGlobalState = atom({
+  //   key: `tabulator_${widgetId}`, // unique ID (with respect to other atoms/selectors)
+  //   default: '', // default value (aka initial value)
+  // });
 
   return (
     <RecoilRoot>
