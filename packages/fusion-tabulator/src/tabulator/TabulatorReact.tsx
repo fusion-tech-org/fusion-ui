@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom';
 import { pickHTMLProps } from 'pick-react-known-prop';
 import { propsToOptions } from 'utils/ConfigUtils';
 import zhCNLang from 'langs/zh-cn.json';
-import 'styles/index.css';
+import './index.css';
 
 import { TabulatorFull as Tabulator, ColumnDefinition, Options, OptionsColumns, EventCallBackMethods } from 'tabulator-tables';
 import { isEmpty } from 'lodash';

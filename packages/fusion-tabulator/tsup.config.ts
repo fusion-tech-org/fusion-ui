@@ -7,9 +7,9 @@ const handleBuildSuccess = async () => {
 
 export default defineConfig({
   entry: ['src/index.tsx'],
-  outExtension({ format }) {
+  outExtension() {
     return {
-      js: `.${pkg.version}.js`,
+      js: `.${pkg.version}.min.js`,
     };
   },
   splitting: false,
