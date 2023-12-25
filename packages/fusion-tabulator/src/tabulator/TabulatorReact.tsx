@@ -26,7 +26,6 @@ export interface ReactTabulatorProps {
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const { layout = 'fitColumns', classNames, eventMaps, data } = props;
-  console.log(props);
   const wrapperRef = useRef();
   const instanceRef = useRef<Tabulator>();
   const [mainId] = useState(`tabulator-${+new Date()}-${Math.floor(Math.random() * 9999999)}`);
@@ -115,5 +114,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(data)]);
 
-  return <div ref={wrapperRef} data-instance={mainId} {...htmlProps} className={classNames} />;
+  return <div ref={wrapperRef} style={{
+    height: '100%',
+  }} data-instance={mainId} {...htmlProps} className={classNames} />;
 };

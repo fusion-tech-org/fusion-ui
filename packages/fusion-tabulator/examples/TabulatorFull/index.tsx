@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { Tabulator } from '../../src/Tabulator';
+import TabulatorWithRecoil from '../../src';
 import {
   colConfigTableData,
   colConfigTableColumns
@@ -10,7 +8,7 @@ import {
 export const TabulatorFull = () => {
   return (
     <div style={{ display: 'flex', padding: '32px' }}>
-      <Tabulator appMode="EDIT" widgetId='ss' tableType="tabulator" tabulatorOptions={{
+      <TabulatorWithRecoil appMode="EDIT" widgetId='ss' tableType="tabulator" tabulatorOptions={{
         data: colConfigTableData,
         columns: colConfigTableColumns
       }} />

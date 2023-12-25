@@ -7,9 +7,9 @@ export const FilterContainer = styled.div`
 export const Footer = styled.div``;
 
 export const ConfigsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 18px;
-  height: 100%;
-  overflow: hidden;
 `;
 
 export const Main = styled.div`
@@ -17,11 +17,14 @@ export const Main = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+  min-height: 500px;
 `;
 
 export const TableContainer = styled.div`
   flex: 1;
   width: 100%;
+  height: 100%;
 `;
 
 export const Container = styled.div<{
@@ -31,4 +34,5 @@ export const Container = styled.div<{
   flex-direction: row;
   width: 100%;
   height: 100%;
+  padding: 12px;
 `;
