@@ -1,13 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useState, useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
-import { pickHTMLProps } from 'pick-react-known-prop';
+// import { pickHTMLProps } from 'pick-react-known-prop';
 import { propsToOptions } from 'utils/ConfigUtils';
 import zhCNLang from 'langs/zh-cn.json';
 import './index.css';
 
-import { TabulatorFull as Tabulator, ColumnDefinition, Options, OptionsColumns, EventCallBackMethods } from 'tabulator-tables';
-import { isEmpty } from 'lodash';
+import { TabulatorFull as Tabulator, ColumnDefinition, Options, OptionsColumns, EventCallBackMethods, CellComponent, OptionsGeneral, ColumnComponent } from 'tabulator-tables';
+import { forIn, isEmpty } from 'lodash';
+import { genTabulatorUUID } from 'utils/index';
+import { PlatformAppMode } from 'src/interface';
+import { Message } from '@arco-design/web-react';
 
 export interface TabulatorTableData {
   tuid: string | number;
@@ -17,22 +20,144 @@ export interface TabulatorTableData {
 export interface ReactTabulatorProps {
   columns?: ColumnDefinition[];
   options?: Options;
-  eventMaps?: Record<string, <K extends keyof EventCallBackMethods>(event: K, callback?: EventCallBackMethods[K]) => void>;
+  eventMaps?: Record<keyof EventCallBackMethods, <K extends keyof EventCallBackMethods>(event: K, callback?: EventCallBackMethods[K]) => void>;
   onRef?: (ref: any) => void;
   classNames?: string;
   data: TabulatorTableData[];
-  layout?: OptionsColumns['layout']
+  layout?: OptionsColumns['layout'];
+  appMode?: PlatformAppMode;
+  configs?: {
+    generalConfigs?: Record<string, any>;
+    loadedConfigs?: Record<string, any>;
+    columnConfigs?: Record<string, any>;
+    rowConfigs?: Record<string, any>;
+    cellConfigs?: Record<string, any>;
+    keyBindingConfigs?: Record<string, any>;
+    eventConfigs?: Record<string, any>;
+    styleConfigs?: Record<string, any>;
+    advancedConfigs?: Record<string, any>;
+  };
+  onUpdateWidgetMetaProperty?: (params: Record<string, any>) => void;
+  onUpdateWidgetProperty?: (params: Record<string, any>) => void;
+  queryInfo?: string;
 }
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
-  const { layout = 'fitColumns', classNames, eventMaps, data } = props;
+  const {
+    layout = 'fitColumns',
+    classNames,
+    eventMaps,
+    appMode,
+    data: tableData,
+    configs = {},
+    onUpdateWidgetMetaProperty,
+    onUpdateWidgetProperty,
+    queryInfo,
+  } = props;
+  // const {
+  //   generalConfigs,
+  //   loadedConfigs,
+  //   columnConfigs,
+  //   rowConfigs,
+  //   cellConfigs,
+  //   keyBindingConfigs,
+  //   eventConfigs,
+  //   styleConfigs,
+  //   advancedConfigs,
+  // } = configs;
   const wrapperRef = useRef();
   const instanceRef = useRef<Tabulator>();
-  const [mainId] = useState(`tabulator-${+new Date()}-${Math.floor(Math.random() * 9999999)}`);
+  const [mainId] = useState(genTabulatorUUID());
 
-  const htmlProps = pickHTMLProps(props); // pick valid html props
-  delete htmlProps['data']; // don't render data & columns as attributes
-  delete htmlProps['columns'];
+  // const htmlProps = pickHTMLProps(props); // pick valid html props
+  // delete htmlProps['data']; // don't render data & columns as attributes
+  // delete htmlProps['columns'];
+
+  // const handleDataLoaded = () => {
+  //   if (appMode === 'EDIT') {
+  //     Message.info('表格数据加载完成');
+  //   }
+  //   const curTableData = instanceRef.current.getData();
+  //   console.log(curTableData);
+  //   onUpdateWidgetMetaProperty?.({
+  //     curTableData,
+  //   });
+  // }
+
+  const handleDataProcessed = () => {
+    if (appMode === 'EDIT') {
+      Message.info('表格数据渲染完成');
+    }
+    const curTableData = instanceRef.current.getData();
+    console.log(curTableData);
+    onUpdateWidgetMetaProperty?.({
+      curTableData,
+    });
+  }
+
+  const handleLoadError = (error: Error) => {
+    console.log(error);
+  }
+
+  const handleDataChanged = (data: any[]) => {
+    onUpdateWidgetMetaProperty?.({
+      curTableData: data,
+    });
+  }
+
+  const handleColumnMoved = (column, columns) => {
+    // column - column component of the moved column
+    // columns- array of columns in new order
+    console.log(column, columns);
+  };
+
+  const handleColumnResized = (column: ColumnComponent) => {
+    //column - column component of the resized column
+    console.log(column);
+  };
+
+  const handleColumnTitleChanged = (column) => {
+    //column - column component
+    console.log(column);
+  };
+
+  const handleColumnVisibilityChanged = (column, visible) => {
+    //column - column component
+    //visible - is column visible (true = visible, false = hidden)
+    console.log(column, visible);
+  };
+
+  const handleCellEditing = (cell: CellComponent) => {
+    //cell - cell component
+    console.log(cell);
+  };
+
+  const handleCellEdited = (cell: CellComponent) => {
+    console.log(cell.getField(), cell.getValue());
+    const cellField = cell.getField();
+    const cellValue = cell.getValue();
+    onUpdateWidgetMetaProperty?.({
+      editingCell: {
+        [cellField]: cellValue
+      },
+    });
+  };
+
+  const defaultEvents: Partial<Record<keyof EventCallBackMethods, EventCallBackMethods[keyof EventCallBackMethods]>> = {
+    // data events
+    // dataLoaded: handleDataLoaded,
+    dataProcessed: handleDataProcessed,
+    dataChanged: handleDataChanged,
+    dataLoadError: handleLoadError,
+    // column events
+    columnMoved: handleColumnMoved,
+    columnResized: handleColumnResized,
+    columnTitleChanged: handleColumnTitleChanged,
+    columnVisibilityChanged: handleColumnVisibilityChanged,
+    // cell events
+    cellEditing: handleCellEditing,
+    cellEdited: handleCellEdited,
+  }
 
   const initTabulator = async () => {
     const domEle = ReactDOM.findDOMNode(wrapperRef.current) as HTMLElement; // mounted DOM element
@@ -44,10 +169,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       propOptions.data = data;
     }
 
-    const initTabulatorOptions = {
+    const initTabulatorOptions: OptionsGeneral & OptionsColumns = {
       height: '100%',
       locale: true,
       pagination: true,
+      reactiveData: true,
       langs: {
         'zh': zhCNLang
       },
@@ -58,29 +184,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
     if (isEmpty(columns)) {
       initTabulatorOptions.autoColumns = true;
-
-      // initTabulatorOptions.autoColumnsDefinitions = function (definitions: ColumnDefinition[]) {
-      //   //definitions - array of column definition objects
-
-      //   definitions.forEach(column => {
-      //     column.headerFilter = true;
-      //   })
-
-      //   return definitions;
-
-      // }
-      /**
-      * NOTE: support array or object
-      */
-      initTabulatorOptions.autoColumnsDefinitions = [
-        { field: "name", editor: "input" }, //add input editor to the name column
-        { field: "age", headerFilter: true }, //add header filters to the age column
-      ];
-
-      //   initTabulatorOptions.autoColumnsDefinitions = {
-      //     name: {editor:"input"}, //add input editor to the name column
-      //     age: {headerFilter:true}, //add header filters to the age column
-      // };
     } else {
       initTabulatorOptions.columns = columns;
     }
@@ -89,15 +192,17 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
     instanceRef.current.setLocale?.('zh');
 
-    console.log(instanceRef.current.getLang?.());
+    /**
+    * NOTE: Binding events
+    */
+    const mergeEvents = {
+      ...defaultEvents,
+      ...eventMaps,
+    };
 
-    if (eventMaps) {
-      Object.keys(eventMaps).forEach((eventName: keyof EventCallBackMethods) => {
-        const handler = eventMaps[eventName];
-
-        instanceRef.current.on(eventName, handler);
-      });
-    }
+    forIn(mergeEvents, (handler, eventName: keyof EventCallBackMethods) => {
+      instanceRef.current.on(eventName, handler);
+    })
 
     props.onRef && props.onRef(instanceRef);
   };
@@ -108,13 +213,28 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   }, []);
 
   useEffect(() => {
-    if (instanceRef && instanceRef.current) {
+    if (queryInfo && instanceRef.current) {
+      console.log(queryInfo);
+      // instanceRef.current.setData
+    }
+  }, [queryInfo])
+
+  useEffect(() => {
+    if (instanceRef.current) {
+      instanceRef.current.destroy()
+      instanceRef.current = null;
       initTabulator(); // re-init table
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(data)]);
+  }, [JSON.stringify(tableData)]);
 
-  return <div ref={wrapperRef} style={{
-    height: '100%',
-  }} data-instance={mainId} {...htmlProps} className={classNames} />;
+  return (
+    <div ref={wrapperRef}
+      style={{
+        height: '100%',
+      }}
+      data-instance={mainId}
+      className={classNames}
+    />
+  );
 };

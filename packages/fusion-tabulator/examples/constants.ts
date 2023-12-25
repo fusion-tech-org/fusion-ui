@@ -84,29 +84,37 @@ export const colConfigTableData: TabulatorTableData[] = [
   {
     tuid: 1,
     id: 1,
-    name: 'Oli Bob',
-    age: '12',
-    height: 173,
-    gender: 'male',
-    col: 'red',
+    name: '',
+    age: '',
+    height: '',
+    gender: '',
+    col: '',
     dob: '',
     cheese: '',
   },
 ];
 
 export const colConfigTableColumns: ColumnDefinition[] = [
-  { title: '姓名', field: 'name', sorter: 'string', width: 200, editor: true },
+  {
+    title: '姓名',
+    field: 'name',
+    sorter: 'string',
+    width: 200,
+    editor: true,
+    editableTitle: true,
+  },
   {
     title: '年龄',
     field: 'age',
-    sorter: 'number',
+    editor: true,
+    editableTitle: true,
     hozAlign: 'right',
-    formatter: 'progress',
   },
   {
     title: '性别',
     field: 'gender',
-    sorter: 'string',
+    editor: true,
+    editableTitle: true,
     cellClick: function (e, cell) {
       console.log('cell click');
     },
@@ -114,17 +122,31 @@ export const colConfigTableColumns: ColumnDefinition[] = [
   {
     title: '身高',
     field: 'height',
-    formatter: 'star',
+    editor: true,
+    editableTitle: true,
+    // formatter: 'star',
     hozAlign: 'center',
     width: 100,
   },
-  { title: '最喜欢的颜色', field: 'col', sorter: 'string' },
-  { title: '出生日期', field: 'dob', sorter: 'date', hozAlign: 'center' },
+  {
+    title: '最喜欢的颜色',
+    field: 'col',
+    editor: true,
+    editableTitle: true,
+  },
+  {
+    title: '出生日期',
+    field: 'dob',
+    editor: true,
+    editableTitle: true,
+    hozAlign: 'center',
+  },
   {
     title: '喜欢的奶酪',
     field: 'cheese',
-    sorter: 'boolean',
+    editor: true,
+    editableTitle: true,
     hozAlign: 'center',
-    formatter: 'tickCross',
+    // formatter: 'tickCross',
   },
 ];

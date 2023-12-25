@@ -1,6 +1,8 @@
 import { render } from 'react-dom';
 import { cloneElement, ReactElement } from 'react';
 
+export const genTabulatorUUID = () => `tabulator-${+new Date()}-${Math.floor(Math.random() * 9999999)}`;
+
 export function clone(obj: unknown) {
   return JSON.parse(JSON.stringify(obj));
 }
@@ -62,17 +64,4 @@ export function reactFormatter(JSX: ReactElement) {
     }, 0);
     return '<div class="formatterCell"></div>';
   };
-}
-
-// write a bubble sort function
-export function bubbleSort(array: number[]) {
-  const len = array.length;
-  for (let i = 0; i < len; i++) {
-    for (let j = 0; j < len - 1 - i; j++) {
-      if (array[j] > array[j + 1]) {
-        [array[j], array[j + 1]] = [array[j + 1], array[j]];
-      }
-    }
-  }
-  return array;
 }
