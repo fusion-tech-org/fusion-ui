@@ -1,7 +1,10 @@
-import { FC, } from 'react';
+import { FC, useRef, } from 'react';
 import {
+  AtomOptions,
   RecoilRoot,
-  // atom,
+  atom,
+  useRecoilState,
+  useRecoilValue,
   // selector,
   // useRecoilState,
   // useRecoilValue,
@@ -20,6 +23,8 @@ import { ReactTabulatorProps, TabulatorReact } from './tabulator/TabulatorReact'
 import { S2React, S2ReactProps } from './s2/S2React';
 import { TabulatorTableType } from './interface';
 import { TableConfigBar } from 'components/TableConfigs';
+import { Drawer } from '@arco-design/web-react';
+import { openConfigDrawerAtom } from './constants';
 
 type RenderCompByTypeProps = {
   s2Options?: S2ReactProps;
@@ -37,18 +42,38 @@ const renderCompByTableType = (tableType: TabulatorTableType, props: RenderCompB
       return <TabulatorReact {...(tabulatorOptions as ReactTabulatorProps)} />;
   }
 };
+// export const tabulatorGlobalState = atom<{
+//   showFilter: boolean;
+// }>({
+//   key: `tabulator_global`, // unique ID (with respect to other atoms/selectors)
+//   showFilter: false,
+// });
+
+export const TABULATOR_PREFIX = 'TABULATOR_CONTAINER';
+
 
 export const Tabulator: FC<RenderCompByTypeProps & TabulatorProps> = (props) => {
   const { widgetId, tableType = 'tabulator', appMode = 'EDIT', ...restProps } = props;
-  // const tabulatorGlobalState = atom({
-  //   key: `tabulator_${widgetId}`, // unique ID (with respect to other atoms/selectors)
-  //   default: '', // default value (aka initial value)
-  // });
+  const refMain = useRef(null);
+  const openConfigDrawerAtom = atom({
+    key: 'isOpenConfigDrawer',
+    default: false,
+  });
+
+  console.log(openConfigDrawerAtom);
+
+  const handleDrawerOk = () => {
+
+  }
+
+  const handleDrawerCancel = () => {
+
+  }
 
   return (
     <RecoilRoot>
-      <Container widget-id={widgetId}>
-        <Main>
+      <Container widget-id={widgetId} id={`${TABULATOR_PREFIX}_${widgetId}`}>
+        <Main ref={refMain}>
           <FilterContainer>
             过滤栏
           </FilterContainer>
@@ -61,9 +86,21 @@ export const Tabulator: FC<RenderCompByTypeProps & TabulatorProps> = (props) => 
         </Main>
         {
           appMode === 'EDIT' && <ConfigsContainer>
-            <TableConfigBar />
+            <TableConfigBar widgetId={widgetId} />
           </ConfigsContainer>
         }
+        <Drawer
+          width="90%"
+          title={null}
+          getPopupContainer={() => refMain && refMain.current}
+          visible={false}
+          onOk={handleDrawerOk}
+          onCancel={handleDrawerCancel}
+        >
+          <div>Here is an example text.</div>
+
+          <div>Here is an example text.</div>
+        </Drawer>
       </Container>
     </RecoilRoot>
   )
