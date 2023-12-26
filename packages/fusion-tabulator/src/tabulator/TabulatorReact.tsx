@@ -183,12 +183,13 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // if (data) {
     //   propOptions.data = data;
     // }
+    console.log('domEle', domEle);
 
     const initTabulatorOptions: Options = {
       height: '100%',
       locale: true,
       pagination: true,
-      reactiveData: true,
+      // reactiveData: true,
       langs: {
         'zh': zhCNLang
       },
