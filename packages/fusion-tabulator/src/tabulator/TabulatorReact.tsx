@@ -1,16 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useState, useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
+import {
+  TabulatorFull as Tabulator,
+  ColumnDefinition,
+  Options,
+  OptionsColumns,
+  EventCallBackMethods,
+  CellComponent,
+  ColumnComponent,
+} from 'tabulator-tables';
+import { forIn, isArray, isEmpty } from 'lodash';
+import { Message } from '@arco-design/web-react';
+
 // import { pickHTMLProps } from 'pick-react-known-prop';
 // import { propsToOptions } from 'utils/ConfigUtils';
 import zhCNLang from 'langs/zh-cn.json';
 import './index.css';
-
-import { TabulatorFull as Tabulator, ColumnDefinition, Options, OptionsColumns, EventCallBackMethods, CellComponent, OptionsGeneral, ColumnComponent, OptionsLocale } from 'tabulator-tables';
-import { forIn, isArray, isEmpty } from 'lodash';
 import { genTabulatorUUID } from 'utils/index';
 import { PlatformAppMode } from 'src/interface';
-import { Message } from '@arco-design/web-react';
 
 export interface TabulatorTableData {
   tuid: string | number;
