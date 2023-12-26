@@ -227,8 +227,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   useEffect(() => {
     if (instanceRef.current) {
-      instanceRef.current.destroy()
-      instanceRef.current = null;
+      // instanceRef.current.destroy()
+      // instanceRef.current = null;
       initTabulator(); // re-init table
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
