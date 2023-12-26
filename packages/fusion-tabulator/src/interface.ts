@@ -9,6 +9,13 @@ export type RenderCompByTypeProps = {
   appMode: PlatformAppMode;
   s2Options?: S2ReactProps;
   tabulatorOptions?: ReactTabulatorProps;
+  queryInfo?: string;
+  widgetId?: string;
+  onUpdateWidgetMetaProperty?: (params: Record<string, unknown>) => void;
+  eventMaps?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tabulator?: Record<string, any>;
+  };
 };
 
 export type RenderConfigByTypeProps = {
@@ -21,22 +28,22 @@ export interface TabulatorProps {
   appMode: PlatformAppMode;
   configs?: {
     tabulator?: {
-      generalConfigs?: Record<string, any>;
-      loadedConfigs?: Record<string, any>;
-      columnConfigs?: Record<string, any>;
-      rowConfigs?: Record<string, any>;
-      cellConfigs?: Record<string, any>;
-      keyBindingConfigs?: Record<string, any>;
-      eventConfigs?: Record<string, any>;
-      styleConfigs?: Record<string, any>;
-      advancedConfigs?: Record<string, any>;
+      generalConfigs?: Record<string, unknown>;
+      loadedConfigs?: Record<string, unknown>;
+      columnConfigs?: Record<string, unknown>;
+      rowConfigs?: Record<string, unknown>;
+      cellConfigs?: Record<string, unknown>;
+      keyBindingConfigs?: Record<string, unknown>;
+      eventConfigs?: Record<string, unknown>;
+      styleConfigs?: Record<string, unknown>;
+      advancedConfigs?: Record<string, unknown>;
     };
   };
   eventMaps?: {
-    tabulator?: Record<string, any>;
+    tabulator?: Record<string, unknown>;
   };
-  onUpdateWidgetMetaProperty?: (params: Record<string, any>) => void;
-  onUpdateWidgetProperty?: (params: Record<string, any>) => void;
+  onUpdateWidgetMetaProperty?: (params: Record<string, unknown>) => void;
+  onUpdateWidgetProperty?: (params: Record<string, unknown>) => void;
   queryInfo?: string;
 }
 

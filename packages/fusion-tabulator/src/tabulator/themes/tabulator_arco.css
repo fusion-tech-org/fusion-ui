@@ -423,8 +423,8 @@ body {
   text-align: right;
   color: #555;
   font-family: inherit;
-  font-weight: inherit;
-  font-size: inherit;
+  font-weight: normal;
+  font-size: 14px;
 }
 
 .tabulator .tabulator-footer .tabulator-page-size {

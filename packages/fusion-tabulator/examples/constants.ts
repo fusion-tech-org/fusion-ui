@@ -82,15 +82,15 @@ export const autoTableData: TabulatorTableData[] = [
 
 export const colConfigTableData: TabulatorTableData[] = [
   {
-    tuid: 1,
-    id: 1,
-    name: '',
+    name: 'any',
     age: '',
     height: '',
+    id: 1,
     gender: '',
     col: '',
     dob: '',
     cheese: '',
+    tuid: 1,
   },
 ];
 

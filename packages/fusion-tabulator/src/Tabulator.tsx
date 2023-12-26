@@ -28,7 +28,15 @@ const renderCompByTableType = (
   tableType: TabulatorTableType,
   props: RenderCompByTypeProps
 ) => {
-  const { tabulatorOptions = {}, s2Options = {}, appMode } = props;
+  const {
+    tabulatorOptions = {},
+    s2Options = {},
+    appMode,
+    onUpdateWidgetMetaProperty,
+    eventMaps = {},
+    queryInfo,
+    widgetId,
+  } = props;
   switch (tableType) {
     case 's2':
       return <S2React {...(s2Options as S2ReactProps)} />;
@@ -37,6 +45,10 @@ const renderCompByTableType = (
         <TabulatorReact
           {...(tabulatorOptions as ReactTabulatorProps)}
           appMode={appMode}
+          widgetId={widgetId}
+          onUpdateWidgetMetaProperty={onUpdateWidgetMetaProperty}
+          eventMaps={eventMaps['tabulator']}
+          queryInfo={queryInfo}
         />
       );
     default:
@@ -44,6 +56,10 @@ const renderCompByTableType = (
         <TabulatorReact
           {...(tabulatorOptions as ReactTabulatorProps)}
           appMode={appMode}
+          widgetId={widgetId}
+          onUpdateWidgetMetaProperty={onUpdateWidgetMetaProperty}
+          eventMaps={eventMaps['tabulator']}
+          queryInfo={queryInfo}
         />
       );
   }

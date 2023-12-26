@@ -6,8 +6,8 @@ import * as ReactDOM from 'react-dom';
 import zhCNLang from 'langs/zh-cn.json';
 import './index.css';
 
-import { TabulatorFull as Tabulator, ColumnDefinition, Options, OptionsColumns, EventCallBackMethods, CellComponent, OptionsGeneral, ColumnComponent } from 'tabulator-tables';
-import { forIn, isEmpty } from 'lodash';
+import { TabulatorFull as Tabulator, ColumnDefinition, Options, OptionsColumns, EventCallBackMethods, CellComponent, OptionsGeneral, ColumnComponent, OptionsLocale } from 'tabulator-tables';
+import { forIn, isArray, isEmpty } from 'lodash';
 import { genTabulatorUUID } from 'utils/index';
 import { PlatformAppMode } from 'src/interface';
 import { Message } from '@arco-design/web-react';
@@ -23,6 +23,7 @@ export interface ReactTabulatorProps {
   eventMaps?: Record<keyof EventCallBackMethods, <K extends keyof EventCallBackMethods>(event: K, callback?: EventCallBackMethods[K]) => void>;
   onRef?: (ref: any) => void;
   classNames?: string;
+  widgetId?: string;
   data: TabulatorTableData[];
   layout?: OptionsColumns['layout'];
   appMode?: PlatformAppMode;
@@ -46,9 +47,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
     layout = 'fitColumns',
     classNames,
-    eventMaps,
+    eventMaps = {},
     appMode,
     data: tableData,
+    columns: columnDefs,
     onUpdateWidgetMetaProperty,
     // onUpdateWidgetProperty,
     queryInfo,
@@ -162,11 +164,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // cell events
     cellEditing: handleCellEditing,
     cellEdited: handleCellEdited,
-  }
+  };
 
   const initTabulator = async () => {
     const domEle = ReactDOM.findDOMNode(wrapperRef.current) as HTMLElement; // mounted DOM element
-    const { columns, data = [], options } = props;
+    // const { columns, data = [], options } = props;
 
     // const propOptions = await propsToOptions(props);
 
@@ -174,7 +176,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     //   propOptions.data = data;
     // }
 
-    const initTabulatorOptions: OptionsGeneral & OptionsColumns = {
+    const initTabulatorOptions: Options = {
       height: '100%',
       locale: true,
       pagination: true,
@@ -182,18 +184,18 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       langs: {
         'zh': zhCNLang
       },
-      data,
+      data: tableData,
       // ...propOptions,
       layout, // fit columns to width of table (optional)
-      ...options // props.options are passed to Tabulator's options.
+      // ...options // props.options are passed to Tabulator's options.
     };
 
-    if (isEmpty(columns)) {
+    if (isEmpty(columnDefs)) {
       initTabulatorOptions.autoColumns = true;
     } else {
-      initTabulatorOptions.columns = columns;
+      initTabulatorOptions.columns = columnDefs;
     }
-
+    console.log('initTabulatorOptions', initTabulatorOptions);
     instanceRef.current = new Tabulator(domEle, initTabulatorOptions);
 
     instanceRef.current.setLocale?.('zh');
@@ -214,7 +216,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   };
 
   useEffect(() => {
-    initTabulator();
+    if (isArray(tableData) && tableData.length > 0 && !instanceRef.current) {
+      console.log('init tabulator', tableData.length);
+      initTabulator();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -229,7 +234,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     if (instanceRef.current) {
       // instanceRef.current.destroy()
       // instanceRef.current = null;
-      initTabulator(); // re-init table
+      // console.log('invoked by data changed');
+      // initTabulator(); // re-init table
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(tableData)]);
