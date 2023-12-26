@@ -1,6 +1,3 @@
-// import {  SheetComponentOptions } from '@antv/s2-react';
-// import { S2DataConfig } from '@antv/s2';
-// import '@antv/s2-react/dist/style.min.css';
 // import { s2DataConfig } from './constants';
 
 // const s2Options = {
