@@ -54,7 +54,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // onUpdateWidgetProperty,
     queryInfo,
   } = props;
-  console.log(configs);
+  console.log('TabulatorReact -> ', props);
   // const {
   //   generalConfigs,
   //   loadedConfigs,
@@ -84,6 +84,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   //     curTableData,
   //   });
   // }
+
+  const handleTableDestroyed = () => {
+    console.log('table destroyed');
+  }
 
   const handleDataProcessed = () => {
     if (appMode === 'EDIT') {
@@ -146,6 +150,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   const defaultEvents: Partial<Record<keyof EventCallBackMethods, EventCallBackMethods[keyof EventCallBackMethods]>> = {
     // data events
+    tableDestroyed: handleTableDestroyed,
     // dataLoaded: handleDataLoaded,
     dataProcessed: handleDataProcessed,
     dataChanged: handleDataChanged,
@@ -162,13 +167,13 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   const initTabulator = async () => {
     const domEle = ReactDOM.findDOMNode(wrapperRef.current) as HTMLElement; // mounted DOM element
-    const { columns, data, options } = props;
+    const { columns, data = [], options } = props;
 
-    const propOptions = await propsToOptions(props);
+    // const propOptions = await propsToOptions(props);
 
-    if (data) {
-      propOptions.data = data;
-    }
+    // if (data) {
+    //   propOptions.data = data;
+    // }
 
     const initTabulatorOptions: OptionsGeneral & OptionsColumns = {
       height: '100%',
@@ -178,7 +183,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       langs: {
         'zh': zhCNLang
       },
-      ...propOptions,
+      data,
+      // ...propOptions,
       layout, // fit columns to width of table (optional)
       ...options // props.options are passed to Tabulator's options.
     };
@@ -205,7 +211,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       instanceRef.current.on(eventName, handler);
     })
 
-    props.onRef && props.onRef(instanceRef);
+    // props.onRef && props.onRef(instanceRef);
   };
 
   useEffect(() => {
@@ -232,6 +238,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   return (
     <div ref={wrapperRef}
       style={{
+        width: '100%',
         height: '100%',
       }}
       data-instance={mainId}

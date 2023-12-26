@@ -1,6 +1,7 @@
 body {
   --arcoblue-6: 22,93,255;
   --gray-2: 242,243,245;
+  --gray-10: 29,33,41;
   --color-fill-1: rgb(247, 248, 250);
   --color-neutral-2: rgb(var(--gray-2));
   --custom-header-color: #F2F7FC;
@@ -122,6 +123,8 @@ body {
   padding: 2px;
   border-radius: 2px;
   background: #fff;
+  font-size: 14px;
+  color: rgb(var(--gray-10));
 
   &:focus {
     border-color: rgb(var(--primary-6));

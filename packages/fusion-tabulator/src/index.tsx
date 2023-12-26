@@ -15,6 +15,7 @@ export type { TabulatorTableData } from './tabulator/TabulatorReact';
 export { TabulatorReact } from './tabulator/TabulatorReact';
 
 export default function TabulatorWithRecoil(props: FusionTabulatorProps) {
+  console.log('all props ', props);
   return (
     <RecoilRoot>
       <Tabulator {...props} />

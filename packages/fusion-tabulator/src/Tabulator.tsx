@@ -50,7 +50,7 @@ const renderCompByTableType = (
 };
 
 export interface RenderConfigCommonProps {
-  onUpdateWidgetProperty?: (params: Record<string, any>) => void;
+  onUpdateWidgetProperty?: (params: Record<string, unknown>) => void;
 }
 
 const renderConfigByTableType = (
@@ -74,15 +74,17 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
     tableType = 'tabulator',
     appMode = 'EDIT',
     onUpdateWidgetProperty,
+    configs,
     ...restProps
   } = props;
+  console.log('Tabulator props -> ', props);
   const refMain = useRef(null);
   const [isOpenConfigDrawer, setIsOpenConfigDrawer] =
     useRecoilState(openConfigDrawerAtom);
 
-  const handleDrawerOk = () => {
-    setIsOpenConfigDrawer(false);
-  };
+  // const handleDrawerOk = () => {
+  //   setIsOpenConfigDrawer(false);
+  // };
 
   const handleDrawerCancel = () => {
     setIsOpenConfigDrawer(false);
