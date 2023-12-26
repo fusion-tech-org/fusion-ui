@@ -49,16 +49,20 @@ const renderCompByTableType = (
   }
 };
 
+export interface RenderConfigCommonProps {
+  onUpdateWidgetProperty?: (params: Record<string, any>) => void;
+}
+
 const renderConfigByTableType = (
   tableType: TabulatorTableType,
-  props: RenderConfigByTypeProps
+  props: RenderConfigByTypeProps & RenderConfigCommonProps
 ) => {
-  const { tabulatorProps = {} } = props;
+  const { tabulatorProps = {}, onUpdateWidgetProperty } = props;
   switch (tableType) {
     case 'tabulator':
-      return <TabulatorConfigs {...tabulatorProps} />;
+      return <TabulatorConfigs {...tabulatorProps} onUpdateWidgetProperty={onUpdateWidgetProperty} />;
     default:
-      return <TabulatorConfigs {...tabulatorProps} />;
+      return <TabulatorConfigs {...tabulatorProps} onUpdateWidgetProperty={onUpdateWidgetProperty} />;
   }
 };
 
@@ -108,7 +112,7 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
             footer={null}
             onCancel={handleDrawerCancel}
           >
-            {renderConfigByTableType(tableType, {})}
+            {renderConfigByTableType(tableType, { onUpdateWidgetProperty })}
           </Drawer>
         </>
       )}

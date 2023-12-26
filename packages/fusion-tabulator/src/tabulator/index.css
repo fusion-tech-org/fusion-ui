@@ -1,5 +1,6 @@
 
-@import '../tabulator/themes/tabulator_bootstrap5.min.css';
+/* @import '../tabulator/themes/tabulator_bootstrap5.min.css'; */
+@import '../tabulator/themes/tabulator_arco.css';
 
 .multi-value-formatter-content span {
   padding: 2px 4px;

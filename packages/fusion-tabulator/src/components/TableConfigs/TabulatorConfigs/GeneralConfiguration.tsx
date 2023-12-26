@@ -1,8 +1,10 @@
 import { Button, Form, Space, Switch } from "@arco-design/web-react";
+import type { TabulatorConfigsProps } from "./index";
 
 const FormItem = Form.Item;
 
-export const GeneralConfiguration = () => {
+export const GeneralConfiguration = (props: TabulatorConfigsProps) => {
+  const { onUpdateWidgetProperty } = props;
   const [form] = Form.useForm();
 
   const handleConfig = async () => {
@@ -11,7 +13,7 @@ export const GeneralConfiguration = () => {
 
       const formValues = form.getFieldsValue();
 
-
+      onUpdateWidgetProperty?.(formValues);
     } catch (err) {
       console.log(err);
     }

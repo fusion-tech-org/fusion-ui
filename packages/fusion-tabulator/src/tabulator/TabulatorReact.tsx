@@ -51,9 +51,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     data: tableData,
     configs = {},
     onUpdateWidgetMetaProperty,
-    onUpdateWidgetProperty,
+    // onUpdateWidgetProperty,
     queryInfo,
   } = props;
+  console.log(configs);
   // const {
   //   generalConfigs,
   //   loadedConfigs,
