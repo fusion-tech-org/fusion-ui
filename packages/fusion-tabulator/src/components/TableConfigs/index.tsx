@@ -1,13 +1,7 @@
 import styled from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 
 import { ConfigBarContainer } from './styles';
-
-import {
-  useSetRecoilState,
-  // selector,
-  // useRecoilState,
-  // useRecoilValue,
-} from 'recoil';
 import { openConfigDrawerAtom } from '../../constants';
 
 export interface TableConfigBarProps {
@@ -15,7 +9,7 @@ export interface TableConfigBarProps {
 }
 
 export const TableConfigBar = (props: TableConfigBarProps) => {
-  const { widgetId } = props;
+  // const { widgetId } = props;
 
   const setIsOpenConfigDrawer = useSetRecoilState(openConfigDrawerAtom);
 
