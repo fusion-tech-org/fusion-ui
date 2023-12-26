@@ -2,7 +2,7 @@
 import { useRef, useState, useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
 // import { pickHTMLProps } from 'pick-react-known-prop';
-import { propsToOptions } from 'utils/ConfigUtils';
+// import { propsToOptions } from 'utils/ConfigUtils';
 import zhCNLang from 'langs/zh-cn.json';
 import './index.css';
 
@@ -49,7 +49,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     eventMaps,
     appMode,
     data: tableData,
-    configs = {},
     onUpdateWidgetMetaProperty,
     // onUpdateWidgetProperty,
     queryInfo,
