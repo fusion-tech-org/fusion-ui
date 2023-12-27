@@ -1,3 +1,4 @@
+import type { ColProps, RulesProps } from '@arco-design/web-react';
 import { S2ReactProps } from './s2/S2React';
 import { ReactTabulatorProps } from './tabulator/TabulatorReact';
 
@@ -22,10 +23,30 @@ export type RenderConfigByTypeProps = {
   tabulatorProps?: Record<string, unknown>;
 };
 
+export type FilterConfigurationItem = {
+  label: string;
+  field: string;
+  type: 'input' | 'button' | 'select' | 'date' | 'checkbox' | 'radio';
+  rules?: RulesProps[];
+  labelCol?: ColProps;
+  labelAlign?: 'left' | 'right';
+  wGrid?: number; // unit is the grid
+  hGrid?: number;
+  eventName?: string;
+  extraProps?: Record<string, unknown>;
+};
+export interface FilterConfigurations {
+  initialValues?: Record<string, unknown>;
+  items?: FilterConfigurationItem[];
+  rowHeight?: number; // unit is the px
+  cols?: number;
+}
+
 export interface TabulatorProps {
   widgetId: string;
   tableType: TabulatorTableType;
   appMode: PlatformAppMode;
+  filterConfigurations?: FilterConfigurations;
   configs?: {
     tabulator?: {
       generalConfigs?: Record<string, unknown>;

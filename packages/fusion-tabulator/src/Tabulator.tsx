@@ -1,4 +1,4 @@
-import { FC, useRef } from 'react';
+import { FC, useCallback, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 
 import {
@@ -9,6 +9,7 @@ import {
   TableContainer,
 } from 'styles/global-styles';
 import type {
+  FilterConfigurations,
   FusionTabulatorProps,
   RenderCompByTypeProps,
   RenderConfigByTypeProps,
@@ -23,6 +24,8 @@ import { TableConfigBar } from 'components/TableConfigs';
 import { Drawer } from '@arco-design/web-react';
 import { openConfigDrawerAtom } from './constants';
 import { TabulatorConfigs } from 'components/TableConfigs/TabulatorConfigs';
+import { TableFilter } from 'components/TableConfigs/TableFilter';
+import { isArray } from 'lodash';
 
 const renderCompByTableType = (
   tableType: TabulatorTableType,
@@ -88,6 +91,49 @@ const renderConfigByTableType = (
 
 export const TABULATOR_PREFIX = 'TABULATOR_CONTAINER';
 
+const mockFilterConfigurations: FilterConfigurations = {
+  initialValues: {},
+  rowHeight: 32,
+  items: [
+    {
+      label: 'ID',
+      field: 'id',
+      type: 'input',
+      rules: [{ required: true, message: '请输入ID' }],
+      labelCol: { span: 6, offset: 0 },
+      labelAlign: 'left',
+      wGrid: 2,
+      extraProps: {},
+    },
+    {
+      label: '工号',
+      field: 'no',
+      type: 'input',
+      rules: [{ required: true, message: '请输入工号' }],
+      labelCol: { span: 6, offset: 0 },
+      wGrid: 2,
+      labelAlign: 'left',
+      extraProps: {},
+    },
+    {
+      field: 'dump-excel',
+      label: '导出Excel',
+      type: 'button',
+      wGrid: 1,
+      eventName: 'dumpExcel',
+      extraProps: {},
+    },
+    {
+      field: 'dump-pdf',
+      label: '导出PDF',
+      type: 'button',
+      wGrid: 1,
+      eventName: 'dumpPdf',
+      extraProps: {},
+    },
+  ]
+}
+
 export const Tabulator: FC<FusionTabulatorProps> = (props) => {
   const {
     widgetId,
@@ -95,25 +141,42 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
     appMode = 'EDIT',
     onUpdateWidgetProperty,
     configs,
+    filterConfigurations = mockFilterConfigurations,
     ...restProps
   } = props;
   console.log('Tabulator props -> ', props);
+
   const refMain = useRef(null);
   const [isOpenConfigDrawer, setIsOpenConfigDrawer] =
     useRecoilState(openConfigDrawerAtom);
-
-  // const handleDrawerOk = () => {
-  //   setIsOpenConfigDrawer(false);
-  // };
 
   const handleDrawerCancel = () => {
     setIsOpenConfigDrawer(false);
   };
 
+  const handleFilterLayoutChange = useCallback(() => {
+    console.log('layout changed');
+  }, []);
+
+  const handleFilterLayoutSave = useCallback((layout) => {
+    console.log('layout saved', layout);
+  }, []);
+
   return (
     <Container widget-id={widgetId} id={`${TABULATOR_PREFIX}_${widgetId}`}>
       <Main ref={refMain}>
-        <FilterContainer>过滤栏</FilterContainer>
+        {
+          isArray(filterConfigurations?.items) && filterConfigurations.items.length > 0 && (
+            <FilterContainer>
+              <TableFilter
+                appMode={appMode}
+                filterConfigurations={filterConfigurations}
+                onLayoutChange={handleFilterLayoutChange}
+                onLayoutSave={handleFilterLayoutSave}
+              />
+            </FilterContainer>
+          )
+        }
         <TableContainer>
           {renderCompByTableType(tableType, { appMode, ...restProps })}
         </TableContainer>

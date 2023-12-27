@@ -1,8 +1,6 @@
-import {
-  TabulatorReact,
-  ColumnDefinition,
-  TabulatorTableData,
-} from '../src/index';
+import { ColumnDefinition, TabulatorTableData } from '../src/index';
+import { CustomDateEditor } from '../src/tabulator/editors/CustomDateEditor';
+import { CustomInputEditor } from '../src/tabulator/editors/CustomInputEditor';
 
 export const baseTableData: TabulatorTableData[] = [
   { tuid: 1, id: 1, name: 'Oli Bob', age: '12', col: 'red', dob: '' },
@@ -82,7 +80,7 @@ export const autoTableData: TabulatorTableData[] = [
 
 export const colConfigTableData: TabulatorTableData[] = [
   {
-    name: 'any',
+    name: '',
     age: '',
     height: '',
     id: 1,
@@ -100,7 +98,7 @@ export const colConfigTableColumns: ColumnDefinition[] = [
     field: 'name',
     sorter: 'string',
     width: 200,
-    editor: true,
+    editor: CustomInputEditor,
     editableTitle: true,
   },
   {
@@ -137,7 +135,7 @@ export const colConfigTableColumns: ColumnDefinition[] = [
   {
     title: '出生日期',
     field: 'dob',
-    editor: true,
+    editor: CustomDateEditor,
     editableTitle: true,
     hozAlign: 'center',
   },

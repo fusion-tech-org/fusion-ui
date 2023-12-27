@@ -13,3 +13,10 @@ export const ConfigBarContainer = styled.div`
 export const TabulatorConfigContainer = styled.div`
   height: 100%;
 `;
+
+export const FilterOperation = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  font-size: 12px;
+  margin: 0 12px 6px 0;
+`;

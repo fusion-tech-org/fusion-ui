@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
 export const FilterContainer = styled.div`
+  position: relative;
   width: 100%;
+  margin-bottom: 4px;
 `;
 
 export const Footer = styled.div``;

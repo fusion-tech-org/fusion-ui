@@ -183,13 +183,12 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // if (data) {
     //   propOptions.data = data;
     // }
-    console.log('domEle', domEle);
 
     const initTabulatorOptions: Options = {
       height: '100%',
       locale: true,
       pagination: true,
-      // reactiveData: true,
+      reactiveData: true,
       langs: {
         'zh': zhCNLang
       },
@@ -204,7 +203,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     } else {
       initTabulatorOptions.columns = columnDefs;
     }
-    console.log('initTabulatorOptions', initTabulatorOptions);
+
     instanceRef.current = new Tabulator(domEle, initTabulatorOptions);
 
     instanceRef.current.setLocale?.('zh');
@@ -222,11 +221,13 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     })
 
     // props.onRef && props.onRef(instanceRef);
+    onUpdateWidgetMetaProperty?.({
+      tabulatorRef: instanceRef.current,
+    });
   };
 
   useEffect(() => {
     if (isArray(tableData) && tableData.length > 0 && !instanceRef.current) {
-      console.log('init tabulator', tableData.length);
       initTabulator();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
