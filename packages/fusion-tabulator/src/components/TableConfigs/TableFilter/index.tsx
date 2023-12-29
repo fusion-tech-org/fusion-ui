@@ -1,11 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { CSSProperties } from 'react';
 import RGL, { WidthProvider } from 'react-grid-layout';
-import _, { isArray } from 'lodash';
+import _, { get, isArray } from 'lodash';
 import { Button, Form, Space } from '@arco-design/web-react';
 import { FilterOperation } from '../styles';
 import { TableFilterProps, TableFilterState } from './interface';
 import { renderItemByType } from './constants';
+import { IconEdit } from '@arco-design/web-react/icon';
 
 const FormItem = Form.Item;
 
@@ -25,7 +26,7 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
       rowHeight: 32,
       cols: 24,
     },
-    appMode: 'PUBLISHED'
+    appMode: 'PUBLISHED',
   };
 
   constructor(props) {
@@ -43,26 +44,41 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
     return _.map(items, (item) => {
       const { field, type, label, extraProps = {} } = item;
 
-      return (
-        <FormItem
-          key={field}
-          field={field}
-          label={type === 'button' ? null : label}>
-          {renderItemByType(type, label, extraProps)}
-        </FormItem>
-      )
+      switch (type) {
+        case 'button':
+          return (
+            <div key={field} style={{ backgroundColor: '#f6f9f9' }}>
+              {renderItemByType(type, label, extraProps)}
+            </div>
+          );
+        case 'input':
+        case 'select':
+        case 'date':
+        case 'checkbox':
+        case 'radio':
+          return (
+            <FormItem
+              key={field}
+              field={field}
+              label={label}>
+              {renderItemByType(type, label, extraProps)}
+            </FormItem>
+          )
+        default:
+          break;
+      }
     });
   }
 
   genLayout() {
     const { items } = this.props.filterConfigurations;
-
+    console.log(items);
     return _.map(items, function (item, i) {
-      // const y = ;
+      const y = get(item, 'y', 1);
 
       return {
         x: (i * item.wGrid) % 12,
-        y: 1,
+        y: y,
         w: item.wGrid,
         h: 1,
         i: item.field
@@ -70,7 +86,7 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
     });
   }
 
-  onLayoutChange(layout) {
+  onLayoutChange = (layout) => {
     this.props.onLayoutChange(layout);
   }
 
@@ -90,7 +106,8 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
             isResizable={enableEdit}
             allowOverlap={false}
             rowHeight={rowHeight}
-            {...this.props}
+            verticalCompact
+          // {...this.props}
           >
             {this.genDOM()}
           </GridLayout>
@@ -105,7 +122,7 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
                   <Button size='mini' onClick={this.handleCancelEdit}>取消</Button>
 
                 </Space>
-                : <Button type="primary" size='mini' onClick={this.handleStartEdit}>编排</Button>
+                : <Button type="outline" size='mini' onClick={this.handleStartEdit}>编排<IconEdit style={{ marginLeft: 4 }} /></Button>
               }
             </FilterOperation>
           )

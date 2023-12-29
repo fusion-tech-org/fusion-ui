@@ -10,9 +10,9 @@ export type {
   EventCallBackMethods,
 } from 'tabulator-tables';
 
-export type { TabulatorTableData } from './tabulator/TabulatorReact';
+export type { TabulatorTableData } from './tabulator/index';
 
-export { TabulatorReact } from './tabulator/TabulatorReact';
+export { TabulatorReact } from './tabulator/index';
 
 export default function TabulatorWithRecoil(props: FusionTabulatorProps) {
   console.log('all props ', props);

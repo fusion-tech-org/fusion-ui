@@ -8,6 +8,7 @@
     "prev_title": "上一页",
     "next": "下一页",
     "next_title": "下一页",
-    "all": "共"
+    "all": "共",
+    "page_size": "页码"
   }
 }

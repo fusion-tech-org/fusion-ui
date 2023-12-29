@@ -17,7 +17,7 @@ import type {
 import {
   ReactTabulatorProps,
   TabulatorReact,
-} from './tabulator/TabulatorReact';
+} from './tabulator/index';
 import { S2React, S2ReactProps } from './s2/S2React';
 import { TabulatorTableType } from './interface';
 import { TableConfigBar } from 'components/TableConfigs';
@@ -37,8 +37,9 @@ const renderCompByTableType = (
     appMode,
     onUpdateWidgetMetaProperty,
     eventMaps = {},
-    queryInfo,
+    actionId,
     widgetId,
+    enableRemote,
   } = props;
   const { data = [], ...restTabulatorOptions } = tabulatorOptions || {};
 
@@ -54,7 +55,8 @@ const renderCompByTableType = (
           widgetId={widgetId}
           onUpdateWidgetMetaProperty={onUpdateWidgetMetaProperty}
           eventMaps={eventMaps['tabulator']}
-          queryInfo={queryInfo}
+          actionId={actionId}
+          enableRemote={enableRemote}
         />
       );
     default:
@@ -66,7 +68,7 @@ const renderCompByTableType = (
           widgetId={widgetId}
           onUpdateWidgetMetaProperty={onUpdateWidgetMetaProperty}
           eventMaps={eventMaps['tabulator']}
-          queryInfo={queryInfo}
+          actionId={actionId}
         />
       );
   }
@@ -106,6 +108,26 @@ const mockFilterConfigurations: FilterConfigurations = {
       extraProps: {},
     },
     {
+      label: '工号2',
+      field: 'no2',
+      type: 'input',
+      rules: [{ required: true, message: '请输入工号' }],
+      labelCol: { span: 6, offset: 0 },
+      wGrid: 2,
+      labelAlign: 'left',
+      extraProps: {},
+    },
+    {
+      label: 'ID2',
+      field: 'id2',
+      type: 'input',
+      rules: [{ required: true, message: '请输入ID' }],
+      labelCol: { span: 6, offset: 0 },
+      labelAlign: 'left',
+      wGrid: 2,
+      extraProps: {},
+    },
+    {
       label: '工号',
       field: 'no',
       type: 'input',
@@ -119,7 +141,7 @@ const mockFilterConfigurations: FilterConfigurations = {
       field: 'dump-excel',
       label: '导出Excel',
       type: 'button',
-      wGrid: 1,
+      wGrid: 2,
       eventName: 'dumpExcel',
       extraProps: {},
     },
@@ -127,7 +149,7 @@ const mockFilterConfigurations: FilterConfigurations = {
       field: 'dump-pdf',
       label: '导出PDF',
       type: 'button',
-      wGrid: 1,
+      wGrid: 2,
       eventName: 'dumpPdf',
       extraProps: {},
     },
@@ -154,8 +176,8 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
     setIsOpenConfigDrawer(false);
   };
 
-  const handleFilterLayoutChange = useCallback(() => {
-    console.log('layout changed');
+  const handleFilterLayoutChange = useCallback((layout) => {
+    console.log('layout have changed: ', layout);
   }, []);
 
   const handleFilterLayoutSave = useCallback((layout) => {

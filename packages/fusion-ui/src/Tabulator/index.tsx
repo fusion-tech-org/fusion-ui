@@ -168,7 +168,7 @@ export const Tabulator = () => {
   return (
     <div>
       <ReactTabulator
-        onRef={(ref) => (ref = ref)}
+        // onRef={(ref) => (ref = ref)}
         columns={columns}
         data={data}
         events={{
