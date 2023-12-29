@@ -9,7 +9,7 @@ import {
   TableContainer,
 } from 'styles/global-styles';
 import type {
-  FilterConfigurations,
+  filterDefinitions,
   FusionTabulatorProps,
   RenderCompByTypeProps,
   RenderConfigByTypeProps,
@@ -93,7 +93,7 @@ const renderConfigByTableType = (
 
 export const TABULATOR_PREFIX = 'TABULATOR_CONTAINER';
 
-const mockFilterConfigurations: FilterConfigurations = {
+const mockfilterDefinitions: filterDefinitions = {
   initialValues: {},
   rowHeight: 32,
   items: [
@@ -163,7 +163,7 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
     appMode = 'EDIT',
     onUpdateWidgetProperty,
     configs,
-    filterConfigurations = mockFilterConfigurations,
+    filterDefinitions = mockfilterDefinitions,
     ...restProps
   } = props;
   console.log('Tabulator props -> ', props);
@@ -188,11 +188,11 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
     <Container widget-id={widgetId} id={`${TABULATOR_PREFIX}_${widgetId}`}>
       <Main ref={refMain}>
         {
-          isArray(filterConfigurations?.items) && filterConfigurations.items.length > 0 && (
+          isArray(filterDefinitions?.items) && filterDefinitions.items.length > 0 && (
             <FilterContainer>
               <TableFilter
                 appMode={appMode}
-                filterConfigurations={filterConfigurations}
+                filterDefinitions={filterDefinitions}
                 onLayoutChange={handleFilterLayoutChange}
                 onLayoutSave={handleFilterLayoutSave}
               />

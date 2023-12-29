@@ -12,6 +12,7 @@ export const ConfigsContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 18px;
+  flex-shrink: 0;
 `;
 
 export const Main = styled.div`

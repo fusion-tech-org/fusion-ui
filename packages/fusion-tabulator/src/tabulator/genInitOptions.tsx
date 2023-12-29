@@ -3,20 +3,21 @@ import {
   OptionsColumns,
   OptionsData,
   OptionsPagination,
-  OptionsGeneral,
-  OptionsLocale,
+  // OptionsGeneral,
+  // OptionsLocale,
   ColumnDefinition,
 } from 'tabulator-tables';
-import { forEach, isArray } from 'lodash';
+import { isArray } from 'lodash';
 
 import zhCNLang from 'langs/zh-cn.json';
 import { ReactTabulatorProps } from './index';
 
-const genGeneralOptions = (): OptionsGeneral & OptionsLocale => {
+const genGeneralOptions = (): Options => {
   return {
     height: '100%',
     reactiveData: true,
     placeholder: '暂无数据',
+    tabEndNewRow: true, // create empty new row on tab
     locale: true,
     langs: {
       zh: zhCNLang,
@@ -33,6 +34,16 @@ const genColumnDefsOptions = (initColDefs: any[]): OptionsColumns => {
 
   return {
     autoColumns: true,
+    autoColumnsDefinitions: function (definitions) {
+      //definitions - array of column definition objects
+
+      definitions.forEach((column) => {
+        column.editableTitle = true;
+        // column.headerFilter = true; // add header filter to every column
+      });
+
+      return definitions;
+    },
   };
 };
 
@@ -88,19 +99,23 @@ const genStaticDataOptions = (
   staticData: Record<string, any>[],
   columnDefs?: ColumnDefinition[]
 ): OptionsData => {
-  const initEditData = {};
+  console.log('genStaticDataOptions columnDefs:', columnDefs);
+  if (!isArray(staticData) || !staticData?.length) {
+    // const initEditData = {};
 
-  forEach(columnDefs, (item) => {
-    initEditData[item.field] = '';
-  });
+    // forEach(columnDefs, (item) => {
+    //   initEditData[item.field] = '';
+    // });
 
-  if (!isArray(staticData) || !staticData?.length)
-    return {
-      data: [{
-        id: 1,
-        ...initEditData
-      }],
-    };
+    // return {
+    //   data: [{
+    //     id: 1,
+    //     ...initEditData
+    //   }],
+
+    // };
+    return {};
+  }
 
   return {
     data: staticData,

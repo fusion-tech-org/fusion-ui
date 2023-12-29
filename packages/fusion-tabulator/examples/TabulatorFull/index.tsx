@@ -11,7 +11,7 @@ export const TabulatorFull = () => {
   return (
     <div style={{ display: 'flex', padding: '32px' }}>
       <TabulatorWithRecoil appMode="EDIT" widgetId='ss' tableType="tabulator" tabulatorOptions={{
-        // data: colConfigTableData,
+        data: colConfigTableData,
         columns: colConfigTableColumns,
       }} />
     </div>

@@ -21,7 +21,7 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
   static defaultProps: TableFilterProps = {
     onLayoutChange: _.noop,
     className: 'layout',
-    filterConfigurations: {
+    filterDefinitions: {
       items: [],
       rowHeight: 32,
       cols: 24,
@@ -39,7 +39,7 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
   }
 
   genDOM() {
-    const { items } = this.props.filterConfigurations;
+    const { items } = this.props.filterDefinitions;
 
     return _.map(items, (item) => {
       const { field, type, label, extraProps = {} } = item;
@@ -71,7 +71,7 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
   }
 
   genLayout() {
-    const { items } = this.props.filterConfigurations;
+    const { items } = this.props.filterDefinitions;
     console.log(items);
     return _.map(items, function (item, i) {
       const y = get(item, 'y', 1);
@@ -92,8 +92,8 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
 
   render() {
     const { layout, enableEdit } = this.state;
-    const { appMode, filterConfigurations } = this.props;
-    const { rowHeight } = filterConfigurations;
+    const { appMode, filterDefinitions } = this.props;
+    const { rowHeight } = filterDefinitions;
 
     return (
       <div style={appMode === 'EDIT' ? WrapperStyles : {}}>
