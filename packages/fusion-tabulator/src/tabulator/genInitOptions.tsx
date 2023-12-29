@@ -11,6 +11,7 @@ import { isArray } from 'lodash';
 
 import zhCNLang from 'langs/zh-cn.json';
 import { ReactTabulatorProps } from './index';
+import { Message } from '@arco-design/web-react';
 
 const genGeneralOptions = (): Options => {
   return {
@@ -86,10 +87,19 @@ const genAjaxOptions = (
       //params - the parameters passed with the request
       //response - the JSON object returned in the body of the response.
       console.log(response);
+
+      const { data, responseMeta, size, total } = response;
+      const { status, success } = responseMeta || {};
+
+      if (status !== 200 && !success) {
+        Message.error('数据加载异常，请稍后重试！');
+      }
       // return response.data.tags;
+      const { body = [] } = data || {};
+      const lastPage = Math.max(Math.ceil(total / size), 1);
       return {
-        data: response.data.tags,
-        last_page: 3,
+        data: body,
+        last_page: lastPage,
       }; //return the tableData property of a response json object
     },
   };

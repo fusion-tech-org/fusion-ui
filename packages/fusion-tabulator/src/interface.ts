@@ -36,7 +36,7 @@ export type FilterConfigurationItem = {
   eventName?: string;
   extraProps?: Record<string, unknown>;
 };
-export interface filterDefinitions {
+export interface FilterDefinitions {
   initialValues?: Record<string, unknown>;
   items?: FilterConfigurationItem[];
   rowHeight?: number; // unit is the px
@@ -47,7 +47,7 @@ export interface TabulatorProps {
   widgetId: string;
   tableType: TabulatorTableType;
   appMode: PlatformAppMode;
-  filterDefinitions?: filterDefinitions;
+  filterDefinitions?: FilterDefinitions;
   configs?: {
     tabulator?: {
       generalConfigs?: Record<string, unknown>;

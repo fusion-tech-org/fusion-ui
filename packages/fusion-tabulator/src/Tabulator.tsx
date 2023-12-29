@@ -9,7 +9,7 @@ import {
   TableContainer,
 } from 'styles/global-styles';
 import type {
-  filterDefinitions,
+  // FilterDefinitions,
   FusionTabulatorProps,
   RenderCompByTypeProps,
   RenderConfigByTypeProps,
@@ -93,69 +93,6 @@ const renderConfigByTableType = (
 
 export const TABULATOR_PREFIX = 'TABULATOR_CONTAINER';
 
-const mockfilterDefinitions: filterDefinitions = {
-  initialValues: {},
-  rowHeight: 32,
-  items: [
-    {
-      label: 'ID',
-      field: 'id',
-      type: 'input',
-      rules: [{ required: true, message: '请输入ID' }],
-      labelCol: { span: 6, offset: 0 },
-      labelAlign: 'left',
-      wGrid: 2,
-      extraProps: {},
-    },
-    {
-      label: '工号2',
-      field: 'no2',
-      type: 'input',
-      rules: [{ required: true, message: '请输入工号' }],
-      labelCol: { span: 6, offset: 0 },
-      wGrid: 2,
-      labelAlign: 'left',
-      extraProps: {},
-    },
-    {
-      label: 'ID2',
-      field: 'id2',
-      type: 'input',
-      rules: [{ required: true, message: '请输入ID' }],
-      labelCol: { span: 6, offset: 0 },
-      labelAlign: 'left',
-      wGrid: 2,
-      extraProps: {},
-    },
-    {
-      label: '工号',
-      field: 'no',
-      type: 'input',
-      rules: [{ required: true, message: '请输入工号' }],
-      labelCol: { span: 6, offset: 0 },
-      wGrid: 2,
-      labelAlign: 'left',
-      extraProps: {},
-    },
-    {
-      field: 'dump-excel',
-      label: '导出Excel',
-      type: 'button',
-      wGrid: 2,
-      eventName: 'dumpExcel',
-      extraProps: {},
-    },
-    {
-      field: 'dump-pdf',
-      label: '导出PDF',
-      type: 'button',
-      wGrid: 2,
-      eventName: 'dumpPdf',
-      extraProps: {},
-    },
-  ]
-}
-
 export const Tabulator: FC<FusionTabulatorProps> = (props) => {
   const {
     widgetId,
@@ -163,7 +100,7 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
     appMode = 'EDIT',
     onUpdateWidgetProperty,
     configs,
-    filterDefinitions = mockfilterDefinitions,
+    filterDefinitions = {},
     ...restProps
   } = props;
   console.log('Tabulator props -> ', props);
