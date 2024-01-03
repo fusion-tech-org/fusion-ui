@@ -12,6 +12,7 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "esModuleInterop": true,
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
@@ -34,6 +35,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "examples/App.tsx", "src/index.tsx", "examples/main.tsx"],
+  "include": ["src", "examples", "src/index.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
