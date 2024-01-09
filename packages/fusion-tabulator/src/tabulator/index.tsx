@@ -8,18 +8,19 @@ import {
   OptionsColumns,
   EventCallBackMethods,
 } from 'tabulator-tables';
-import { forIn, isArray, isEmpty } from 'lodash';
+import { forIn, isArray, isEmpty, isUndefined } from 'lodash';
 
 // import { pickHTMLProps } from 'pick-react-known-prop';
 // import { propsToOptions } from 'utils/ConfigUtils';
 import './index.css';
 import { genTabulatorUUID } from 'utils/index';
 import { PlatformAppMode } from 'src/interface';
-import { genInitOptions } from './genInitOptions';
+import { genAjaxOptions, genInitOptions } from './genInitOptions';
 import { genInitEventMaps } from './genInitEventMaps';
+import { Empty } from '@arco-design/web-react';
 
 export interface TabulatorTableData {
-  tuid: string | number;
+  tuid?: string | number;
   [key: string]: any;
 }
 
@@ -112,51 +113,75 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     });
   }
 
-  useEffect(() => {
-    if (
-      (isArray(tableData) && tableData.length > 0) || // loads static data
-      !isEmpty(actionId) || // lodas data from ajax request
-      (isArray(columnDefs) && columnDefs.length > 0) // add data from scratch
-      && !instanceRef.current) {
-      console.log('To init Tabulator...');
-      initTabulator();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   if (
+  //     (isArray(tableData) && tableData.length > 0) || // loads static data
+  //     !isEmpty(actionId) || // lodas data from ajax request
+  //     (isArray(columnDefs) && columnDefs.length > 0) // add data from scratch
+  //     && !instanceRef.current) {
+  //     console.log('To init Tabulator...');
+  //     initTabulator();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   useEffect(() => {
-    if (actionId && instanceRef.current) {
-      console.log(actionId);
-      // instanceRef.current.setData
+    if (actionId) {
+      if (instanceRef.current) {
+        instanceRef.current.destroy();
+      }
+      initTabulator();
     }
-  }, [actionId])
+  }, [actionId]);
+
+  // reset table data
+  useEffect(() => {
+    if (!instanceRef.current && tableData?.length > 0) {
+      initTabulator();
+    }
+
+    if (instanceRef.current && !isUndefined(tableData)) {
+      // instanceRef.current.destroy()
+      // instanceRef.current = null;
+      // console.log('invoked by data changed');
+      // initTabulator(); // re-init table
+      console.log('tableData have changed: ', tableData);
+      instanceRef.current.setData(tableData);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(tableData)]);
 
   // reset table column definitions
   useEffect(() => {
-    if (instanceRef.current) {
-      console.log('columnDefs have changed: ', columnDefs);
+    if (!instanceRef.current && columnDefs?.length > 0) {
+      console.log('init tabulator due to column definions');
+      initTabulator();
+    }
+  }, []);
+
+  useEffect(() => {
+    const curColumnDefs = instanceRef.current?.getColumnDefinitions();
+    console.log('curColumnDefs', curColumnDefs);
+    if (!!instanceRef.current && JSON.stringify(curColumnDefs) !== JSON.stringify(columnDefs)) {
+      console.log('columnDefs have changed: ');
       // instanceRef.current.setColumns(columnDefs);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(columnDefs)]);
 
-  // reset table data
-  useEffect(() => {
-    if (instanceRef.current) {
-      // instanceRef.current.destroy()
-      // instanceRef.current = null;
-      // console.log('invoked by data changed');
-      // initTabulator(); // re-init table
-      // instanceRef.current.setData(tableData);
-      console.log('tableData have changed: ', tableData);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(tableData)]);
+
+  if (isEmpty(tableData) && !actionId && isEmpty(columnDefs)) {
+    return <div style={{
+      width: '100%',
+      paddingTop: 48
+    }}>
+      <Empty description={!instanceRef.current && appMode === 'EDIT' ? '暂无数据，请先在右侧属性配置栏选择数据源' : '暂无数据'} />
+    </div>
+  }
 
   return (
     <div ref={wrapperRef}
       style={{
-        width: '100%',
         height: '100%',
       }}
       data-instance={mainId}

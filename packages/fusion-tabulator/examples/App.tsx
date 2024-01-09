@@ -9,7 +9,11 @@ import { IconHome, IconCalendar } from '@arco-design/web-react/icon';
 
 import { TabulatorExamples } from './tabulator/index';
 import { TabulatorFull } from './TabulatorFull/index';
+import { TabulatorEmpty } from './TabulatorEmpty/index';
 import { MonacoEditor } from './MonacoEditor/index';
+import { ProxyPattern } from "./ProxyPattern";
+import { CustomSelect } from "./CustomSelect";
+import { TabulatorSelect } from "./TabulatorSelect";
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -18,18 +22,22 @@ const Content = Layout.Content;
 const collapsedWidth = 60;
 const normalWidth = 220;
 
-type MenuItemKeys = 'monaco-editor' | 'tabulator-full' | 'tabulator';
+type MenuItemKeys = 'tabulator-select' | 'monaco-editor' | 'tabulator-full' | 'tabulator' | 'proxy-pattern' | 'custom-select' | 'tabulator-empty';
 
 const menuKeyMapComp = {
+  'custom-select': <CustomSelect />,
   'monaco-editor': <MonacoEditor />,
   'tabulator-full': <TabulatorFull />,
+  'tabulator-select': <TabulatorSelect />,
+  'tabulator-empty': <TabulatorEmpty />,
+  'proxy-pattern': <ProxyPattern />,
   tabulator: <TabulatorExamples />,
 }
 
 function App() {
   const [collapsed, setCollapsed] = useState(false);
   const [siderWidth, setSiderWidth] = useState(normalWidth);
-  const [activeMenuKey, setActiveMenuKey] = useState<MenuItemKeys>('monaco-editor');
+  const [activeMenuKey, setActiveMenuKey] = useState<MenuItemKeys>('tabulator-select');
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);
@@ -76,6 +84,22 @@ function App() {
           }}
         >
           <Menu theme='dark' autoOpen style={{ width: '100%' }} onClickMenuItem={handleClickMenuItem}>
+            <MenuItem key='tabulator-select'>
+              <IconCalendar />
+              tabulator-select
+            </MenuItem>
+            <MenuItem key='custom-select'>
+              <IconCalendar />
+              custom-select
+            </MenuItem>
+            <MenuItem key='proxy-pattern'>
+              <IconCalendar />
+              Proxy Pattern
+            </MenuItem>
+            <MenuItem key='tabulator-full'>
+              <IconCalendar />
+              Tabulator 完整实例
+            </MenuItem>
             <MenuItem key='monaco-editor'>
               <IconCalendar />
               Monaco Editor示例
@@ -84,9 +108,9 @@ function App() {
               <IconHome />
               Tabulator 简单示例
             </MenuItem>
-            <MenuItem key='tabulator-full'>
+            <MenuItem key='tabulator-empty'>
               <IconCalendar />
-              Tabulator 完整实例
+              Tabulator Empty
             </MenuItem>
             <SubMenu
               key='layout'

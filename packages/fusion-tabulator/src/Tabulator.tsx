@@ -122,7 +122,7 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
   }, []);
 
   return (
-    <Container widget-id={widgetId} id={`${TABULATOR_PREFIX}_${widgetId}`}>
+    <Container widget-id={widgetId} id={`${TABULATOR_PREFIX}_${widgetId}`} appMode={appMode}>
       <Main ref={refMain}>
         {
           isArray(filterDefinitions?.items) && filterDefinitions.items.length > 0 && (

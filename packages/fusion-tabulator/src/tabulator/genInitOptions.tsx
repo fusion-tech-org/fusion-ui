@@ -16,17 +16,28 @@ import { Message } from '@arco-design/web-react';
 const genGeneralOptions = (): Options => {
   return {
     height: '100%',
+    maxHeight: "100%",
     reactiveData: true,
     placeholder: '暂无数据',
     tabEndNewRow: true, // create empty new row on tab
     locale: true,
+    selectable: true,
+    selectableRollingSelection: false, // disable rolling selection
+    renderHorizontal: "virtual",
     langs: {
       zh: zhCNLang,
     },
+    dataLoaderLoading: `
+      <div style='display:inline-block; border:4px solid #333; border-radius:10px; background:#fff; font-weight:bold; font-size:16px; color:#000; padding:10px 20px;'>
+        数据加载中...
+      </div>
+    `,
+    dataLoaderError: '',
+    dataLoaderErrorTimeout: 1,
   };
 };
 
-const genColumnDefsOptions = (initColDefs: any[]): OptionsColumns => {
+const genColumnDefsOptions = (initColDefs: ColumnDefinition[]): OptionsColumns => {
   if (isArray(initColDefs) && initColDefs.length > 0) {
     return {
       columns: initColDefs,
@@ -48,11 +59,12 @@ const genColumnDefsOptions = (initColDefs: any[]): OptionsColumns => {
   };
 };
 
-const genAjaxOptions = (
+export const genAjaxOptions = (
   actionId: string,
   enableRemote: boolean
 ): OptionsData => {
   if (!actionId) return {};
+
   console.log(enableRemote, 'enableRemote');
   return {
     ajaxURL: '/api/v1/actions/execute',
@@ -97,6 +109,7 @@ const genAjaxOptions = (
       // return response.data.tags;
       const { body = [] } = data || {};
       const lastPage = Math.max(Math.ceil(total / size), 1);
+
       return {
         data: body,
         last_page: lastPage,
@@ -106,7 +119,7 @@ const genAjaxOptions = (
 };
 
 const genStaticDataOptions = (
-  staticData: Record<string, any>[],
+  staticData: Record<string, unknown>[],
   columnDefs?: ColumnDefinition[]
 ): OptionsData => {
   console.log('genStaticDataOptions columnDefs:', columnDefs);
@@ -145,7 +158,7 @@ export const genInitOptions = (
   tabulatorProps: ReactTabulatorProps,
 ): Options => {
   const {
-    layout = 'fitColumns',
+    // layout = "fitColumns",
     data: tableData,
     actionId,
     columns: columnDefs,
@@ -163,7 +176,7 @@ export const genInitOptions = (
     ...ajaxOptions,
     ...staticDataOptions,
     ...paginationOptions,
-    layout, // fit columns to width of table (optional)
+    // layout, // fit columns to width of table (optional)
     // ...options // props.options are passed to Tabulator's options.
   } as Options;
 };

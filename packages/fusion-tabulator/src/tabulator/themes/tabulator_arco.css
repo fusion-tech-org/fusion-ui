@@ -537,12 +537,12 @@ body {
 }
 
 .tabulator-row.tabulator-selected {
-  background-color: #9ABCEA;
+  background-color: #C3E7FE;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .tabulator-row.tabulator-selected:hover {
-    background-color: #769BCC;
+    background-color: #9FD4FD;
     cursor: pointer;
   }
 }
@@ -1378,7 +1378,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 }
 
 .tabulator.table .tabulator-row.tabulator-selected {
-  background-color: #9ABCEA;
+  background-color: #C3E7FE;
 }
 
 .tabulator.table .tabulator-footer {
@@ -1401,7 +1401,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 }
 
 .tabulator.table-striped:not(.table) .tabulator-row.tabulator-row-even.tabulator-selected {
-  background-color: #9ABCEA;
+  background-color: #C3E7FE;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1410,7 +1410,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
     cursor: pointer;
   }
   .tabulator.table-striped:not(.table) .tabulator-row.tabulator-row-even.tabulator-selected:hover {
-    background-color: #769BCC;
+    background-color: #9FD4FD;
     cursor: pointer;
   }
 }

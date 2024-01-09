@@ -9,10 +9,11 @@ export const FilterContainer = styled.div`
 export const Footer = styled.div``;
 
 export const ConfigsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 18px;
-  flex-shrink: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 32px;
+  min-width: 32px;
 `;
 
 export const Main = styled.div`
@@ -32,11 +33,11 @@ export const TableContainer = styled.div`
 
 export const Container = styled.div<{
   'widget-id': string;
+  appMode: string;
 }>`
-  display: flex;
-  flex-direction: row;
+  position: relative;
   width: 100%;
   height: 100%;
-  padding: 12px;
+  padding-right: ${({ appMode }) => (appMode === 'EDIT' ? '40px' : 0)};
   background-color: #fff;
 `;
