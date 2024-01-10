@@ -199,7 +199,7 @@ export const genInitOptions = (
   tabulatorProps: ReactTabulatorProps,
 ): Options => {
   const {
-    // layout = "fitColumns",
+    layout = "fitColumns",
     data: tableData,
     actionId,
     columns: columnDefs,
@@ -221,7 +221,7 @@ export const genInitOptions = (
     ...ajaxOptions,
     ...staticDataOptions,
     ...paginationOptions,
-    // layout, // fit columns to width of table (optional)
+    layout, // fit columns to width of table (optional)
     // ...options // props.options are passed to Tabulator's options.
   } as Options;
 };
