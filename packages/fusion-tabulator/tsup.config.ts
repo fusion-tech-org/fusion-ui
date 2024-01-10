@@ -19,7 +19,7 @@ export default defineConfig({
   outDir: 'lib',
   minify: 'terser',
   onSuccess: handleBuildSuccess,
-  external: ['react', 'react-dom'],
+  external: ['react', 'react-dom', 'lodash'],
   platform: 'browser',
   format: 'esm',
   dts: true,

@@ -9,7 +9,6 @@ export const TabulatorEditable = () => {
 
   return (
     <div style={{ display: 'flex', padding: '32px', height: '200px' }}>
-
       <TabulatorWithRecoil appMode="EDIT" widgetId='ss33' tableType="tabulator" tabulatorOptions={{
         columns: editableColDefs,
         data: colConfigTableData

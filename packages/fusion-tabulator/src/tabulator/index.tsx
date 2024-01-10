@@ -19,7 +19,7 @@ import { genInitOptions } from './genInitOptions';
 import { genInitEventMaps } from './genInitEventMaps';
 import { Empty } from '@arco-design/web-react';
 import { ExternalInputContainer } from './styles';
-import { CustomSelect } from '../../examples/CustomSelect';
+import { CustomSelect } from './components/CustomSelect';
 // import { ROW_HEIGHT } from './constants';
 
 export interface TabulatorTableData {

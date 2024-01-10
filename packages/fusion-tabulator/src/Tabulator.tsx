@@ -104,8 +104,9 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
     appMode = 'EDIT',
     tableMode = 'normal',
     onUpdateWidgetProperty,
+    onUpdateWidgetMetaProperty,
     configs,
-    filterDefinitions = {},
+    filterDefinitions,
     ...restProps
   } = props;
   console.log('Tabulator props -> ', props);
@@ -126,6 +127,13 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
     console.log('layout saved', layout);
   }, []);
 
+  const handleFieldValuesChange = (fieldValues: any) => {
+    console.log('fieldValues have changed: ', fieldValues);
+    onUpdateWidgetMetaProperty({
+      filterData: fieldValues,
+    });
+  }
+
   return (
     <Container widget-id={widgetId} id={`${TABULATOR_PREFIX}_${widgetId}`} appMode={appMode}>
       <Main ref={refMain}>
@@ -136,13 +144,14 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
                 appMode={appMode}
                 filterDefinitions={filterDefinitions}
                 onLayoutChange={handleFilterLayoutChange}
+                onFieldValuesChange={handleFieldValuesChange}
                 onLayoutSave={handleFilterLayoutSave}
               />
             </FilterContainer>
           )
         }
         <TableContainer>
-          {renderCompByTableType(tableType, { tableMode, appMode, ...restProps })}
+          {renderCompByTableType(tableType, { onUpdateWidgetMetaProperty, tableMode, appMode, ...restProps })}
         </TableContainer>
         {/* <Footer>
             footer

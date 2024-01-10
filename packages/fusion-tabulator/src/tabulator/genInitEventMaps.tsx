@@ -55,7 +55,7 @@ export function genInitEventMaps({
   function handleDataChanged(data: any[]) {
     console.log('data changed: ', data);
     onUpdateWidgetMetaProperty?.({
-      curTableData: data,
+      updatingRows: data,
     });
   }
 

@@ -93,11 +93,9 @@ export const colConfigTableData: TabulatorTableData[] = [
 ];
 
 export const editableColDefs: ColumnDefinition[] = [
-
   {
     title: '姓名',
     field: 'name',
-    sorter: 'string',
     width: 200,
     editor: true,
     editableTitle: true,

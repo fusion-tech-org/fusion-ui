@@ -2,11 +2,11 @@
 import React, { CSSProperties } from 'react';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import _, { get, isArray } from 'lodash';
-import { Button, Form, Space } from '@arco-design/web-react';
-import { FilterOperation } from '../styles';
+import { Form } from '@arco-design/web-react';
+// import { FilterOperation } from '../styles';
 import { TableFilterProps, TableFilterState } from './interface';
 import { renderItemByType } from './constants';
-import { IconEdit } from '@arco-design/web-react/icon';
+// import { IconEdit } from '@arco-design/web-react/icon';
 
 const FormItem = Form.Item;
 
@@ -21,11 +21,7 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
   static defaultProps: TableFilterProps = {
     onLayoutChange: _.noop,
     className: 'layout',
-    filterDefinitions: {
-      items: [],
-      rowHeight: 32,
-      cols: 24,
-    },
+    filterDefinitions: {},
     appMode: 'PUBLISHED',
   };
 
@@ -39,7 +35,7 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
   }
 
   genDOM() {
-    const { items } = this.props.filterDefinitions;
+    const { items } = this.props.filterDefinitions || {};
 
     return _.map(items, (item) => {
       const { field, type, label, extraProps = {} } = item;
@@ -71,9 +67,9 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
   }
 
   genLayout() {
-    const { items } = this.props.filterDefinitions;
+    const { items = [] } = this.props.filterDefinitions || {};
     console.log(items);
-    return _.map(items, function (item, i) {
+    return _.map(items, function (item, i: number) {
       const y = get(item, 'y', 1);
 
       return {
@@ -92,12 +88,12 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
 
   render() {
     const { layout, enableEdit } = this.state;
-    const { appMode, filterDefinitions } = this.props;
-    const { rowHeight } = filterDefinitions;
+    const { appMode, filterDefinitions, onFieldValuesChange } = this.props;
+    const { rowHeight = 32 } = filterDefinitions;
 
     return (
       <div style={appMode === 'EDIT' ? WrapperStyles : {}}>
-        <Form>
+        <Form onValuesChange={onFieldValuesChange}>
           <GridLayout
             layout={layout}
             onLayoutChange={this.onLayoutChange}
@@ -105,6 +101,7 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
             isDraggable={enableEdit}
             isResizable={enableEdit}
             allowOverlap={false}
+            cols={24}
             rowHeight={rowHeight}
             verticalCompact
           // {...this.props}
@@ -112,7 +109,7 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
             {this.genDOM()}
           </GridLayout>
         </Form>
-        {
+        {/* {
           appMode === 'EDIT' && (
             <FilterOperation>
               {enableEdit
@@ -126,7 +123,7 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
               }
             </FilterOperation>
           )
-        }
+        } */}
       </div>
     )
   }
