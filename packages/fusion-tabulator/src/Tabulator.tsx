@@ -40,6 +40,7 @@ const renderCompByTableType = (
     actionId,
     widgetId,
     enableRemote,
+    tableMode,
   } = props;
   const { data = [], ...restTabulatorOptions } = tabulatorOptions || {};
 
@@ -56,6 +57,7 @@ const renderCompByTableType = (
           onUpdateWidgetMetaProperty={onUpdateWidgetMetaProperty}
           eventMaps={eventMaps['tabulator']}
           actionId={actionId}
+          tableMode={tableMode}
           enableRemote={enableRemote}
         />
       );
@@ -64,6 +66,8 @@ const renderCompByTableType = (
         <TabulatorReact
           {...(tabulatorOptions as ReactTabulatorProps)}
           appMode={appMode}
+          tableMode={tableMode}
+          enableRemote={enableRemote}
           data={[...data]}
           widgetId={widgetId}
           onUpdateWidgetMetaProperty={onUpdateWidgetMetaProperty}
@@ -98,6 +102,7 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
     widgetId,
     tableType = 'tabulator',
     appMode = 'EDIT',
+    tableMode = 'normal',
     onUpdateWidgetProperty,
     configs,
     filterDefinitions = {},
@@ -137,7 +142,7 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
           )
         }
         <TableContainer>
-          {renderCompByTableType(tableType, { appMode, ...restProps })}
+          {renderCompByTableType(tableType, { tableMode, appMode, ...restProps })}
         </TableContainer>
         {/* <Footer>
             footer

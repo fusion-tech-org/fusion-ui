@@ -22,10 +22,10 @@ const genGeneralOptions = (): Options => {
     height: '100%',
     maxHeight: "100%",
     reactiveData: true,
-    placeholder: '暂无数据',
+    placeholder: null,
     tabEndNewRow: true, // create empty new row on tab
     locale: true,
-    selectable: true,
+    selectable: false,
     selectableRollingSelection: false, // disable rolling selection
     renderHorizontal: "virtual",
     langs: {
@@ -37,40 +37,39 @@ const genGeneralOptions = (): Options => {
       </div>
     `,
     dataLoaderError: '',
-    dataLoaderErrorTimeout: 1,
+    dataLoaderErrorTimeout: 0,
   };
 };
 
 function customEditorAndFormatterPipe(tempColDefs: ColumnDefinition[]): ColumnDefinition[] {
   return map(tempColDefs, item => {
-   const { editor, formatter, ...rest } = item;
+    const { editor, formatter, ...rest } = item;
 
-   const pendingItem: {
-    editor?: Editor;
-    formatter?: Formatter;
-   } = {
-    editor,
-    formatter
-   };
+    const pendingItem: {
+      editor?: Editor;
+      formatter?: Formatter;
+    } = {
+      editor,
+      formatter
+    };
 
-   if (isString(editor) && checkIsCustomEditor(editor)) {
-    pendingItem.editor = CUSTOM_EDITOR_MAP[editor];
-   }
+    if (isString(editor) && checkIsCustomEditor(editor)) {
+      pendingItem.editor = CUSTOM_EDITOR_MAP[editor];
+    }
 
-   if (isString(formatter) && checkIsCustomFormatter(formatter)) {
-    pendingItem.formatter = CUSTOM_FORMATTER_MAP[formatter]
-   }
+    if (isString(formatter) && checkIsCustomFormatter(formatter)) {
+      pendingItem.formatter = CUSTOM_FORMATTER_MAP[formatter]
+    }
 
     return {
-    ...pendingItem,
-    ...rest
+      ...pendingItem,
+      ...rest
     }
   })
 }
 
 const genColumnDefsOptions = (initColDefs: ColumnDefinition[]): OptionsColumns => {
   if (isArray(initColDefs) && initColDefs.length > 0) {
-    console.log('>>>', customEditorAndFormatterPipe(initColDefs));
     return {
       columns: customEditorAndFormatterPipe(initColDefs),
     };
@@ -152,10 +151,11 @@ export const genAjaxOptions = (
 
 const genStaticDataOptions = (
   staticData: Record<string, unknown>[],
-  columnDefs?: ColumnDefinition[]
+  columnDefs?: ColumnDefinition[],
+  tableMode?: TableMode
 ): OptionsData => {
   console.log('genStaticDataOptions columnDefs:', columnDefs);
-  if (!isArray(staticData) || !staticData?.length) {
+  if (!isArray(staticData) || !staticData?.length || tableMode === 'editable') {
     // const initEditData = {};
 
     // forEach(columnDefs, (item) => {
@@ -209,7 +209,7 @@ export const genInitOptions = (
   const generalOptions = genGeneralOptions();
   const columnDefsOptions = genColumnDefsOptions(columnDefs);
   const ajaxOptions = genAjaxOptions(actionId, enableRemote);
-  const staticDataOptions = genStaticDataOptions(tableData, columnDefs);
+  const staticDataOptions = genStaticDataOptions(tableData, columnDefs, tableMode);
   const paginationOptions = genPaginationOptions({
     enableRemote,
     tableMode

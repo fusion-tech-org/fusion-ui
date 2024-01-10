@@ -1,6 +1,6 @@
 import type { ColProps, RulesProps } from '@arco-design/web-react';
 import { S2ReactProps } from './s2/S2React';
-import { ReactTabulatorProps } from './tabulator/index';
+import { ReactTabulatorProps, TableMode } from './tabulator/index';
 
 export type TabulatorTableType = 'tabulator' | 's2';
 
@@ -18,6 +18,7 @@ export type RenderCompByTypeProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tabulator?: Record<string, any>;
   };
+  tableMode?: TableMode;
 };
 
 export type RenderConfigByTypeProps = {
@@ -68,6 +69,7 @@ export interface TabulatorProps {
   onUpdateWidgetProperty?: (params: Record<string, unknown>) => void;
   actionId?: string;
   enableRemote?: boolean;
+  tableMode?: TableMode;
 }
 
 export type FusionTabulatorProps = RenderCompByTypeProps & TabulatorProps;

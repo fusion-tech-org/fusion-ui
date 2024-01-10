@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import * as ReactDOM from 'react-dom';
 import {
   TabulatorFull as Tabulator,
@@ -18,6 +18,9 @@ import { PlatformAppMode } from 'src/interface';
 import { genAjaxOptions, genInitOptions } from './genInitOptions';
 import { genInitEventMaps } from './genInitEventMaps';
 import { Empty } from '@arco-design/web-react';
+import { ExternalInputContainer } from './styles';
+import { CustomSelect } from '../../examples/CustomSelect';
+// import { ROW_HEIGHT } from './constants';
 
 export interface TabulatorTableData {
   tuid?: string | number;
@@ -64,6 +67,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     onUpdateWidgetMetaProperty,
     // onUpdateWidgetProperty,
     actionId,
+    tableMode = 'editable'
     // enableRemote = false,
   } = props;
   console.log('TabulatorReact -> ', props);
@@ -78,9 +82,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   //   styleConfigs,
   //   advancedConfigs,
   // } = configs;
-  const wrapperRef = useRef();
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const instanceRef = useRef<Tabulator>();
   const [mainId] = useState(genTabulatorUUID());
+  const [inputTop, setInputTop] = useState(52);
 
   const initTabulator = async () => {
     // mounted DOM element
@@ -171,6 +176,45 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(columnDefs)]);
 
+  const renderExtraInput = () => {
+    if (tableMode !== 'editable') return null;
+    let isOverHeigth = false;
+    const ROW_HEIGHT = 49;
+
+    function handleSelectRowData(record) {
+      console.log('handleSelectRowData: ', record);
+      const {
+        key: _key,
+        ...rest
+      } = record || {};
+      instanceRef.current.addRow(rest)
+        .then(() => {
+          const top = inputTop + ROW_HEIGHT;
+          const tableHeight = wrapperRef.current.getBoundingClientRect().height;
+          console.log('tableHeight', tableHeight);
+
+          if (top < tableHeight - ROW_HEIGHT) {
+            setInputTop(top);
+            return;
+          }
+
+          if (!isOverHeigth) {
+            const tableEle = document.querySelector(`#${mainId} .tabulator-table`);
+
+            tableEle.setAttribute('style', `padding-bottom: ${ROW_HEIGHT}px`);
+          }
+
+          isOverHeigth = true;
+        }).catch(err => {
+          console.log(err);
+        });
+    }
+
+    return <ExternalInputContainer top={inputTop}>
+      <CustomSelect onSelectRowData={handleSelectRowData} />
+    </ExternalInputContainer>
+  };
+
 
   if (isEmpty(tableData) && !actionId && isEmpty(columnDefs)) {
     return <div style={{
@@ -182,12 +226,20 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   }
 
   return (
-    <div ref={wrapperRef}
-      style={{
-        height: '100%',
-      }}
-      data-instance={mainId}
-      className={classNames}
-    />
+    <div style={{
+      position: 'relative',
+      height: '100%'
+    }}>
+      <div ref={wrapperRef}
+        style={{
+          height: '100%',
+        }}
+        id={mainId}
+        data-instance={mainId}
+        className={classNames}
+      />
+      {renderExtraInput()}
+    </div>
+
   );
 };

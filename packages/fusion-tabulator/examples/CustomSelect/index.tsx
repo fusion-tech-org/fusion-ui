@@ -4,7 +4,8 @@ import { Button, Table, Dropdown, Input, Select, Form, FormInstance } from '@arc
 const FormItem = Form.Item;
 const EditableContext = React.createContext<{ getForm?: () => FormInstance }>({});
 
-export const CustomSelect = () => {
+export const CustomSelect = (props) => {
+  const { onSelectRowData } = props
   const [popupVisible, setPopupVisble] = useState(false);
   const handleVisibleChange = (visible: boolean) => {
     console.log('visible', visible);
@@ -14,11 +15,17 @@ export const CustomSelect = () => {
     setPopupVisble(true);
   }
 
+  const handleSelectedRow = (record) => {
+    onSelectRowData?.(record)
+    setPopupVisble(false)
+  }
+
+
   return (
     <div>
       <Dropdown popupVisible={popupVisible} trigger="focus" onVisibleChange={handleVisibleChange} droplist={
         <div>
-          <EditableTable />
+          <EditableTable onSelectedRow={handleSelectedRow} />
         </div>
       }>
         <Input onFocus={handleInputFocus} />
@@ -74,6 +81,7 @@ function EditableCell(props) {
   useEffect(() => {
     editing && refInput.current && refInput.current.focus();
   }, [editing]);
+
   useEffect(() => {
     document.addEventListener('click', handleClick, true);
     return () => {
@@ -134,63 +142,64 @@ function EditableCell(props) {
   );
 }
 
-function EditableTable() {
+function EditableTable(props) {
+  const { onSelectedRow } = props;
   const [count, setCount] = useState(5);
   const [data, setData] = useState([
     {
       key: '1',
       name: 'Jane Doe',
-      salary: 23000,
-      address: '32 Park Road, London',
-      email: 'jane.doe@example.com',
+      age: 23000,
+      gender: '32 Park Road, London',
+      height: 'jane.doe@example.com',
     },
     {
       key: '2',
       name: 'Alisa Ross',
-      salary: 25000,
-      address: '35 Park Road, London',
-      email: 'alisa.ross@example.com',
+      age: 25000,
+      gender: '35 Park Road, London',
+      height: 'alisa.ross@example.com',
     },
     {
       key: '3',
       name: 'Kevin Sandra',
-      salary: 22000,
-      address: '31 Park Road, London',
-      email: 'kevin.sandra@example.com',
+      age: 22000,
+      gender: '31 Park Road, London',
+      height: 'kevin.sandra@example.com',
     },
     {
       key: '4',
       name: 'Ed Hellen',
-      salary: 17000,
-      address: '42 Park Road, London',
-      email: 'ed.hellen@example.com',
+      age: 17000,
+      gender: '42 Park Road, London',
+      height: 'ed.hellen@example.com',
     },
     {
       key: '5',
       name: 'William Smith',
-      salary: 27000,
-      address: '62 Park Road, London',
-      email: 'william.smith@example.com',
+      age: 27000,
+      gender: '62 Park Road, London',
+      height: 'william.smith@example.com',
     },
   ]);
   const columns = [
     {
-      title: 'Name',
+      title: '姓名',
       dataIndex: 'name',
       editable: true,
     },
     {
-      title: 'Salary',
-      dataIndex: 'salary',
+      title: '年龄',
+      dataIndex: 'age',
       editable: true,
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
+      title: '性别',
+      dataIndex: 'gender',
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
+      title: '身高',
+      dataIndex: 'height',
     },
     {
       title: 'Operation',
@@ -220,42 +229,43 @@ function EditableTable() {
       data.concat({
         key: `${count + 1}`,
         name: 'Tom',
-        salary: 10000,
-        address: '33 Park Road, London',
-        email: 'tom@example.com',
+        age: 10000,
+        gender: '33 Park Road, London',
+        height: 'tom@example.com',
       })
     );
   }
 
+  function handleRowEvent(record, _index) {
+    return {
+      onClick: () => {
+        console.log(record);
+        onSelectedRow?.(record)
+      }
+    }
+  }
+
   return (
-    <>
-      <Button
-        style={{ marginBottom: 10, }}
-        type='primary'
-        onClick={addRow}
-      >
-        Add
-      </Button>
-      <Table
-        data={data}
-        components={{
-          body: {
-            row: EditableRow,
-            cell: EditableCell,
-          },
-        }}
-        columns={columns.map((column) =>
-          column.editable
-            ? {
-              ...column,
-              onCell: () => ({
-                onHandleSave: handleSave,
-              }),
-            }
-            : column
-        )}
-        className='table-demo-editable-cell'
-      />
-    </>
+    <Table
+      data={data}
+      components={{
+        body: {
+          row: EditableRow,
+          cell: EditableCell,
+        },
+      }}
+      onRow={handleRowEvent}
+      columns={columns.map((column) =>
+        column.editable
+          ? {
+            ...column,
+            onCell: () => ({
+              onHandleSave: handleSave,
+            }),
+          }
+          : column
+      )}
+      className='table-demo-editable-cell'
+    />
   );
 }

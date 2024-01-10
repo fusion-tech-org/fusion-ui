@@ -39,7 +39,7 @@ const initData = [
 
 export const TabulatorSelect = () => {
   return (
-    <div style={{ padding: '32px' }}>
+    <div style={{ padding: '32px', height: '160px' }}>
       <TabulatorWithRecoil appMode="EDIT" widgetId='ss' tableType="tabulator" tabulatorOptions={{
         data: initData
       }} />
