@@ -14,6 +14,7 @@ import { MonacoEditor } from './MonacoEditor/index';
 import { ProxyPattern } from "./ProxyPattern";
 import { CustomSelect } from "./CustomSelect";
 import { TabulatorSelect } from "./TabulatorSelect";
+import { TabulatorEditable } from "./TabulatorEditable";
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -22,9 +23,10 @@ const Content = Layout.Content;
 const collapsedWidth = 60;
 const normalWidth = 220;
 
-type MenuItemKeys = 'tabulator-select' | 'monaco-editor' | 'tabulator-full' | 'tabulator' | 'proxy-pattern' | 'custom-select' | 'tabulator-empty';
+type MenuItemKeys = 'tabulator-editable' | 'tabulator-select' | 'monaco-editor' | 'tabulator-full' | 'tabulator' | 'proxy-pattern' | 'custom-select' | 'tabulator-empty';
 
 const menuKeyMapComp = {
+  'tabulator-editable': <TabulatorEditable />,
   'custom-select': <CustomSelect />,
   'monaco-editor': <MonacoEditor />,
   'tabulator-full': <TabulatorFull />,
@@ -37,7 +39,7 @@ const menuKeyMapComp = {
 function App() {
   const [collapsed, setCollapsed] = useState(false);
   const [siderWidth, setSiderWidth] = useState(normalWidth);
-  const [activeMenuKey, setActiveMenuKey] = useState<MenuItemKeys>('tabulator-select');
+  const [activeMenuKey, setActiveMenuKey] = useState<MenuItemKeys>('tabulator-editable');
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);

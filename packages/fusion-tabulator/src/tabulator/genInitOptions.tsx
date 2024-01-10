@@ -6,12 +6,16 @@ import {
   // OptionsGeneral,
   // OptionsLocale,
   ColumnDefinition,
+  Editor,
+  Formatter,
 } from 'tabulator-tables';
-import { isArray } from 'lodash';
+import { isArray, isString, map } from 'lodash';
 
 import zhCNLang from 'langs/zh-cn.json';
-import { ReactTabulatorProps } from './index';
+import { ReactTabulatorProps, TableMode } from './index';
 import { Message } from '@arco-design/web-react';
+import { CUSTOM_EDITOR_MAP, checkIsCustomEditor } from './editors';
+import { CUSTOM_FORMATTER_MAP, checkIsCustomFormatter } from './formatters';
 
 const genGeneralOptions = (): Options => {
   return {
@@ -37,10 +41,38 @@ const genGeneralOptions = (): Options => {
   };
 };
 
+function customEditorAndFormatterPipe(tempColDefs: ColumnDefinition[]): ColumnDefinition[] {
+  return map(tempColDefs, item => {
+   const { editor, formatter, ...rest } = item;
+
+   const pendingItem: {
+    editor?: Editor;
+    formatter?: Formatter;
+   } = {
+    editor,
+    formatter
+   };
+
+   if (isString(editor) && checkIsCustomEditor(editor)) {
+    pendingItem.editor = CUSTOM_EDITOR_MAP[editor];
+   }
+
+   if (isString(formatter) && checkIsCustomFormatter(formatter)) {
+    pendingItem.formatter = CUSTOM_FORMATTER_MAP[formatter]
+   }
+
+    return {
+    ...pendingItem,
+    ...rest
+    }
+  })
+}
+
 const genColumnDefsOptions = (initColDefs: ColumnDefinition[]): OptionsColumns => {
   if (isArray(initColDefs) && initColDefs.length > 0) {
+    console.log('>>>', customEditorAndFormatterPipe(initColDefs));
     return {
-      columns: initColDefs,
+      columns: customEditorAndFormatterPipe(initColDefs),
     };
   }
 
@@ -145,7 +177,16 @@ const genStaticDataOptions = (
   };
 };
 
-const genPaginationOptions = (enableRemote): OptionsPagination => {
+export interface GenPaginationOptionsParams {
+  enableRemote: boolean;
+  tableMode: TableMode;
+}
+const genPaginationOptions = ({ tableMode, enableRemote }: GenPaginationOptionsParams): OptionsPagination => {
+  if (tableMode === 'editable') {
+    return {
+      pagination: false,
+    }
+  }
   return {
     pagination: true,
     paginationSize: 10,
@@ -163,12 +204,16 @@ export const genInitOptions = (
     actionId,
     columns: columnDefs,
     enableRemote = false,
+    tableMode = 'editable',
   } = tabulatorProps;
   const generalOptions = genGeneralOptions();
   const columnDefsOptions = genColumnDefsOptions(columnDefs);
   const ajaxOptions = genAjaxOptions(actionId, enableRemote);
   const staticDataOptions = genStaticDataOptions(tableData, columnDefs);
-  const paginationOptions = genPaginationOptions(enableRemote);
+  const paginationOptions = genPaginationOptions({
+    enableRemote,
+    tableMode
+  });
 
   return {
     ...generalOptions,

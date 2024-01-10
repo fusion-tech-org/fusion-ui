@@ -24,6 +24,8 @@ export interface TabulatorTableData {
   [key: string]: any;
 }
 
+export type TableMode = 'normal' | 'editable';
+
 export interface ReactTabulatorProps {
   columns?: ColumnDefinition[];
   options?: Options;
@@ -31,6 +33,7 @@ export interface ReactTabulatorProps {
   onRef?: (ref: any) => void;
   classNames?: string;
   widgetId?: string;
+  tableMode?: TableMode;
   data?: TabulatorTableData[];
   layout?: OptionsColumns['layout'];
   appMode?: PlatformAppMode;
@@ -96,7 +99,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     /**
     * NOTE: Binding events
     */
-
     const defaultEvents = genInitEventMaps({ appMode, tabulatorRef: instanceRef.current, onUpdateWidgetMetaProperty });
     const mergeEvents = {
       ...defaultEvents,

@@ -116,6 +116,7 @@ export default function (
 ) {
   const container = document.createElement('div');
   container.style.height = '100%';
+  console.log('using custom editor');
   render(
     <Editor cell={cell} onRendered={onRendered} success={success} cancel={cancel} editorParams={editorParams} />,
     container

@@ -92,6 +92,64 @@ export const colConfigTableData: TabulatorTableData[] = [
   },
 ];
 
+export const editableColDefs: ColumnDefinition[] = [
+
+  {
+    title: '姓名',
+    field: 'name',
+    sorter: 'string',
+    width: 200,
+    editor: true,
+    editableTitle: true,
+  },
+  {
+    title: '年龄',
+    field: 'age',
+    editor: true,
+    editableTitle: true,
+    hozAlign: 'right',
+  },
+  {
+    title: '性别',
+    field: 'gender',
+    editor: true,
+    editableTitle: true,
+    cellClick: function (e, cell) {
+      console.log('cell click');
+    },
+  },
+  {
+    title: '身高',
+    field: 'height',
+    editor: true,
+    editableTitle: true,
+    // formatter: 'star',
+    hozAlign: 'center',
+    width: 100,
+  },
+  {
+    title: '最喜欢的颜色',
+    field: 'col',
+    editor: true,
+    editableTitle: true,
+  },
+  {
+    title: '出生日期',
+    field: 'dob',
+    editor: true,
+    editableTitle: true,
+    hozAlign: 'center',
+  },
+  {
+    title: '喜欢的奶酪',
+    field: 'cheese',
+    editor: true,
+    editableTitle: true,
+    hozAlign: 'center',
+    // formatter: 'tickCross',
+  },
+];
+
 export const colConfigTableColumns: ColumnDefinition[] = [
   {
     title: '姓名',
