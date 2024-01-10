@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useState, useEffect, useMemo } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import * as ReactDOM from 'react-dom';
 import {
   TabulatorFull as Tabulator,
@@ -8,14 +8,14 @@ import {
   OptionsColumns,
   EventCallBackMethods,
 } from 'tabulator-tables';
-import { forIn, isArray, isEmpty, isUndefined } from 'lodash';
+import { forIn, isEmpty, isUndefined } from 'lodash';
 
 // import { pickHTMLProps } from 'pick-react-known-prop';
 // import { propsToOptions } from 'utils/ConfigUtils';
 import './index.css';
 import { genTabulatorUUID } from 'utils/index';
 import { PlatformAppMode } from 'src/interface';
-import { genAjaxOptions, genInitOptions } from './genInitOptions';
+import { genInitOptions } from './genInitOptions';
 import { genInitEventMaps } from './genInitEventMaps';
 import { Empty } from '@arco-design/web-react';
 import { ExternalInputContainer } from './styles';
