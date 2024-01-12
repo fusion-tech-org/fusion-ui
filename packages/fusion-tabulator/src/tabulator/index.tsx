@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import * as ReactDOM from 'react-dom';
 import {
   TabulatorFull as Tabulator,
@@ -19,7 +19,8 @@ import { genInitOptions } from './genInitOptions';
 import { genInitEventMaps } from './genInitEventMaps';
 import { Empty } from '@arco-design/web-react';
 import { ExternalInputContainer } from './styles';
-import { CustomSelect } from './components/CustomSelect';
+import { CustomTableSelect } from './components/CustomTableSelect';
+import { ROW_HEIGHT } from './constants';
 // import { ROW_HEIGHT } from './constants';
 
 export interface TabulatorTableData {
@@ -53,8 +54,10 @@ export interface ReactTabulatorProps {
   };
   onUpdateWidgetMetaProperty?: (params: Record<string, any>) => void;
   onUpdateWidgetProperty?: (params: Record<string, any>) => void;
+  onCustomSelectDropdownItem?: VoidFunction;
   actionId?: string;
   enableRemote?: boolean;
+  onEvents?: (eventName: string, data?: Record<string, any>) => void;
 }
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
@@ -66,8 +69,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     columns: columnDefs,
     onUpdateWidgetMetaProperty,
     // onUpdateWidgetProperty,
+    onCustomSelectDropdownItem,
     actionId,
-    tableMode = 'editable'
+    tableMode = 'editable',
+    onEvents,
     // enableRemote = false,
   } = props;
   console.log('TabulatorReact -> ', props);
@@ -87,7 +92,16 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const [mainId] = useState(genTabulatorUUID());
   const [inputTop, setInputTop] = useState(52);
 
-  const initTabulator = async () => {
+  const calcActionIdCombineDataHash = useMemo(() => {
+    if (!actionId && isEmpty(tableData)) return null;
+
+    if (!actionId && !isEmpty(tableData)) return `false|true`;
+
+    if (actionId && isEmpty(tableData)) return `true|false`;
+
+  }, [actionId, JSON.stringify(tableData)])
+
+  const initTabulator = () => {
     // mounted DOM element
     const domEle = ReactDOM.findDOMNode(wrapperRef.current) as HTMLElement;
 
@@ -98,13 +112,23 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // init tabulator
     instanceRef.current = new Tabulator(domEle, initOptions);
 
+    if (tableMode === 'editable' && !isEmpty(tableData)) {
+      const reCalcTop = (tableData.length * ROW_HEIGHT) + 52;
+      setInputTop(reCalcTop);
+    }
+
     // localization
     instanceRef.current.setLocale?.('zh');
 
     /**
     * NOTE: Binding events
     */
-    const defaultEvents = genInitEventMaps({ appMode, tabulatorRef: instanceRef.current, onUpdateWidgetMetaProperty });
+    const defaultEvents = genInitEventMaps({
+      appMode,
+      tabulatorRef: instanceRef.current,
+      onUpdateWidgetMetaProperty,
+      onEvents,
+    });
     const mergeEvents = {
       ...defaultEvents,
       ...eventMaps,
@@ -120,98 +144,96 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     });
   }
 
-  // useEffect(() => {
-  //   if (
-  //     (isArray(tableData) && tableData.length > 0) || // loads static data
-  //     !isEmpty(actionId) || // lodas data from ajax request
-  //     (isArray(columnDefs) && columnDefs.length > 0) // add data from scratch
-  //     && !instanceRef.current) {
-  //     console.log('To init Tabulator...');
-  //     initTabulator();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  const responsiveTabulator = () => {
+    if (isEmpty(tableData) && !actionId && isEmpty(columnDefs)) return;
+
+    if (!instanceRef.current) {
+      initTabulator();
+      return;
+    }
+
+    const curColumns = instanceRef.current.getColumnDefinitions();
+    const curData = instanceRef.current.getData();
+    debugger;
+    if (!isEmpty(tableData) && JSON.stringify(curData) !== JSON.stringify(tableData)) {
+      debugger;
+      instanceRef.current.replaceData(tableData);
+      return;
+    }
+
+    if (!isEmpty(columnDefs) && JSON.stringify(curColumns) !== JSON.stringify(columnDefs)) {
+      debugger;
+      instanceRef.current.setColumns(columnDefs) //overwrite existing columns with new columns definition array
+
+      return;
+    }
+  }
 
   useEffect(() => {
-    if (actionId) {
-      if (instanceRef.current) {
-        instanceRef.current.destroy();
-      }
-      initTabulator();
-    }
+    if (!calcActionIdCombineDataHash && !instanceRef.current) return;
+
+    console.log('calcActionIdCombineDataHash', '<<<<<<');
+  }, [calcActionIdCombineDataHash]);
+
+  useEffect(() => {
+    if (!actionId || !instanceRef.current) return;
+    debugger;
+    const curAjax = instanceRef.current.getAjaxUrl();
+    instanceRef.current.setData(curAjax);
   }, [actionId]);
 
-  // reset table data
   useEffect(() => {
-    if (!instanceRef.current && tableData?.length > 0) {
-      initTabulator();
-    }
+    responsiveTabulator();
+  }, [actionId, JSON.stringify(columnDefs), JSON.stringify(tableData)]);
 
-    if (instanceRef.current && !isUndefined(tableData)) {
-      // instanceRef.current.destroy()
-      // instanceRef.current = null;
-      // console.log('invoked by data changed');
-      // initTabulator(); // re-init table
-      console.log('tableData have changed: ', tableData);
-      instanceRef.current.setData(tableData);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(tableData)]);
 
-  // reset table column definitions
-  useEffect(() => {
-    if (!instanceRef.current && columnDefs?.length > 0) {
-      console.log('init tabulator due to column definions');
-      initTabulator();
-    }
-  }, []);
-
-  useEffect(() => {
-    const curColumnDefs = instanceRef.current?.getColumnDefinitions();
-    console.log('curColumnDefs', curColumnDefs);
-    if (!!instanceRef.current && JSON.stringify(curColumnDefs) !== JSON.stringify(columnDefs)) {
-      console.log('columnDefs have changed: ');
-      // instanceRef.current.setColumns(columnDefs);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(columnDefs)]);
-
-  const renderExtraInput = () => {
-    if (tableMode !== 'editable') return null;
+  function handleSelectRowData(record) {
+    console.log('handleSelectRowData: ', record);
+    const {
+      id: _key,
+      ...rest
+    } = record || {};
     let isOverHeigth = false;
     const ROW_HEIGHT = 49;
 
-    function handleSelectRowData(record) {
-      console.log('handleSelectRowData: ', record);
-      const {
-        key: _key,
-        ...rest
-      } = record || {};
-      instanceRef.current.addRow(rest)
-        .then(() => {
-          const top = inputTop + ROW_HEIGHT;
-          const tableHeight = wrapperRef.current.getBoundingClientRect().height;
-          console.log('tableHeight', tableHeight);
+    onUpdateWidgetMetaProperty?.({
+      selectedDropdownItem: record
+    });
 
-          if (top < tableHeight - ROW_HEIGHT) {
-            setInputTop(top);
-            return;
-          }
+    if (onCustomSelectDropdownItem) {
+      onCustomSelectDropdownItem?.();
 
-          if (!isOverHeigth) {
-            const tableEle = document.querySelector(`#${mainId} .tabulator-table`);
-
-            tableEle.setAttribute('style', `padding-bottom: ${ROW_HEIGHT}px`);
-          }
-
-          isOverHeigth = true;
-        }).catch(err => {
-          console.log(err);
-        });
+      return;
     }
 
+    instanceRef.current.addRow(rest)
+      .then(() => {
+        const top = inputTop + ROW_HEIGHT;
+        const tableHeight = wrapperRef.current.getBoundingClientRect().height;
+        console.log('tableHeight', tableHeight);
+
+        if (top < tableHeight - ROW_HEIGHT) {
+          setInputTop(top);
+          return;
+        }
+
+        if (!isOverHeigth) {
+          const tableEle = document.querySelector(`#${mainId} .tabulator-table`);
+
+          tableEle.setAttribute('style', `padding-bottom: ${ROW_HEIGHT}px`);
+        }
+
+        isOverHeigth = true;
+      }).catch(err => {
+        console.log(err);
+      });
+  }
+
+  const renderExtraInput = () => {
+    if (tableMode !== 'editable') return null;
+
     return <ExternalInputContainer top={inputTop}>
-      <CustomSelect onSelectRowData={handleSelectRowData} />
+      <CustomTableSelect onSelectRowData={handleSelectRowData} />
     </ExternalInputContainer>
   };
 
@@ -221,7 +243,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       width: '100%',
       paddingTop: 48
     }}>
-      <Empty description={!instanceRef.current && appMode === 'EDIT' ? '暂无数据，请先在右侧属性配置栏选择数据源' : '暂无数据'} />
+      <Empty description={!instanceRef.current && appMode === 'EDIT' ? '暂无数据，请先在右侧属性配置栏添加数据源或列定义' : '暂无数据'} />
     </div>
   }
 

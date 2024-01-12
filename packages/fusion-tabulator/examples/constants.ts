@@ -96,7 +96,6 @@ export const editableColDefs: ColumnDefinition[] = [
   {
     title: '姓名',
     field: 'name',
-    width: 200,
     editor: true,
     editableTitle: true,
   },
@@ -112,18 +111,13 @@ export const editableColDefs: ColumnDefinition[] = [
     field: 'gender',
     editor: true,
     editableTitle: true,
-    cellClick: function (e, cell) {
-      console.log('cell click');
-    },
   },
   {
     title: '身高',
     field: 'height',
     editor: true,
     editableTitle: true,
-    // formatter: 'star',
     hozAlign: 'center',
-    width: 100,
   },
   {
     title: '最喜欢的颜色',

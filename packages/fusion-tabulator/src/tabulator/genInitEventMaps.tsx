@@ -1,15 +1,17 @@
 import { Message } from "@arco-design/web-react";
 import { PlatformAppMode } from "src/interface";
-import { CellComponent, ColumnComponent, EventCallBackMethods, Tabulator } from "tabulator-tables";
+import { CellComponent, ColumnComponent, EventCallBackMethods, RowComponent, Tabulator } from "tabulator-tables";
 
 export function genInitEventMaps({
   appMode,
   tabulatorRef,
   onUpdateWidgetMetaProperty,
+  onEvents,
 }: {
   appMode: PlatformAppMode;
   tabulatorRef: Tabulator;
   onUpdateWidgetMetaProperty: (params: Record<string, unknown>) => void;
+  onEvents: (eventName: string, data?: Record<string, any>) => void;
 }): Partial<Record<keyof EventCallBackMethods, EventCallBackMethods[keyof EventCallBackMethods]>> {
   function handleDataLoaded() {
     console.log('data loaded');
@@ -87,15 +89,54 @@ export function genInitEventMaps({
   }
 
   function handleCellEdited(cell: CellComponent) {
-    console.log(cell.getField(), cell.getValue());
     const cellField = cell.getField();
     const cellValue = cell.getValue();
+
     onUpdateWidgetMetaProperty?.({
       editingCell: {
         [cellField]: cellValue
       },
     });
   }
+
+  function handleRowClick(_event: UIEvent, row: RowComponent) {
+    console.log(row);
+    const rowData = row.getData();
+    onEvents?.('rowClick', rowData)
+  }
+
+  function handleRowDoubleClick(_event: UIEvent, row: RowComponent) {
+    const rowData = row.getData();
+    onEvents?.('rowDbClick', rowData)
+  }
+
+  function handleHeaderClick(_event: UIEvent, column: ColumnComponent) {
+    const colField = column.getField();
+    onEvents?.('headerClick', {
+      field: colField
+    })
+  }
+
+  function handleHeaderDblClick(_event: UIEvent, column: ColumnComponent) {
+    const colField = column.getField();
+    onEvents?.('headerDbClick', {
+      field: colField
+    })
+  }
+
+  function handleCellClick(_event: UIEvent, cell: CellComponent) {
+    const cellField = cell.getField();
+    const cellValue = cell.getValue();
+    onEvents?.('cellClick', {
+      [cellField]: cellValue
+    });
+  }
+
+  function handleCellDblClick(_event: UIEvent, cell: CellComponent) {
+    const cellData = cell.getData();
+    onEvents?.('cellDbClick', cellData);
+  }
+
 
   return {
     // data events
@@ -104,7 +145,12 @@ export function genInitEventMaps({
     dataProcessed: () => handleDataProcessed,
     dataChanged: handleDataChanged,
     dataLoadError: handleLoadError,
+    // row events
+    rowClick: handleRowClick,
+    rowDblClick: handleRowDoubleClick,
     // column events
+    headerClick: handleHeaderClick,
+    headerDblClick: handleHeaderDblClick,
     columnMoved: handleColumnMoved,
     columnResized: handleColumnResized,
     columnTitleChanged: handleColumnTitleChanged,
@@ -112,6 +158,8 @@ export function genInitEventMaps({
     // cell events
     cellEditing: handleCellEditing,
     cellEdited: handleCellEdited,
+    cellClick: handleCellClick,
+    cellDblClick: handleCellDblClick,
   }
 }
 

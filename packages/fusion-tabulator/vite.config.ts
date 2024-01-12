@@ -23,6 +23,9 @@ export default defineConfig({
       langs: `${srcDir}/langs`,
     },
   },
+  server: {
+    host: '0.0.0.0',
+  },
   build: {
     outDir: 'lib',
     sourcemap: true,

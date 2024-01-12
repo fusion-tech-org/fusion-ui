@@ -16,6 +16,7 @@ import { ReactTabulatorProps, TableMode } from './index';
 import { Message } from '@arco-design/web-react';
 import { CUSTOM_EDITOR_MAP, checkIsCustomEditor } from './editors';
 import { CUSTOM_FORMATTER_MAP, checkIsCustomFormatter } from './formatters';
+import { PlatformAppMode } from 'src/interface';
 
 const genGeneralOptions = (): Options => {
   return {
@@ -32,7 +33,7 @@ const genGeneralOptions = (): Options => {
       zh: zhCNLang,
     },
     dataLoaderLoading: `
-      <div style='display:inline-block; border:4px solid #333; border-radius:10px; background:#fff; font-weight:bold; font-size:16px; color:#000; padding:10px 20px;'>
+      <div style='display:inline-block; border-radius:10px; background:#fff; font-weight:bold; font-size:16px; color:#000; padding:10px 20px;'>
         数据加载中...
       </div>
     `,
@@ -41,9 +42,11 @@ const genGeneralOptions = (): Options => {
   };
 };
 
-function customEditorAndFormatterPipe(tempColDefs: ColumnDefinition[]): ColumnDefinition[] {
+function customEditorAndFormatterPipe(tempColDefs: ColumnDefinition[], appMode?: PlatformAppMode): ColumnDefinition[] {
   return map(tempColDefs, item => {
-    const { editor, formatter, ...rest } = item;
+    const { editor, formatter, editableTitle = false, ...rest } = item;
+
+    const formatEditableTitle = appMode !== 'EDIT' ? false : editableTitle;
 
     const pendingItem: {
       editor?: Editor;
@@ -62,16 +65,17 @@ function customEditorAndFormatterPipe(tempColDefs: ColumnDefinition[]): ColumnDe
     }
 
     return {
+      editableTitle: formatEditableTitle,
       ...pendingItem,
       ...rest
     }
   })
 }
 
-const genColumnDefsOptions = (initColDefs: ColumnDefinition[]): OptionsColumns => {
+const genColumnDefsOptions = (initColDefs: ColumnDefinition[], appMode?: PlatformAppMode): OptionsColumns => {
   if (isArray(initColDefs) && initColDefs.length > 0) {
     return {
-      columns: customEditorAndFormatterPipe(initColDefs),
+      columns: customEditorAndFormatterPipe(initColDefs, appMode),
     };
   }
 
@@ -79,6 +83,7 @@ const genColumnDefsOptions = (initColDefs: ColumnDefinition[]): OptionsColumns =
     autoColumns: true,
     autoColumnsDefinitions: function (definitions) {
       //definitions - array of column definition objects
+      if (appMode !== 'EDIT') return definitions;
 
       definitions.forEach((column) => {
         column.editableTitle = true;
@@ -155,13 +160,12 @@ const genStaticDataOptions = (
   tableMode?: TableMode
 ): OptionsData => {
   console.log('genStaticDataOptions columnDefs:', columnDefs);
-  if (!isArray(staticData) || !staticData?.length || tableMode === 'editable') {
+  if (!isArray(staticData) || !staticData?.length) {
     // const initEditData = {};
 
     // forEach(columnDefs, (item) => {
     //   initEditData[item.field] = '';
     // });
-
     // return {
     //   data: [{
     //     id: 1,
@@ -190,7 +194,7 @@ const genPaginationOptions = ({ tableMode, enableRemote }: GenPaginationOptionsP
   return {
     pagination: true,
     paginationSize: 10,
-    paginationSizeSelector: [3, 10, 30, 50, 100],
+    paginationSizeSelector: [10, 30, 50, 100, 500, 1000],
     paginationMode: enableRemote ? 'remote' : 'local',
   };
 };
@@ -205,9 +209,10 @@ export const genInitOptions = (
     columns: columnDefs,
     enableRemote = false,
     tableMode = 'editable',
+    appMode,
   } = tabulatorProps;
   const generalOptions = genGeneralOptions();
-  const columnDefsOptions = genColumnDefsOptions(columnDefs);
+  const columnDefsOptions = genColumnDefsOptions(columnDefs, appMode);
   const ajaxOptions = genAjaxOptions(actionId, enableRemote);
   const staticDataOptions = genStaticDataOptions(tableData, columnDefs, tableMode);
   const paginationOptions = genPaginationOptions({

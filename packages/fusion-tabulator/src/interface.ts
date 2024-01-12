@@ -14,6 +14,8 @@ export type RenderCompByTypeProps = {
   enableRemote?: boolean;
   widgetId?: string;
   onUpdateWidgetMetaProperty?: (params: Record<string, unknown>) => void;
+  onCustomSelectDropdownItem?: VoidFunction;
+  onEvents?: (eventName: string, data?: Record<string, any>) => void;
   eventMaps?: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tabulator?: Record<string, any>;
@@ -67,9 +69,11 @@ export interface TabulatorProps {
   };
   onUpdateWidgetMetaProperty?: (params: Record<string, unknown>) => void;
   onUpdateWidgetProperty?: (params: Record<string, unknown>) => void;
+  onCustomSelectDropdownItem?: VoidFunction;
   actionId?: string;
   enableRemote?: boolean;
   tableMode?: TableMode;
+  onEvents?: (eventName: string, data?: Record<string, any>) => void;
 }
 
 export type FusionTabulatorProps = RenderCompByTypeProps & TabulatorProps;

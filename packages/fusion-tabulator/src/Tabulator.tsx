@@ -36,12 +36,15 @@ const renderCompByTableType = (
     s2Options = {},
     appMode,
     onUpdateWidgetMetaProperty,
+    onEvents,
+    onCustomSelectDropdownItem,
     eventMaps = {},
     actionId,
     widgetId,
     enableRemote,
     tableMode,
   } = props;
+  console.log('renderCompByTableType', props);
   const { data = [], ...restTabulatorOptions } = tabulatorOptions || {};
 
   switch (tableType) {
@@ -55,6 +58,8 @@ const renderCompByTableType = (
           appMode={appMode}
           widgetId={widgetId}
           onUpdateWidgetMetaProperty={onUpdateWidgetMetaProperty}
+          onCustomSelectDropdownItem={onCustomSelectDropdownItem}
+          onEvents={onEvents}
           eventMaps={eventMaps['tabulator']}
           actionId={actionId}
           tableMode={tableMode}
@@ -102,7 +107,8 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
     widgetId,
     tableType = 'tabulator',
     appMode = 'EDIT',
-    tableMode = 'normal',
+    // tableMode = 'normal',
+    tableMode = 'editable',
     onUpdateWidgetProperty,
     onUpdateWidgetMetaProperty,
     configs,
