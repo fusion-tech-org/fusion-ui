@@ -8,7 +8,7 @@ import {
   OptionsColumns,
   EventCallBackMethods,
 } from 'tabulator-tables';
-import { forIn, isEmpty, isUndefined } from 'lodash';
+import { forIn, isEmpty } from 'lodash';
 
 // import { pickHTMLProps } from 'pick-react-known-prop';
 // import { propsToOptions } from 'utils/ConfigUtils';
