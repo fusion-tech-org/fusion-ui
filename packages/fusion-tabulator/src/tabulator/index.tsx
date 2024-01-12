@@ -71,7 +71,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // onUpdateWidgetProperty,
     onCustomSelectDropdownItem,
     actionId,
-    tableMode = 'editable',
+    tableMode = 'normal',
     onEvents,
     // enableRemote = false,
   } = props;

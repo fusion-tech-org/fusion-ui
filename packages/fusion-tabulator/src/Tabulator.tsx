@@ -44,7 +44,6 @@ const renderCompByTableType = (
     enableRemote,
     tableMode,
   } = props;
-  console.log('renderCompByTableType', props);
   const { data = [], ...restTabulatorOptions } = tabulatorOptions || {};
 
   switch (tableType) {
