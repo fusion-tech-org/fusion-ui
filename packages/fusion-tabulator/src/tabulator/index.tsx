@@ -3,9 +3,6 @@ import { useRef, useState, useEffect, useMemo } from 'react';
 import * as ReactDOM from 'react-dom';
 import {
   TabulatorFull as Tabulator,
-  ColumnDefinition,
-  Options,
-  OptionsColumns,
   EventCallBackMethods,
 } from 'tabulator-tables';
 import { forIn, isEmpty } from 'lodash';
@@ -14,51 +11,13 @@ import { forIn, isEmpty } from 'lodash';
 // import { propsToOptions } from 'utils/ConfigUtils';
 import './index.css';
 import { genTabulatorUUID } from 'utils/index';
-import { PlatformAppMode } from 'src/interface';
 import { genInitOptions } from './genInitOptions';
 import { genInitEventMaps } from './genInitEventMaps';
 import { Empty } from '@arco-design/web-react';
 import { ExternalInputContainer } from './styles';
 import { CustomTableSelect } from './components/CustomTableSelect';
 import { ROW_HEIGHT } from './constants';
-// import { ROW_HEIGHT } from './constants';
-
-export interface TabulatorTableData {
-  tuid?: string | number;
-  [key: string]: any;
-}
-
-export type TableMode = 'normal' | 'editable';
-
-export interface ReactTabulatorProps {
-  columns?: ColumnDefinition[];
-  options?: Options;
-  eventMaps?: Record<keyof EventCallBackMethods, <K extends keyof EventCallBackMethods>(event: K, callback?: EventCallBackMethods[K]) => void>;
-  onRef?: (ref: any) => void;
-  classNames?: string;
-  widgetId?: string;
-  tableMode?: TableMode;
-  data?: TabulatorTableData[];
-  layout?: OptionsColumns['layout'];
-  appMode?: PlatformAppMode;
-  configs?: {
-    generalConfigs?: Record<string, any>;
-    loadedConfigs?: Record<string, any>;
-    columnConfigs?: Record<string, any>;
-    rowConfigs?: Record<string, any>;
-    cellConfigs?: Record<string, any>;
-    keyBindingConfigs?: Record<string, any>;
-    eventConfigs?: Record<string, any>;
-    styleConfigs?: Record<string, any>;
-    advancedConfigs?: Record<string, any>;
-  };
-  onUpdateWidgetMetaProperty?: (params: Record<string, any>) => void;
-  onUpdateWidgetProperty?: (params: Record<string, any>) => void;
-  onCustomSelectDropdownItem?: VoidFunction;
-  actionId?: string;
-  enableRemote?: boolean;
-  onEvents?: (eventName: string, data?: Record<string, any>) => void;
-}
+import { ReactTabulatorProps } from './interface';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
@@ -74,6 +33,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     tableMode = 'normal',
     onEvents,
     // enableRemote = false,
+    quickAddDropdownDefinitions,
   } = props;
   console.log('TabulatorReact -> ', props);
   // const {
@@ -194,7 +154,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       ...rest
     } = record || {};
     let isOverHeigth = false;
-    const ROW_HEIGHT = 49;
+    // const ROW_HEIGHT = 49;
 
     onUpdateWidgetMetaProperty?.({
       selectedDropdownItem: record
@@ -233,7 +193,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     if (tableMode !== 'editable') return null;
 
     return <ExternalInputContainer top={inputTop}>
-      <CustomTableSelect onSelectRowData={handleSelectRowData} />
+      <CustomTableSelect onSelectRowData={handleSelectRowData} quickAddDropdownDefinitions={quickAddDropdownDefinitions} />
     </ExternalInputContainer>
   };
 

@@ -1,6 +1,6 @@
 import type { ColProps, RulesProps } from '@arco-design/web-react';
 import { S2ReactProps } from './s2/S2React';
-import { ReactTabulatorProps, TableMode } from './tabulator/index';
+import { ReactTabulatorProps, TableMode } from './tabulator/interface';
 
 export type TabulatorTableType = 'tabulator' | 's2';
 
@@ -63,6 +63,10 @@ export interface TabulatorProps {
       styleConfigs?: Record<string, unknown>;
       advancedConfigs?: Record<string, unknown>;
     };
+  };
+  quickAddDropdownDefinitions?: {
+    data: any[];
+    columns: any[];
   };
   eventMaps?: {
     tabulator?: Record<string, unknown>;

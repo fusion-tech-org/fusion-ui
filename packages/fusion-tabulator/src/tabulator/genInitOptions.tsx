@@ -12,7 +12,7 @@ import {
 import { isArray, isString, map } from 'lodash';
 
 import zhCNLang from 'langs/zh-cn.json';
-import { ReactTabulatorProps, TableMode } from './index';
+import type { ReactTabulatorProps, TableMode } from './interface';
 import { Message } from '@arco-design/web-react';
 import { CUSTOM_EDITOR_MAP, checkIsCustomEditor } from './editors';
 import { CUSTOM_FORMATTER_MAP, checkIsCustomFormatter } from './formatters';
@@ -99,7 +99,7 @@ export const genAjaxOptions = (
   actionId: string,
   enableRemote: boolean
 ): OptionsData => {
-  if (!actionId) return {};
+  if (!actionId || !enableRemote) return {};
 
   console.log(enableRemote, 'enableRemote');
   return {

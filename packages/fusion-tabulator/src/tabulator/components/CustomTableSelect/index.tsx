@@ -12,7 +12,7 @@ import { useKeyPress } from 'hooks/useKeyPress';
 import { RowComponent, Tabulator } from 'tabulator-tables';
 
 export const CustomTableSelect = (props) => {
-  const { onSelectRowData } = props
+  const { onSelectRowData, quickAddDropdownDefinitions } = props
   const [popupVisible, setPopupVisble] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -21,10 +21,10 @@ export const CustomTableSelect = (props) => {
     console.log('visible', visible);
   }
 
-  const hideDroplist = useCallback(() => {
-
+  const hideDroplist = () => {
     setPopupVisble(false);
-  }, [])
+    tabulatorRef.current = null;
+  }
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (!tabulatorRef.current) return;
@@ -75,6 +75,7 @@ export const CustomTableSelect = (props) => {
         popupVisible={popupVisible}
         trigger="focus"
         onVisibleChange={handleVisibleChange}
+        unmountOnExit
         droplist={
           <DroplistWrapper ref={dropdownRef}>
             <TableSelect onRef={handleTabulator} />

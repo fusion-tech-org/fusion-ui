@@ -15,9 +15,9 @@ import type {
   RenderConfigByTypeProps,
 } from './interface';
 import {
-  ReactTabulatorProps,
   TabulatorReact,
 } from './tabulator/index';
+import type { ReactTabulatorProps } from './tabulator/interface';
 import { S2React, S2ReactProps } from './s2/S2React';
 import { TabulatorTableType } from './interface';
 import { TableConfigBar } from 'components/TableConfigs';
@@ -41,7 +41,7 @@ const renderCompByTableType = (
     eventMaps = {},
     actionId,
     widgetId,
-    enableRemote,
+    enableRemote = false,
     tableMode,
   } = props;
   const { data = [], ...restTabulatorOptions } = tabulatorOptions || {};

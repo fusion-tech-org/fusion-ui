@@ -19,10 +19,14 @@ import {
 
 interface TableSelectProps {
   onRef?: (ref: Tabulator) => void;
+  quickAddDropdownDefinitions?: {
+    data: any[];
+    columns: any[];
+  };
 }
 
 export const TableSelect: FC<TableSelectProps> = (props) => {
-  const { onRef } = props;
+  const { onRef, quickAddDropdownDefinitions } = props;
   const [mainId] = useState(genTabulatorUUID());
   const instanceRef = useRef<Tabulator>();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -30,7 +34,7 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
   const initTabulator = () => {
     // mounted DOM element
     const domEle = ReactDOM.findDOMNode(wrapperRef.current) as HTMLElement;
-
+    console.log(quickAddDropdownDefinitions, 'quickAddDropdownDefinitions');
     // generates initial options
     const initOptions: Options = {
       data: initData,
@@ -45,10 +49,9 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
         "navRight": false,
         "navDown": false,
       },
-      // keybindings: false, //disable all key bindings
     };
 
-    console.log('initTabulatorOptions', initOptions);
+    console.log('initTabulatorOptions sub ->: ', initOptions);
     // init tabulator
     instanceRef.current = new Tabulator(domEle, initOptions);
 
@@ -65,6 +68,10 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
   // reset table column definitions
   useEffect(() => {
     initTabulator();
+
+    return () => {
+      instanceRef.current?.destroy();
+    }
   }, []);
 
   return (

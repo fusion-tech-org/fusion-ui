@@ -10,7 +10,7 @@ export type {
   EventCallBackMethods,
 } from 'tabulator-tables';
 
-export type { TabulatorTableData } from './tabulator/index';
+export type { TabulatorTableData } from './tabulator/interface';
 
 export { TabulatorReact } from './tabulator/index';
 
