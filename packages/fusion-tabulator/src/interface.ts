@@ -20,6 +20,10 @@ export type RenderCompByTypeProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tabulator?: Record<string, any>;
   };
+  quickAddDropdownDefinitions?: {
+    data: any[];
+    columns: any[];
+  };
   tableMode?: TableMode;
 };
 

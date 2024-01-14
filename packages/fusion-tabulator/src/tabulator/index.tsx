@@ -108,11 +108,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const reCalcInputTop = () => {
     const dataLen = tableData?.length || 0;
     const allRowHeight = Math.max(dataLen, 1) * ROW_HEIGHT;
-    const top = inputTop + allRowHeight;
+    const nextTop = HEADER_HEIGHT + allRowHeight;
     const tableHeight = wrapperRef.current.getBoundingClientRect().height;
 
-    if (top < tableHeight - ROW_HEIGHT) {
-      setInputTop(top);
+    if (nextTop < tableHeight - ROW_HEIGHT) {
+      setInputTop(nextTop);
       return;
     } else {
       setInputTop(tableHeight - ROW_HEIGHT);

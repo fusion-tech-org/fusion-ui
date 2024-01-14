@@ -43,6 +43,7 @@ const renderCompByTableType = (
     widgetId,
     enableRemote = false,
     tableMode,
+    quickAddDropdownDefinitions,
   } = props;
   const { data = [], ...restTabulatorOptions } = tabulatorOptions || {};
 
@@ -63,6 +64,7 @@ const renderCompByTableType = (
           actionId={actionId}
           tableMode={tableMode}
           enableRemote={enableRemote}
+          quickAddDropdownDefinitions={quickAddDropdownDefinitions}
         />
       );
     default:
