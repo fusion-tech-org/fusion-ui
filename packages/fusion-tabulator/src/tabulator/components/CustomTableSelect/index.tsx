@@ -55,7 +55,8 @@ export const CustomTableSelect = (props) => {
     const rowData = row.getData();
     onSelectRowData?.(rowData)
 
-    setPopupVisble(false)
+    // setPopupVisble(false)
+    hideDroplist();
   }
 
   const handleValueChange = () => {
@@ -78,7 +79,7 @@ export const CustomTableSelect = (props) => {
         unmountOnExit
         droplist={
           <DroplistWrapper ref={dropdownRef}>
-            <TableSelect onRef={handleTabulator} />
+            <TableSelect onRef={handleTabulator} quickAddDropdownDefinitions={quickAddDropdownDefinitions} />
           </DroplistWrapper>
         }
       >

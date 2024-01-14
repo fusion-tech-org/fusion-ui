@@ -16,7 +16,7 @@ import { genInitEventMaps } from './genInitEventMaps';
 import { Empty } from '@arco-design/web-react';
 import { ExternalInputContainer } from './styles';
 import { CustomTableSelect } from './components/CustomTableSelect';
-import { ROW_HEIGHT } from './constants';
+import { HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { ReactTabulatorProps } from './interface';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
@@ -50,7 +50,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const instanceRef = useRef<Tabulator>();
   const [mainId] = useState(genTabulatorUUID());
-  const [inputTop, setInputTop] = useState(52);
+  const [inputTop, setInputTop] = useState(HEADER_HEIGHT);
+  let isOverHeigth = false;
 
   const calcActionIdCombineDataHash = useMemo(() => {
     if (!actionId && isEmpty(tableData)) return null;
@@ -104,6 +105,28 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     });
   }
 
+  const reCalcInputTop = () => {
+    const dataLen = tableData?.length || 0;
+    const allRowHeight = Math.max(dataLen, 1) * ROW_HEIGHT;
+    const top = inputTop + allRowHeight;
+    const tableHeight = wrapperRef.current.getBoundingClientRect().height;
+
+    if (top < tableHeight - ROW_HEIGHT) {
+      setInputTop(top);
+      return;
+    } else {
+      setInputTop(tableHeight - ROW_HEIGHT);
+    }
+
+    if (!isOverHeigth) {
+      const tableEle = document.querySelector(`#${mainId} .tabulator-table`);
+
+      tableEle.setAttribute('style', `padding-bottom: ${ROW_HEIGHT}px`);
+    }
+
+    isOverHeigth = true;
+  }
+
   const responsiveTabulator = () => {
     if (isEmpty(tableData) && !actionId && isEmpty(columnDefs)) return;
 
@@ -118,6 +141,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     if (!isEmpty(tableData) && JSON.stringify(curData) !== JSON.stringify(tableData)) {
       debugger;
       instanceRef.current.replaceData(tableData);
+      reCalcInputTop();
       return;
     }
 
@@ -153,9 +177,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       id: _key,
       ...rest
     } = record || {};
-    let isOverHeigth = false;
-    // const ROW_HEIGHT = 49;
-
     onUpdateWidgetMetaProperty?.({
       selectedDropdownItem: record
     });
@@ -168,22 +189,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
     instanceRef.current.addRow(rest)
       .then(() => {
-        const top = inputTop + ROW_HEIGHT;
-        const tableHeight = wrapperRef.current.getBoundingClientRect().height;
-        console.log('tableHeight', tableHeight);
-
-        if (top < tableHeight - ROW_HEIGHT) {
-          setInputTop(top);
-          return;
-        }
-
-        if (!isOverHeigth) {
-          const tableEle = document.querySelector(`#${mainId} .tabulator-table`);
-
-          tableEle.setAttribute('style', `padding-bottom: ${ROW_HEIGHT}px`);
-        }
-
-        isOverHeigth = true;
+        reCalcInputTop();
       }).catch(err => {
         console.log(err);
       });

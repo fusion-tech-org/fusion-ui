@@ -1,20 +1,13 @@
 import {
   TabulatorFull as Tabulator,
-  ColumnDefinition,
   Options,
-  OptionsColumns,
-  EventCallBackMethods,
 } from 'tabulator-tables';
-import React, { FC, forwardRef, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import ReactDOM from 'react-dom';
 
 import { DroplistWrapper } from "./styles";
 import { genTabulatorUUID } from 'utils/index';
-import {
-  colDefs,
-  initData
-} from './constants';
 
 
 interface TableSelectProps {
@@ -30,6 +23,7 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
   const [mainId] = useState(genTabulatorUUID());
   const instanceRef = useRef<Tabulator>();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const { data = [], columns = [] } = quickAddDropdownDefinitions || {};
 
   const initTabulator = () => {
     // mounted DOM element
@@ -37,8 +31,8 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
     console.log(quickAddDropdownDefinitions, 'quickAddDropdownDefinitions');
     // generates initial options
     const initOptions: Options = {
-      data: initData,
-      columns: colDefs,
+      data: [...data],
+      columns: [...columns],
       layout: 'fitDataTable',
       height: '320px',
       selectable: 1,
@@ -60,7 +54,7 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
     // })
 
     // localization
-    instanceRef.current.setLocale?.('zh');
+    // instanceRef.current.setLocale?.('zh');
 
     onRef?.(instanceRef.current);
   };
