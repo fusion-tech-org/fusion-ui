@@ -8,6 +8,7 @@ import ReactDOM from 'react-dom';
 
 import { DroplistWrapper } from "./styles";
 import { genTabulatorUUID } from 'utils/index';
+import { map } from 'lodash';
 
 
 interface TableSelectProps {
@@ -29,9 +30,10 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
     // mounted DOM element
     const domEle = ReactDOM.findDOMNode(wrapperRef.current) as HTMLElement;
     console.log(quickAddDropdownDefinitions, 'quickAddDropdownDefinitions');
+    const cloneData = map(data, (item) => ({ ...item }))
     // generates initial options
     const initOptions: Options = {
-      data: [...data],
+      data: cloneData,
       columns: [...columns],
       layout: 'fitDataTable',
       height: '320px',

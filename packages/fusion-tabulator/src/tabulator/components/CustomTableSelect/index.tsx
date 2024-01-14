@@ -69,7 +69,6 @@ export const CustomTableSelect = (props) => {
     tabulatorRef.current.on('rowSelected', handleSelectedRow);
   }
 
-
   return (
     <Container>
       <Dropdown
