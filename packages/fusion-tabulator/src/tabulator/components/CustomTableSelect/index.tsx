@@ -113,7 +113,7 @@ export const CustomTableSelect = (props) => {
 
       const buildFilters = map(filters, (filter) => ({ field: filter, type: 'like', value }))
       console.log('buildFilters', buildFilters);
-      tabulatorRef.current.setFilter([buildFilters]);
+      tabulatorRef.current.setFilter(buildFilters);
     }, 500)
     ;
 
