@@ -24,6 +24,7 @@ export type RenderCompByTypeProps = {
     data: any[];
     columns: any[];
   };
+  uniformProps?: Record<string, any>;
   tableMode?: TableMode;
 };
 
@@ -72,6 +73,7 @@ export interface TabulatorProps {
     data: any[];
     columns: any[];
   };
+  uniformProps?: Record<string, any>;
   eventMaps?: {
     tabulator?: Record<string, unknown>;
   };

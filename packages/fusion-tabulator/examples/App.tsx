@@ -41,7 +41,7 @@ const menuKeyMapComp = {
 function App() {
   const [collapsed, setCollapsed] = useState(false);
   const [siderWidth, setSiderWidth] = useState(normalWidth);
-  const [activeMenuKey, setActiveMenuKey] = useState<MenuItemKeys>('tabulator-test');
+  const [activeMenuKey, setActiveMenuKey] = useState<MenuItemKeys>('tabulator-editable');
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);

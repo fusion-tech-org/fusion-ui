@@ -29,7 +29,7 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
   const initTabulator = () => {
     // mounted DOM element
     const domEle = ReactDOM.findDOMNode(wrapperRef.current) as HTMLElement;
-    console.log(quickAddDropdownDefinitions, 'quickAddDropdownDefinitions');
+
     const cloneData = map(data, (item) => ({ ...item }))
     // generates initial options
     const initOptions: Options = {

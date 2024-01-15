@@ -44,6 +44,7 @@ const renderCompByTableType = (
     enableRemote = false,
     tableMode,
     quickAddDropdownDefinitions,
+    uniformProps,
   } = props;
   const { data = [], ...restTabulatorOptions } = tabulatorOptions || {};
 
@@ -64,6 +65,7 @@ const renderCompByTableType = (
           actionId={actionId}
           tableMode={tableMode}
           enableRemote={enableRemote}
+          uniformProps={uniformProps}
           quickAddDropdownDefinitions={quickAddDropdownDefinitions}
         />
       );

@@ -10,13 +10,22 @@ import { TableSelect } from './TableSelect';
 import { useClickOutside } from 'hooks/useClickOutsite';
 import { useKeyPress } from 'hooks/useKeyPress';
 import { RowComponent, Tabulator } from 'tabulator-tables';
+import { debounce, map } from 'lodash';
 
 export const CustomTableSelect = (props) => {
-  const { onSelectRowData, quickAddDropdownDefinitions } = props
+  const { onSelectRowData, quickAddDropdownDefinitions, uniformProps } = props
   const [popupVisible, setPopupVisble] = useState(false);
+  const [cursor, setCursor] = useState<number>(-1);
+  // const [tableData, setTableData] = useState([]);
+  const [searchText, setSearchText] = useState('');
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const tabulatorRef = useRef<Tabulator>(null);
+
+  const { quickAddConfigs } = uniformProps || {};
+
+  console.log('uniformProps', uniformProps, quickAddConfigs);
+
   const handleVisibleChange = (visible: boolean) => {
     console.log('visible', visible);
   }
@@ -24,17 +33,38 @@ export const CustomTableSelect = (props) => {
   const hideDroplist = () => {
     setPopupVisble(false);
     tabulatorRef.current = null;
+    setCursor(-1);
+    setSearchText('');
+    inputRef.current?.blur();
+  }
+
+  const calcFilterDataLen = () => {
+    const curTableData = tabulatorRef.current.searchData('name', 'like', searchText);
+
+    const len = curTableData.length;
+
+    return len;
   }
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (!tabulatorRef.current) return;
+    // const curTableData = tabulatorRef.current.getData();
 
     if (e.key === 'ArrowDown') {
-      tabulatorRef.current.selectRow([1]);
+      const len = calcFilterDataLen();
+      setCursor((prev) => (prev + 1) % len);
+      // tabulatorRef.current.selectRow([1]);
     }
 
     if (e.key === 'ArrowUp') {
+      const len = calcFilterDataLen();
 
+      setCursor((prev) => {
+
+        if (prev - 1 <= 0) return 0;
+
+        return (prev - 1) % len
+      });
     }
 
     if (e.key === 'Enter') {
@@ -42,7 +72,22 @@ export const CustomTableSelect = (props) => {
       onSelectRowData?.(selectedRow);
       hideDroplist();
     }
+
+    if (e.key === 'Escape') {
+      hideDroplist();
+    }
   }
+
+  useEffect(() => {
+    if (!tabulatorRef.current) return;
+
+    const curTableData = tabulatorRef.current.searchData('name', 'like', searchText);
+    const uniqueKeys = map(curTableData, 'id');
+
+    tabulatorRef.current.deselectRow();
+    tabulatorRef.current.selectRow(uniqueKeys[cursor]);
+    tabulatorRef.current.scrollToRow(uniqueKeys[cursor], "center", false);
+  }, [cursor]);
 
   useClickOutside([dropdownRef, inputRef], hideDroplist);
   useKeyPress(handleKeyPress);
@@ -51,7 +96,7 @@ export const CustomTableSelect = (props) => {
     setPopupVisble(true);
   }
 
-  const handleSelectedRow = (row: RowComponent) => {
+  const handleSelectedRow = (_event: UIEvent, row: RowComponent) => {
     const rowData = row.getData();
     onSelectRowData?.(rowData)
 
@@ -59,14 +104,25 @@ export const CustomTableSelect = (props) => {
     hideDroplist();
   }
 
-  const handleValueChange = () => {
+  const debouncedOnChange =
+    debounce((value) => {
+      if (!tabulatorRef.current) return;
 
+      tabulatorRef.current.setFilter('name', 'like', value);
+    }, 500)
+    ;
+
+  const handleValueChange = (value: string) => {
+    setSearchText(value);
+
+    debouncedOnChange(value);
   }
 
   const handleTabulator = (ref) => {
     tabulatorRef.current = ref;
 
-    tabulatorRef.current.on('rowSelected', handleSelectedRow);
+    // tabulatorRef.current.on('rowSelected', handleSelectedRow);
+    tabulatorRef.current.on('rowDblClick', handleSelectedRow);
   }
 
   return (
@@ -88,6 +144,8 @@ export const CustomTableSelect = (props) => {
             ref={(ref) => (inputRef.current = ref?.dom)}
             onChange={handleValueChange}
             prefix={<IconPlus />}
+            allowClear
+            value={searchText}
             placeholder='请输入...'
           />
         </InputWrapper>

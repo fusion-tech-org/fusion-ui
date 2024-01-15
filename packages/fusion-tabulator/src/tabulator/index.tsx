@@ -34,6 +34,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     onEvents,
     // enableRemote = false,
     quickAddDropdownDefinitions,
+    uniformProps,
   } = props;
   console.log('TabulatorReact -> ', props);
   // const {
@@ -199,7 +200,9 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     if (tableMode !== 'editable') return null;
 
     return <ExternalInputContainer top={inputTop}>
-      <CustomTableSelect onSelectRowData={handleSelectRowData} quickAddDropdownDefinitions={quickAddDropdownDefinitions} />
+      <CustomTableSelect onSelectRowData={handleSelectRowData}
+        uniformProps={uniformProps}
+        quickAddDropdownDefinitions={quickAddDropdownDefinitions} />
     </ExternalInputContainer>
   };
 

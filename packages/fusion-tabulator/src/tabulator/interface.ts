@@ -50,5 +50,6 @@ export interface ReactTabulatorProps {
     data: any[];
     columns: any[];
   };
+  uniformProps?: Record<string, any>;
   onEvents?: (eventName: string, data?: Record<string, any>) => void;
 }
