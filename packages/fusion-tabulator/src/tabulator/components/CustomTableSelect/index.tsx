@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Dropdown, Input } from '@arco-design/web-react';
 import {
   Container,
@@ -10,7 +10,7 @@ import { TableSelect } from './TableSelect';
 import { useClickOutside } from 'hooks/useClickOutsite';
 import { useKeyPress } from 'hooks/useKeyPress';
 import { RowComponent, Tabulator } from 'tabulator-tables';
-import { debounce, map } from 'lodash';
+import { debounce, map, isArray } from 'lodash';
 
 export const CustomTableSelect = (props) => {
   const { onSelectRowData, quickAddDropdownDefinitions, uniformProps } = props
@@ -23,8 +23,9 @@ export const CustomTableSelect = (props) => {
   const tabulatorRef = useRef<Tabulator>(null);
 
   const { quickAddConfigs } = uniformProps || {};
+  const { filters = [], uniqueKey = 'id' } = quickAddConfigs || {};
+  console.log('uniformProps >>>> ', uniformProps, quickAddConfigs);
 
-  console.log('uniformProps', uniformProps, quickAddConfigs);
 
   const handleVisibleChange = (visible: boolean) => {
     console.log('visible', visible);
@@ -39,7 +40,7 @@ export const CustomTableSelect = (props) => {
   }
 
   const calcFilterDataLen = () => {
-    const curTableData = tabulatorRef.current.searchData('name', 'like', searchText);
+    const curTableData = tabulatorRef.current.getData('visible');
 
     const len = curTableData.length;
 
@@ -48,7 +49,6 @@ export const CustomTableSelect = (props) => {
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (!tabulatorRef.current) return;
-    // const curTableData = tabulatorRef.current.getData();
 
     if (e.key === 'ArrowDown') {
       const len = calcFilterDataLen();
@@ -81,8 +81,9 @@ export const CustomTableSelect = (props) => {
   useEffect(() => {
     if (!tabulatorRef.current) return;
 
-    const curTableData = tabulatorRef.current.searchData('name', 'like', searchText);
-    const uniqueKeys = map(curTableData, 'id');
+    const curTableData = tabulatorRef.current.getData('visible');
+
+    const uniqueKeys = map(curTableData, uniqueKey);
 
     tabulatorRef.current.deselectRow();
     tabulatorRef.current.selectRow(uniqueKeys[cursor]);
@@ -108,7 +109,11 @@ export const CustomTableSelect = (props) => {
     debounce((value) => {
       if (!tabulatorRef.current) return;
 
-      tabulatorRef.current.setFilter('name', 'like', value);
+      if (!isArray(filters) || filters.length <= 0) return;
+
+      const buildFilters = map(filters, (filter) => ({ field: filter, type: 'like', value }))
+      console.log('buildFilters', buildFilters);
+      tabulatorRef.current.setFilter([buildFilters]);
     }, 500)
     ;
 
