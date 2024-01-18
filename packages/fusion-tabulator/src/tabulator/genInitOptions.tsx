@@ -9,7 +9,7 @@ import {
   Editor,
   Formatter,
 } from 'tabulator-tables';
-import { isArray, isString, map } from 'lodash';
+import { isArray, isObject, isString, map } from 'lodash';
 
 import zhCNLang from 'langs/zh-cn.json';
 import type { ReactTabulatorProps, TableMode } from './interface';
@@ -210,7 +210,9 @@ export const genInitOptions = (
     enableRemote = false,
     tableMode = 'editable',
     appMode,
+    uniformProps,
   } = tabulatorProps;
+  let { commonOptions = {} } = uniformProps || {};
   const generalOptions = genGeneralOptions();
   const columnDefsOptions = genColumnDefsOptions(columnDefs, appMode);
   const ajaxOptions = genAjaxOptions(actionId, enableRemote);
@@ -220,6 +222,10 @@ export const genInitOptions = (
     tableMode
   });
 
+  if (!isObject(commonOptions)) {
+    commonOptions = {};
+  }
+
   return {
     ...generalOptions,
     ...columnDefsOptions,
@@ -228,5 +234,6 @@ export const genInitOptions = (
     ...paginationOptions,
     layout, // fit columns to width of table (optional)
     // ...options // props.options are passed to Tabulator's options.
+    ...commonOptions,
   } as Options;
 };

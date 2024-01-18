@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 
 import {
   FilterContainer,
-  ConfigsContainer,
+  // ConfigsContainer,
   Container,
   Main,
   TableContainer,
@@ -20,8 +20,8 @@ import {
 import type { ReactTabulatorProps } from './tabulator/interface';
 import { S2React, S2ReactProps } from './s2/S2React';
 import { TabulatorTableType } from './interface';
-import { TableConfigBar } from 'components/TableConfigs';
-import { Drawer } from '@arco-design/web-react';
+// import { TableConfigBar } from 'components/TableConfigs';
+// import { Drawer } from '@arco-design/web-react';
 import { openConfigDrawerAtom } from './constants';
 import { TabulatorConfigs } from 'components/TableConfigs/TabulatorConfigs';
 import { TableFilter } from 'components/TableConfigs/TableFilter';
@@ -165,7 +165,7 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
             footer
           </Footer> */}
       </Main>
-      {appMode === 'EDIT' && (
+      {/* {appMode === 'EDIT' && (
         <>
           <ConfigsContainer>
             <TableConfigBar widgetId={widgetId} />
@@ -181,7 +181,7 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
             {renderConfigByTableType(tableType, { onUpdateWidgetProperty })}
           </Drawer>
         </>
-      )}
+      )} */}
     </Container>
   );
 };

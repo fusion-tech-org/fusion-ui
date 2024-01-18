@@ -22,7 +22,7 @@ export const Main = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  min-height: 500px;
+  min-height: 200px;
 `;
 
 export const TableContainer = styled.div`

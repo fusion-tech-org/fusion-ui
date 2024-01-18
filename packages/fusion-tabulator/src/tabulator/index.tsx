@@ -138,16 +138,15 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
     const curColumns = instanceRef.current.getColumnDefinitions();
     const curData = instanceRef.current.getData();
-    debugger;
+
     if (!isEmpty(tableData) && JSON.stringify(curData) !== JSON.stringify(tableData)) {
-      debugger;
+
       instanceRef.current.replaceData(tableData);
       reCalcInputTop();
       return;
     }
 
     if (!isEmpty(columnDefs) && JSON.stringify(curColumns) !== JSON.stringify(columnDefs)) {
-      debugger;
       instanceRef.current.setColumns(columnDefs) //overwrite existing columns with new columns definition array
 
       return;
@@ -162,7 +161,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   useEffect(() => {
     if (!actionId || !instanceRef.current) return;
-    debugger;
+
     const curAjax = instanceRef.current.getAjaxUrl();
     instanceRef.current.setData(curAjax);
   }, [actionId]);
