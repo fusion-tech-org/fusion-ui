@@ -1,4 +1,3 @@
-import { Message } from "@arco-design/web-react";
 import { PlatformAppMode } from "src/interface";
 import { CellComponent, ColumnComponent, EventCallBackMethods, RowComponent, Tabulator } from "tabulator-tables";
 
@@ -14,7 +13,7 @@ export function genInitEventMaps({
   onEvents: (eventName: string, data?: Record<string, any>) => void;
 }): Partial<Record<keyof EventCallBackMethods, EventCallBackMethods[keyof EventCallBackMethods]>> {
   function handleDataLoaded() {
-    console.log('data loaded');
+    console.log('data loaded', appMode);
   }
 
   function handleTableDestroyed() {
@@ -22,29 +21,13 @@ export function genInitEventMaps({
   }
 
   function handleDataProcessed() {
-    console.log('data processed');
-    if (appMode === 'EDIT') {
-      Message.info('表格数据渲染完成');
-    }
-    const curTableData = tabulatorRef.getData();
-    // tabulatorRef.addRow({})
-    // .then((res) => {
-    //   console.log(res);
-    // })
-    //   .catch(err => {
-    //     console.log('add empty row failed: ', err);
-    //   })
-    console.log(curTableData);
-    // add new empty data
-    // if (isArray(columnDefs) && columnDefs.length > 0 && tableData?.length === 0) {
-    //   console.log('add empty', instanceRef.current);
-    //   tabulatorRef.addRow({}).then((res) => {
-    //     console.log(res);
-    //   })
-    //     .catch(err => {
-    //       console.log('add empty row failed: ', err);
-    //     })
+    // console.log('data processed');
+    // if (appMode === 'EDIT') {
+    //   Message.info('表格数据渲染完成');
     // }
+    const curTableData = tabulatorRef.getData();
+    console.log(curTableData);
+
     onUpdateWidgetMetaProperty?.({
       curTableData,
     });

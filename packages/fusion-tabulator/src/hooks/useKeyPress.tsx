@@ -7,7 +7,6 @@ export const useKeyPress = (handler: HandlerType, elem = document.body) => {
     if (!elem) return;
 
     const listener = (event: KeyboardEvent) => {
-      console.log('listen', event);
       handler(event);
     };
 
