@@ -44,7 +44,7 @@ const genGeneralOptions = (): Options => {
 
 function customEditorAndFormatterPipe(tempColDefs: ColumnDefinition[], appMode?: PlatformAppMode): ColumnDefinition[] {
   return map(tempColDefs, item => {
-    const { editor, formatter, editableTitle = false, ...rest } = item;
+    const { editor, formatter, editableTitle = false, headerSort = false, ...rest } = item;
 
     const formatEditableTitle = appMode !== 'EDIT' ? false : editableTitle;
 
@@ -66,6 +66,7 @@ function customEditorAndFormatterPipe(tempColDefs: ColumnDefinition[], appMode?:
 
     return {
       editableTitle: formatEditableTitle,
+      headerSort, // can not support sort by default
       ...pendingItem,
       ...rest
     }

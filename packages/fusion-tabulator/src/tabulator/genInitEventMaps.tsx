@@ -65,7 +65,7 @@ export function genInitEventMaps({
     // column - column component of the moved column
     // columns- array of columns in new order
     console.log(column, columns);
-  };
+  }
 
   function handleColumnResized(column: ColumnComponent) {
     //column - column component of the resized column
@@ -142,7 +142,7 @@ export function genInitEventMaps({
     // data events
     tableDestroyed: handleTableDestroyed,
     dataLoaded: handleDataLoaded,
-    dataProcessed: () => handleDataProcessed,
+    dataProcessed: handleDataProcessed,
     dataChanged: handleDataChanged,
     dataLoadError: handleLoadError,
     // row events

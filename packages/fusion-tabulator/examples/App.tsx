@@ -16,6 +16,7 @@ import { CustomSelect } from "./CustomSelect";
 import { TabulatorSelect } from "./TabulatorSelect";
 import { TabulatorEditable } from "./TabulatorEditable";
 import { TabulatorTest } from "./TabulatorTest";
+import { GridExplore } from "./GridExplore";
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -24,7 +25,16 @@ const Content = Layout.Content;
 const collapsedWidth = 60;
 const normalWidth = 220;
 
-type MenuItemKeys = 'tabulator-test' | 'tabulator-editable' | 'tabulator-select' | 'monaco-editor' | 'tabulator-full' | 'tabulator' | 'proxy-pattern' | 'custom-select' | 'tabulator-empty';
+type MenuItemKeys = 'grid-explore' |
+  'tabulator-test' |
+  'tabulator-editable' |
+  'tabulator-select' |
+  'monaco-editor' |
+  'tabulator-full' |
+  'tabulator' |
+  'proxy-pattern' |
+  'custom-select' |
+  'tabulator-empty';
 
 const menuKeyMapComp = {
   'tabulator-test': <TabulatorTest />,
@@ -36,12 +46,13 @@ const menuKeyMapComp = {
   'tabulator-empty': <TabulatorEmpty />,
   'proxy-pattern': <ProxyPattern />,
   tabulator: <TabulatorExamples />,
+  'grid-explore': <GridExplore />
 }
 
 function App() {
   const [collapsed, setCollapsed] = useState(false);
   const [siderWidth, setSiderWidth] = useState(normalWidth);
-  const [activeMenuKey, setActiveMenuKey] = useState<MenuItemKeys>('tabulator-editable');
+  const [activeMenuKey, setActiveMenuKey] = useState<MenuItemKeys>('grid-explore');
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);

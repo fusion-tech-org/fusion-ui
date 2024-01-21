@@ -34,8 +34,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     onEvents,
     // enableRemote = false,
     quickAddDropdownDefinitions,
-    uniformProps,
+    uniformProps = {},
   } = props;
+  const { commonOptions = {} } = uniformProps;
+  const { headerVisible = true } = commonOptions;
   console.log('TabulatorReact -> ', props);
   // const {
   //   generalConfigs,
@@ -48,10 +50,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   //   styleConfigs,
   //   advancedConfigs,
   // } = configs;
+  const initInputTop = headerVisible ? HEADER_HEIGHT : 0;
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const instanceRef = useRef<Tabulator>();
   const [mainId] = useState(genTabulatorUUID());
-  const [inputTop, setInputTop] = useState(HEADER_HEIGHT);
+  const [inputTop, setInputTop] = useState(initInputTop);
   let isOverHeigth = false;
 
   const calcActionIdCombineDataHash = useMemo(() => {
@@ -75,7 +78,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     instanceRef.current = new Tabulator(domEle, initOptions);
 
     if (tableMode === 'editable' && !isEmpty(tableData)) {
-      const reCalcTop = (tableData.length * ROW_HEIGHT) + 52;
+      const reCalcTop = headerVisible ? (tableData.length * ROW_HEIGHT) + HEADER_HEIGHT : tableData.length * ROW_HEIGHT;
+
       setInputTop(reCalcTop);
     }
 
@@ -109,7 +113,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const reCalcInputTop = () => {
     const dataLen = tableData?.length || 0;
     const allRowHeight = Math.max(dataLen, 1) * ROW_HEIGHT;
-    const nextTop = HEADER_HEIGHT + allRowHeight;
+    const nextTop = headerVisible ? HEADER_HEIGHT + allRowHeight : allRowHeight;
     const tableHeight = wrapperRef.current.getBoundingClientRect().height;
 
     if (nextTop < tableHeight - ROW_HEIGHT) {

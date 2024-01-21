@@ -526,7 +526,7 @@ body {
 }
 
 .tabulator-row.tabulator-row-even {
-  background-color: var(--color-fill-1);
+  /* background-color: var(--color-fill-1); */
 }
 
 @media (hover: hover) and (pointer: fine) {
