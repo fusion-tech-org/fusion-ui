@@ -13,7 +13,8 @@ export function genInitEventMaps({
   onEvents: (eventName: string, data?: Record<string, any>) => void;
 }): Partial<Record<keyof EventCallBackMethods, EventCallBackMethods[keyof EventCallBackMethods]>> {
   function handleDataLoaded() {
-    console.log('data loaded', appMode);
+    const curTableData = tabulatorRef.getData();
+    console.log('data loaded', curTableData);
   }
 
   function handleTableDestroyed() {

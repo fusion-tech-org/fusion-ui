@@ -17,6 +17,7 @@ import { TabulatorSelect } from "./TabulatorSelect";
 import { TabulatorEditable } from "./TabulatorEditable";
 import { TabulatorTest } from "./TabulatorTest";
 import { GridExplore } from "./GridExplore";
+import { DBTable } from "./DBTable";
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -26,6 +27,7 @@ const collapsedWidth = 60;
 const normalWidth = 220;
 
 type MenuItemKeys = 'grid-explore' |
+  'db-table' |
   'tabulator-test' |
   'tabulator-editable' |
   'tabulator-select' |
@@ -37,6 +39,7 @@ type MenuItemKeys = 'grid-explore' |
   'tabulator-empty';
 
 const menuKeyMapComp = {
+  'db-table': <DBTable />,
   'tabulator-test': <TabulatorTest />,
   'tabulator-editable': <TabulatorEditable />,
   'custom-select': <CustomSelect />,
@@ -52,7 +55,7 @@ const menuKeyMapComp = {
 function App() {
   const [collapsed, setCollapsed] = useState(false);
   const [siderWidth, setSiderWidth] = useState(normalWidth);
-  const [activeMenuKey, setActiveMenuKey] = useState<MenuItemKeys>('grid-explore');
+  const [activeMenuKey, setActiveMenuKey] = useState<MenuItemKeys>('db-table');
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);
@@ -99,6 +102,10 @@ function App() {
           }}
         >
           <Menu theme='dark' autoOpen style={{ width: '100%' }} onClickMenuItem={handleClickMenuItem}>
+            <MenuItem key='db-table'>
+              <IconCalendar />
+              db-table
+            </MenuItem>
             <MenuItem key='tabulator-select'>
               <IconCalendar />
               tabulator-select

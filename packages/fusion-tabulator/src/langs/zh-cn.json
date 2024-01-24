@@ -1,4 +1,8 @@
 {
+  "data": {
+    "loading": "加载中...",
+    "error": "数据加载异常"
+  },
   "pagination": {
     "first": "首页",
     "first_title": "首页",

@@ -11,7 +11,7 @@ import {
 } from 'tabulator-tables';
 import { isArray, isObject, isString, map } from 'lodash';
 
-import zhCNLang from 'langs/zh-cn.json';
+// import zhCNLang from 'langs/zh-cn.json';
 import type { ReactTabulatorProps, TableMode } from './interface';
 import { Message } from '@arco-design/web-react';
 import { CUSTOM_EDITOR_MAP, checkIsCustomEditor } from './editors';
@@ -29,9 +29,10 @@ const genGeneralOptions = (): Options => {
     selectable: false,
     selectableRollingSelection: false, // disable rolling selection
     renderHorizontal: "virtual",
-    langs: {
-      zh: zhCNLang,
-    },
+    renderVertical: "virtual",
+    // langs: {
+    //   zh: zhCNLang,
+    // },
     dataLoaderLoading: `
       <div style='display:inline-block; border-radius:10px; background:#fff; font-weight:bold; font-size:16px; color:#000; padding:10px 20px;'>
         数据加载中...
@@ -96,11 +97,16 @@ const genColumnDefsOptions = (initColDefs: ColumnDefinition[], appMode?: Platfor
   };
 };
 
-export const genAjaxOptions = (
+export const genAjaxOptions = ({
+  actionId,
+  enableRemote,
+  enableIndexedDBQuery,
+}: {
   actionId: string,
-  enableRemote: boolean
-): OptionsData => {
-  if (!actionId || !enableRemote) return {};
+  enableRemote: boolean,
+  enableIndexedDBQuery: boolean,
+}): OptionsData => {
+  if (!actionId || !enableRemote || enableIndexedDBQuery) return {};
 
   console.log(enableRemote, 'enableRemote');
   return {
@@ -155,13 +161,18 @@ export const genAjaxOptions = (
   };
 };
 
-const genStaticDataOptions = (
-  staticData: Record<string, unknown>[],
-  columnDefs?: ColumnDefinition[],
-  tableMode?: TableMode
-): OptionsData => {
+const genStaticDataOptions = ({
+  tableData,
+  enableIndexedDBQuery,
+  columnDefs,
+}: {
+  tableData: Record<string, unknown>[];
+  enableIndexedDBQuery: boolean;
+  columnDefs?: ColumnDefinition[];
+  tableMode?: TableMode;
+}): OptionsData => {
   console.log('genStaticDataOptions columnDefs:', columnDefs);
-  if (!isArray(staticData) || !staticData?.length) {
+  if (!isArray(tableData) || enableIndexedDBQuery) {
     // const initEditData = {};
 
     // forEach(columnDefs, (item) => {
@@ -178,9 +189,10 @@ const genStaticDataOptions = (
   }
 
   return {
-    data: staticData,
+    data: tableData,
   };
 };
+
 
 export interface GenPaginationOptionsParams {
   enableRemote: boolean;
@@ -204,7 +216,7 @@ export const genInitOptions = (
   tabulatorProps: ReactTabulatorProps,
 ): Options => {
   const {
-    layout = "fitColumns",
+    layout = "fitDataFill",
     data: tableData,
     actionId,
     columns: columnDefs,
@@ -213,15 +225,17 @@ export const genInitOptions = (
     appMode,
     uniformProps,
   } = tabulatorProps;
-  let { commonOptions = {} } = uniformProps || {};
+  let { commonOptions = {}, } = uniformProps || {};
+  const { enableIndexedDBQuery = false, indexdbConfigs } = uniformProps || {};
   const generalOptions = genGeneralOptions();
   const columnDefsOptions = genColumnDefsOptions(columnDefs, appMode);
-  const ajaxOptions = genAjaxOptions(actionId, enableRemote);
-  const staticDataOptions = genStaticDataOptions(tableData, columnDefs, tableMode);
+  const ajaxOptions = genAjaxOptions({ actionId, enableRemote, enableIndexedDBQuery });
+  const staticDataOptions = genStaticDataOptions({ tableData, columnDefs, tableMode, enableIndexedDBQuery });
   const paginationOptions = genPaginationOptions({
     enableRemote,
     tableMode
   });
+  const indexedDBOptions = genIndexedDBOptions(enableIndexedDBQuery, indexdbConfigs);
 
   if (!isObject(commonOptions)) {
     commonOptions = {};
@@ -230,6 +244,7 @@ export const genInitOptions = (
   return {
     ...generalOptions,
     ...columnDefsOptions,
+    ...indexedDBOptions,
     ...ajaxOptions,
     ...staticDataOptions,
     ...paginationOptions,
@@ -238,3 +253,23 @@ export const genInitOptions = (
     ...commonOptions,
   } as Options;
 };
+
+function genIndexedDBOptions(enableIndexedDBQuery: boolean, indexdbConfigs: Record<string, any>) {
+  if (!enableIndexedDBQuery) {
+    return {};
+  }
+
+  const {
+    dexie,
+    tableName,
+    simpleBuiltinQueryCondition,
+    dropdownSimpleBuiltinQueryCondition,
+  } = indexdbConfigs;
+  console.log('genIndexedDBOptions', tableName,
+    simpleBuiltinQueryCondition,
+    dropdownSimpleBuiltinQueryCondition,);
+  return {
+    dexie: dexie,
+    dexieTable: tableName
+  };
+}

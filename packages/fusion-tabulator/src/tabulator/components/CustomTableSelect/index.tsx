@@ -69,6 +69,8 @@ export const CustomTableSelect = (props) => {
 
     if (e.key === 'Enter') {
       const selectedRow = tabulatorRef.current.getSelectedData()[0];
+      if (!selectedRow) return;
+
       onSelectRowData?.(selectedRow);
       hideDroplist();
     }

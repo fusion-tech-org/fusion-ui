@@ -251,9 +251,6 @@ importers:
       luxon:
         specifier: ^3.4.4
         version: 3.4.4
-      pick-react-known-prop:
-        specifier: ^0.1.5
-        version: 0.1.5
       react-grid-layout:
         specifier: ^1.4.4
         version: 1.4.4(react-dom@18.2.0)(react@18.2.0)
@@ -312,6 +309,12 @@ importers:
       axios:
         specifier: ^1.6.2
         version: 1.6.2
+      dexie:
+        specifier: ^3.2.4
+        version: 3.2.4
+      dexie-react-hooks:
+        specifier: ^1.1.7
+        version: 1.1.7(@types/react@18.2.45)(dexie@3.2.4)(react@18.2.0)
       eslint:
         specifier: ^8.55.0
         version: 8.55.0
@@ -7964,6 +7967,23 @@ packages:
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /dexie-react-hooks@1.1.7(@types/react@18.2.45)(dexie@3.2.4)(react@18.2.0):
+    resolution: {integrity: sha512-Lwv5W0Hk+uOW3kGnsU9GZoR1er1B7WQ5DSdonoNG+focTNeJbHW6vi6nBoX534VKI3/uwHebYzSw1fwY6a7mTw==}
+    peerDependencies:
+      '@types/react': '>=16'
+      dexie: ^3.2 || ^4.0.1-alpha
+      react: '>=16'
+    dependencies:
+      '@types/react': 18.2.45
+      dexie: 3.2.4
+      react: 18.2.0
+    dev: true
+
+  /dexie@3.2.4:
+    resolution: {integrity: sha512-VKoTQRSv7+RnffpOJ3Dh6ozknBqzWw/F3iqMdsZg958R0AS8AnY9x9d1lbwENr0gzeGJHXKcGhAMRaqys6SxqA==}
+    engines: {node: '>=6.0'}
     dev: true
 
   /diff-sequences@29.6.3:

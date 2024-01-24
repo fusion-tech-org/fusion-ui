@@ -1,6 +1,7 @@
 import type { ColProps, RulesProps } from '@arco-design/web-react';
 import { S2ReactProps } from './s2/S2React';
 import { ReactTabulatorProps, TableMode } from './tabulator/interface';
+import Dexie from 'dexie';
 
 export type TabulatorTableType = 'tabulator' | 's2';
 
@@ -56,6 +57,7 @@ export interface TabulatorProps {
   tableType: TabulatorTableType;
   appMode: PlatformAppMode;
   filterDefinitions?: FilterDefinitions;
+  dexie?: Dexie;
   configs?: {
     tabulator?: {
       generalConfigs?: Record<string, unknown>;
