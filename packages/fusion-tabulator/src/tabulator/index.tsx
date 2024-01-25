@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useState, useEffect } from 'react';
 
-import { isEmpty, isNumber } from 'lodash';
+import { isEmpty, isNumber, isUndefined } from 'lodash';
 
 // import { pickHTMLProps } from 'pick-react-known-prop';
 // import { propsToOptions } from 'utils/ConfigUtils';
@@ -134,33 +134,32 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     if (isNumber(tableHeight)) {
       reCalcInputTop(loadedData)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tableHeight, JSON.stringify(loadedData)]);
 
   const responsiveTabulator = () => {
     if (isEmpty(tableData) && !actionId && isEmpty(columnDefs) && !enableIndexedDBQuery) return;
 
-    initTable();
-    // NOTE: old logic
-    // if (!tabulatorRef) {
     // initTable();
-    //   return;
-    // }
+    // NOTE: old logic
+    if (!tabulatorRef) {
+      initTable();
+      return;
+    }
 
-    // const curColumns = tabulatorRef.getColumnDefinitions();
-    // const curData = tabulatorRef.getData();
+    const curColumns = tabulatorRef.getColumnDefinitions();
+    const curData = tabulatorRef.getData();
 
-    // if (!isUndefined(tableData) && JSON.stringify(curData) !== JSON.stringify(tableData)) {
+    if (!isUndefined(tableData) && JSON.stringify(curData) !== JSON.stringify(tableData)) {
+      tabulatorRef.setData(tableData);
+      return;
+    }
 
-    //   tabulatorRef.replaceData(tableData);
-    //   reCalcInputTop();
-    //   return;
-    // }
+    if (!isUndefined(columnDefs) && JSON.stringify(curColumns) !== JSON.stringify(columnDefs)) {
+      tabulatorRef.setColumns(columnDefs) //overwrite existing columns with new columns definition array
 
-    // if (!isUndefined(columnDefs) && JSON.stringify(curColumns) !== JSON.stringify(columnDefs)) {
-    //   tabulatorRef.setColumns(columnDefs) //overwrite existing columns with new columns definition array
-
-    //   return;
-    // }
+      return;
+    }
   }
 
   // useEffect(() => {
