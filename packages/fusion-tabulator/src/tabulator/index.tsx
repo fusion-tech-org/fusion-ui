@@ -169,13 +169,13 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   //   console.log('calcActionIdCombineDataHash', '<<<<<<');
   // }, [calcActionIdCombineDataHash]);
 
-  // useEffect(() => {
-  //   if (!actionId || !tabulatorRef) return;
+  useEffect(() => {
+    if (!actionId || !tabulatorRef) return;
 
-  //   const curAjax = tabulatorRef.getAjaxUrl();
-  //   tabulatorRef.setData(curAjax);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [actionId]);
+    const curAjax = tabulatorRef.getAjaxUrl();
+    tabulatorRef.setData(curAjax);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actionId, !tabulatorRef]);
 
   useEffect(() => {
     responsiveTabulator();

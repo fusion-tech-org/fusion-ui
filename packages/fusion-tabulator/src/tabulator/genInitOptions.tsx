@@ -85,14 +85,17 @@ export const genAjaxOptions = ({
   actionId,
   enableRemote,
   enableIndexedDBQuery,
+  params,
 }: {
   actionId: string,
   enableRemote: boolean,
   enableIndexedDBQuery: boolean,
+  params?: Record<string, any>;
 }): OptionsData => {
   if (!actionId || !enableRemote || enableIndexedDBQuery) return {};
 
   console.log(enableRemote, 'enableRemote');
+  const formatParams = isObject(params) ? params : {};
   return {
     ajaxURL: '/api/v1/actions/execute',
     ajaxConfig: {
@@ -115,7 +118,9 @@ export const genAjaxOptions = ({
         enablePage: true,
         size: 10,
         page: 1,
-        where: {},
+        where: {
+          ...formatParams
+        },
         dateBetween: {},
       };
 
@@ -210,13 +215,13 @@ export const genInitOptions = (
     uniformProps,
   } = tabulatorProps;
   let { commonOptions = {} } = uniformProps || {};
-  const { enableIndexedDBQuery = false, quickAddConfigs, indexdbConfigs, dbType } = uniformProps || {};
+  const { enableIndexedDBQuery = false, quickAddConfigs, indexdbConfigs, dbType, remoteAjax } = uniformProps || {};
   const generalOptions = genGeneralOptions();
 
   const formatColumnDefs = dbType === 'cutomTableSelect' ? quickAddConfigs.columns : columnDefs;
 
   const columnDefsOptions = genColumnDefsOptions(formatColumnDefs, appMode);
-  const ajaxOptions = genAjaxOptions({ actionId, enableRemote, enableIndexedDBQuery });
+  const ajaxOptions = genAjaxOptions({ actionId, enableRemote, enableIndexedDBQuery, params: remoteAjax?.params });
   const staticDataOptions = genStaticDataOptions({ tableData, columnDefs, tableMode, enableIndexedDBQuery });
   const paginationOptions = genPaginationOptions({
     enableRemote,
