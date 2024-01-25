@@ -40,35 +40,19 @@ const genGeneralOptions = (): Options => {
     `,
     dataLoaderError: '',
     dataLoaderErrorTimeout: 0,
+    // adverts: true,
+    // advertSrc: 'https://fujia.site/articles/632ef6cf86ce2500350b37a1'
   };
 };
 
 function customEditorAndFormatterPipe(tempColDefs: ColumnDefinition[], appMode?: PlatformAppMode): ColumnDefinition[] {
   return map(tempColDefs, item => {
-    const { editor, formatter, editableTitle = false, headerSort = false, ...rest } = item;
+    const { editableTitle = false, ...rest } = item;
 
     const formatEditableTitle = appMode !== 'EDIT' ? false : editableTitle;
 
-    const pendingItem: {
-      editor?: Editor;
-      formatter?: Formatter;
-    } = {
-      editor,
-      formatter
-    };
-
-    if (isString(editor) && checkIsCustomEditor(editor)) {
-      pendingItem.editor = CUSTOM_EDITOR_MAP[editor];
-    }
-
-    if (isString(formatter) && checkIsCustomFormatter(formatter)) {
-      pendingItem.formatter = CUSTOM_FORMATTER_MAP[formatter]
-    }
-
     return {
       editableTitle: formatEditableTitle,
-      headerSort, // can not support sort by default
-      ...pendingItem,
       ...rest
     }
   })
@@ -225,17 +209,20 @@ export const genInitOptions = (
     appMode,
     uniformProps,
   } = tabulatorProps;
-  let { commonOptions = {}, } = uniformProps || {};
-  const { enableIndexedDBQuery = false, indexdbConfigs } = uniformProps || {};
+  let { commonOptions = {} } = uniformProps || {};
+  const { enableIndexedDBQuery = false, quickAddConfigs, indexdbConfigs, dbType } = uniformProps || {};
   const generalOptions = genGeneralOptions();
-  const columnDefsOptions = genColumnDefsOptions(columnDefs, appMode);
+
+  const formatColumnDefs = dbType === 'cutomTableSelect' ? quickAddConfigs.columns : columnDefs;
+
+  const columnDefsOptions = genColumnDefsOptions(formatColumnDefs, appMode);
   const ajaxOptions = genAjaxOptions({ actionId, enableRemote, enableIndexedDBQuery });
   const staticDataOptions = genStaticDataOptions({ tableData, columnDefs, tableMode, enableIndexedDBQuery });
   const paginationOptions = genPaginationOptions({
     enableRemote,
     tableMode
   });
-  const indexedDBOptions = genIndexedDBOptions(enableIndexedDBQuery, indexdbConfigs);
+  const indexedDBOptions = genIndexedDBOptions(enableIndexedDBQuery, indexdbConfigs, dbType);
 
   if (!isObject(commonOptions)) {
     commonOptions = {};
@@ -254,7 +241,7 @@ export const genInitOptions = (
   } as Options;
 };
 
-function genIndexedDBOptions(enableIndexedDBQuery: boolean, indexdbConfigs: Record<string, any>) {
+function genIndexedDBOptions(enableIndexedDBQuery: boolean, indexdbConfigs: Record<string, any>, dbType?: string) {
   if (!enableIndexedDBQuery) {
     return {};
   }
@@ -262,6 +249,7 @@ function genIndexedDBOptions(enableIndexedDBQuery: boolean, indexdbConfigs: Reco
   const {
     dexie,
     tableName,
+    dropdownIndexedDBTableName,
     simpleBuiltinQueryCondition,
     dropdownSimpleBuiltinQueryCondition,
   } = indexdbConfigs;
@@ -270,6 +258,6 @@ function genIndexedDBOptions(enableIndexedDBQuery: boolean, indexdbConfigs: Reco
     dropdownSimpleBuiltinQueryCondition,);
   return {
     dexie: dexie,
-    dexieTable: tableName
+    dexieTable: dbType === 'cutomTableSelect' ? dropdownIndexedDBTableName : tableName
   };
 }

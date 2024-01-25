@@ -4,12 +4,12 @@ export class DexieModule extends Module {
   constructor(table) {
     super(table);
 
-    this.db = null; //hold the database
-    this.dbTable = null; // hold the database table name
+    this.db = undefined; //hold the database
+    this.dbTable = undefined; // hold the database table name
 
     // register table options
-    this.registerTableOption("dexie", null);
-    this.registerTableOption("dexieTable", '');
+    this.registerTableOption("dexie", undefined);
+    this.registerTableOption("dexieTable", undefined);
   }
 
   //called by the table when it is ready for module interactions
@@ -35,7 +35,7 @@ export class DexieModule extends Module {
 
   //build database query, and return results
   requestData(data, params) {
-    console.log('Dexie Module Requesting Data');
+    console.log('Dexie Module Requesting Data', data, params);
     // var query = this.db.table(this.dbTable);
 
     //check if any filters have been set on the query params
@@ -55,27 +55,6 @@ export class DexieModule extends Module {
     //run query and return promise
     // return query.run();
     return this.db[this.dbTable].toArray();
-    //   return new Promise((resolve) => resolve(
-    //     [
-    //       {
-    //         "SEQUENCE_NO": "12641",
-    //         "ICD_CODE": "I22.100x002",
-    //         "SICD": "I22.100x002",
-    //         "SPELL_CODE": "JXXHBZFXJGS",
-    //         "WB_CODE": "QNGRNGNN",
-    //         "ICD_NAME": "急性下后壁再发心肌梗死",
-    //         "DISEASE_CODE": "D",
-    //         "INFECT_FLAG": "0",
-    //         "CANCER_FLAG": "0",
-    //         "VALID_STATE": "1",
-    //         "SORT_ID": null,
-    //         "OPER_CODE": "9999",
-    //         "OPER_DATE": "2021-02-24T10:00:00.000Z",
-    //         "SEXTYPE": "A",
-    //         "SICD_NAME": null
-    //       },
-    //     ]
-    //   ))
   }
 }
 

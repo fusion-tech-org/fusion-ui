@@ -18,7 +18,7 @@ const UNIFORM_PROPS = {
     remoteQuery: {},
   },
   indexdbConfigs: {
-    tableName: 'herbars',
+    tableName: 'drug_list',
     dexie: db,
     simpleBuiltinQueryCondition: [
       {
@@ -30,9 +30,66 @@ const UNIFORM_PROPS = {
         value: '1000',
       },
     ],
-    dropdownSimpleBuiltinQueryCondition: [],
+    dropdownIndexedDBTableName: "herbars",
+    dropdownSimpleBuiltinQueryCondition: [
+      {
+        "label": "where",
+        "value": "ICD_NAME"
+      },
+      {
+        "label": "limit",
+        "value": "1000000"
+      }
+    ],
+
   },
 };
+
+const colDefs: any[] = [
+  {
+    title: '标题',
+    field: 'SEQUENCE_NO',
+    editor: true,
+    formatter: 'placeholder',
+    formatterParams: {
+      placeholder: '用量'
+    }
+  },
+  {
+    title: '标题—2',
+    field: 'ICD_CODE',
+    editor: true,
+  },
+  {
+    title: '标题3',
+    field: 'SICD',
+    editor: true,
+  },
+  {
+    title: '标题4',
+    field: 'SPELL_CODE',
+    editor: true,
+  },
+  {
+    title: '标题5',
+    field: 'WB_CODE',
+    editor: true,
+  },
+  {
+    title: '标题6',
+    field: 'ICD_NAME',
+    editor: true,
+  }, {
+    title: '标题7',
+    field: 'DISEASE_CODE',
+    editor: true,
+  },
+  {
+    title: '标题8',
+    field: 'INFECT_FLAG',
+    editor: true,
+  },
+]
 
 export const DBTable = () => {
   const dexieRef = useRef<Dexie>(null);
@@ -50,7 +107,11 @@ export const DBTable = () => {
         appMode="EDIT"
         widgetId="ss"
         tableType="tabulator"
+        tableMode="editable"
         uniformProps={UNIFORM_PROPS}
+        tabulatorOptions={{
+          columns: colDefs,
+        }}
       />
     </div>
   );

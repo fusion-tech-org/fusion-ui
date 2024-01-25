@@ -5,9 +5,10 @@ import {
   TabulatorFull as Tabulator,
   EventCallBackMethods,
 } from 'tabulator-tables';
-import { filter, forIn, isNull, isUndefined, map, reduce } from 'lodash';
+import { filter, forIn, isNull, isUndefined, reduce } from 'lodash';
 
 import { DexieModule } from './custom-modules/DexieModule';
+// import { AdvertModule } from './custom-modules/AdvertModule';
 import { genInitOptions } from './genInitOptions';
 import { genInitEventMaps } from './genInitEventMaps';
 import zhCNLang from 'langs/zh-cn.json';
@@ -18,6 +19,7 @@ import { useIntersectionObserver } from 'hooks/useIntersectionObserver';
  */
 Tabulator.registerModule(DexieModule);
 
+// Tabulator.registerModule(AdvertModule);
 /**
  * extending modules
  */
@@ -134,9 +136,11 @@ Tabulator.defaultOptions.columnDefaults.headerSort = false;
 export const useTabulator = ({
   ref,
   props,
+  eventCallback,
 }: {
-  ref: React.RefObject<HTMLElement>,
-  props: any,
+  ref: React.RefObject<HTMLElement>;
+  props: any;
+  eventCallback?: (eventName: string, data?: Record<string, any>) => void;
 }) => {
   const {
     classNames,
@@ -156,9 +160,16 @@ export const useTabulator = ({
   } = props;
   const instanceRef = useRef<Tabulator>();
   const [rectBound] = useIntersectionObserver(ref);
-  console.log(rectBound?.height);
-  const initTabulator = () => {
+
+  const handleTableEvents = (eventName: string, data?: Record<string, any>) => {
+    eventCallback?.(eventName, data);
+
+    onEvents?.(eventName, data);
+  }
+
+  const initTabulator = (callback?: VoidFunction) => {
     if (instanceRef.current) {
+      // debugger;
       instanceRef.current.destroy();
       instanceRef.current = null;
     }
@@ -189,7 +200,7 @@ export const useTabulator = ({
       appMode,
       tabulatorRef: instanceRef.current,
       onUpdateWidgetMetaProperty,
-      onEvents,
+      onEvents: handleTableEvents,
     });
     const mergeEvents = {
       ...defaultEvents,
@@ -204,9 +215,12 @@ export const useTabulator = ({
     onUpdateWidgetMetaProperty?.({
       tabulatorRef: instanceRef.current,
     });
+
+    callback?.();
   }
 
   return {
+    tableHeight: rectBound?.height,
     tabulatorRef: instanceRef.current,
     initTable: initTabulator
   }

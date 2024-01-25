@@ -1,16 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Dropdown, Input } from '@arco-design/web-react';
+import { Dropdown, Input, Message } from '@arco-design/web-react';
 import {
   Container,
   DroplistWrapper,
   InputWrapper,
 } from './styles';
 import { IconPlus } from '@arco-design/web-react/icon';
-import { TableSelect } from './TableSelect';
+// import { TableSelect } from './TableSelect';
 import { useClickOutside } from 'hooks/useClickOutsite';
 import { useKeyPress } from 'hooks/useKeyPress';
 import { RowComponent, Tabulator } from 'tabulator-tables';
-import { debounce, map, isArray } from 'lodash';
+import { debounce, map, isArray, isEmpty } from 'lodash';
+import { genTabulatorUUID } from 'utils/index';
+import { useTabulator } from 'src/tabulator/useTabulator';
 
 export const CustomTableSelect = (props) => {
   const { onSelectRowData, quickAddDropdownDefinitions, uniformProps } = props
@@ -20,11 +22,31 @@ export const CustomTableSelect = (props) => {
   const [searchText, setSearchText] = useState('');
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const tabulatorRef = useRef<Tabulator>(null);
+  // const tabulatorRef = useRef<Tabulator>(null);
+  const [mainId] = useState(genTabulatorUUID());
+  const tableRef = useRef<HTMLDivElement | null>(null);
 
-  const { quickAddConfigs } = uniformProps || {};
+  const { tabulatorRef, initTable } = useTabulator({
+    ref: tableRef,
+    eventCallback: handleEventCallback,
+    props: {
+      ...props,
+      uniformProps: {
+        ...uniformProps,
+        commonOptions: {
+          layout: 'fitDataStretch',
+          height: '320px',
+          selectable: 1,
+          rowHeight: 32,
+        },
+        dbType: 'cutomTableSelect'
+      }
+    }
+  });
+
+  const { quickAddConfigs, enableIndexedDBQuery = false, indexdbConfigs } = uniformProps || {};
   const { filters = [], uniqueKey = 'id' } = quickAddConfigs || {};
-  console.log('uniformProps >>>> ', uniformProps, quickAddConfigs);
+  console.log('uniformProps ++++', uniformProps, quickAddConfigs);
 
 
   const handleVisibleChange = (visible: boolean) => {
@@ -33,14 +55,14 @@ export const CustomTableSelect = (props) => {
 
   const hideDroplist = () => {
     setPopupVisble(false);
-    tabulatorRef.current = null;
+    // tabulatorRef = null;
     setCursor(-1);
     setSearchText('');
     inputRef.current?.blur();
   }
 
   const calcFilterDataLen = () => {
-    const curTableData = tabulatorRef.current.getData('visible');
+    const curTableData = tabulatorRef.getData('visible');
 
     const len = curTableData.length;
 
@@ -48,12 +70,12 @@ export const CustomTableSelect = (props) => {
   }
 
   const handleKeyPress = (e: KeyboardEvent) => {
-    if (!tabulatorRef.current) return;
+    if (!tabulatorRef) return;
 
     if (e.key === 'ArrowDown') {
       const len = calcFilterDataLen();
       setCursor((prev) => (prev + 1) % len);
-      // tabulatorRef.current.selectRow([1]);
+      // tabulatorRef.selectRow([1]);
     }
 
     if (e.key === 'ArrowUp') {
@@ -68,7 +90,7 @@ export const CustomTableSelect = (props) => {
     }
 
     if (e.key === 'Enter') {
-      const selectedRow = tabulatorRef.current.getSelectedData()[0];
+      const selectedRow = tabulatorRef.getSelectedData()[0];
       if (!selectedRow) return;
 
       onSelectRowData?.(selectedRow);
@@ -80,27 +102,44 @@ export const CustomTableSelect = (props) => {
     }
   }
 
-  useEffect(() => {
-    if (!tabulatorRef.current) return;
+  useClickOutside([dropdownRef, inputRef], hideDroplist);
 
-    const curTableData = tabulatorRef.current.getData('visible');
+  useKeyPress(handleKeyPress);
+
+  useEffect(() => {
+    if (!tabulatorRef) return;
+
+    const curTableData = tabulatorRef.getData('visible');
 
     const uniqueKeys = map(curTableData, uniqueKey);
 
-    tabulatorRef.current.deselectRow();
-    tabulatorRef.current.selectRow(uniqueKeys[cursor]);
-    tabulatorRef.current.scrollToRow(uniqueKeys[cursor], "center", false);
+    tabulatorRef.deselectRow();
+    tabulatorRef.selectRow(uniqueKeys[cursor]);
+    tabulatorRef.scrollToRow(uniqueKeys[cursor], "center", false);
   }, [cursor]);
 
-  useClickOutside([dropdownRef, inputRef], hideDroplist);
-  useKeyPress(handleKeyPress);
+  // useEffect(() => {
+  //   if (tableRef) {
+  //     initTable();
+  //   }
+  // }, [tableRef]);
 
   const handleInputFocus = () => {
+    const { data, columns } = quickAddDropdownDefinitions || {};
+    if (isEmpty(data) && isEmpty(columns) && !enableIndexedDBQuery) {
+      Message.info('下拉项表格数据未定义');
+
+      return;
+    }
     setPopupVisble(true);
+
+    setTimeout(() => {
+      initTable();
+    }, 20)
   }
 
-  const handleSelectedRow = (_event: UIEvent, row: RowComponent) => {
-    const rowData = row.getData();
+  const handleSelectedRow = (rowData: any) => {
+    // const rowData = row.getData();
     onSelectRowData?.(rowData)
 
     // setPopupVisble(false)
@@ -109,13 +148,13 @@ export const CustomTableSelect = (props) => {
 
   const debouncedOnChange =
     debounce((value) => {
-      if (!tabulatorRef.current) return;
+      if (!tabulatorRef) return;
 
       if (!isArray(filters) || filters.length <= 0) return;
 
       const buildFilters = map(filters, (filter) => ({ field: filter, type: 'like', value }))
       console.log('buildFilters', buildFilters);
-      tabulatorRef.current.setFilter(buildFilters);
+      tabulatorRef.setFilter(buildFilters);
     }, 500)
     ;
 
@@ -125,11 +164,15 @@ export const CustomTableSelect = (props) => {
     debouncedOnChange(value);
   }
 
-  const handleTabulator = (ref) => {
-    tabulatorRef.current = ref;
-
-    // tabulatorRef.current.on('rowSelected', handleSelectedRow);
-    tabulatorRef.current.on('rowDblClick', handleSelectedRow);
+  function handleEventCallback(eventName: string, data?: Record<string, any>) {
+    console.log('eventName', eventName, data, '<<<<<<<<');
+    switch (eventName) {
+      case 'rowDbClick':
+        handleSelectedRow(data);
+        break;
+      default:
+        break;
+    }
   }
 
   return (
@@ -141,7 +184,13 @@ export const CustomTableSelect = (props) => {
         unmountOnExit
         droplist={
           <DroplistWrapper ref={dropdownRef}>
-            <TableSelect onRef={handleTabulator} quickAddDropdownDefinitions={quickAddDropdownDefinitions} />
+            <div ref={tableRef}
+              style={{
+                height: '100%',
+              }}
+              id={mainId}
+              data-instance={mainId}
+            />
           </DroplistWrapper>
         }
       >

@@ -13,7 +13,7 @@ export function genInitEventMaps({
   onEvents: (eventName: string, data?: Record<string, any>) => void;
 }): Partial<Record<keyof EventCallBackMethods, EventCallBackMethods[keyof EventCallBackMethods]>> {
   function handleDataLoaded() {
-    const curTableData = tabulatorRef.getData();
+    const curTableData = tabulatorRef?.getData();
     console.log('data loaded', curTableData);
   }
 
@@ -26,9 +26,9 @@ export function genInitEventMaps({
     // if (appMode === 'EDIT') {
     //   Message.info('表格数据渲染完成');
     // }
-    const curTableData = tabulatorRef.getData();
-    console.log(curTableData);
-
+    const curTableData = tabulatorRef?.getData();
+    // console.log('data processed: ', curTableData);
+    onEvents('dataProcessed', curTableData);
     onUpdateWidgetMetaProperty?.({
       curTableData,
     });
@@ -40,6 +40,7 @@ export function genInitEventMaps({
 
   function handleDataChanged(data: any[]) {
     console.log('data changed: ', data);
+    onEvents('dataChanged', data);
     onUpdateWidgetMetaProperty?.({
       updatingRows: data,
     });
@@ -94,6 +95,11 @@ export function genInitEventMaps({
     onEvents?.('rowDbClick', rowData)
   }
 
+  function handleRowSelected(_event: UIEvent, row: RowComponent) {
+    const rowData = row.getData();
+    onEvents?.('rowSelected', rowData)
+  }
+
   function handleHeaderClick(_event: UIEvent, column: ColumnComponent) {
     const colField = column.getField();
     onEvents?.('headerClick', {
@@ -132,6 +138,8 @@ export function genInitEventMaps({
     // row events
     rowClick: handleRowClick,
     rowDblClick: handleRowDoubleClick,
+    rowSelected: handleRowSelected,
+
     // column events
     headerClick: handleHeaderClick,
     headerDblClick: handleHeaderDblClick,
@@ -144,6 +152,7 @@ export function genInitEventMaps({
     cellEdited: handleCellEdited,
     cellClick: handleCellClick,
     cellDblClick: handleCellDblClick,
+
   }
 }
 
