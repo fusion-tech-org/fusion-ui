@@ -1,30 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useState, useEffect, useMemo } from 'react';
-import * as ReactDOM from 'react-dom';
-import {
-  TabulatorFull as Tabulator,
-  EventCallBackMethods,
-} from 'tabulator-tables';
-import { forIn, isEmpty, isNumber, isUndefined } from 'lodash';
+import { useRef, useState, useEffect } from 'react';
+
+import { isEmpty, isNumber } from 'lodash';
 
 // import { pickHTMLProps } from 'pick-react-known-prop';
 // import { propsToOptions } from 'utils/ConfigUtils';
 import './index.css';
 import { genTabulatorUUID } from 'utils/index';
-import { genInitOptions } from './genInitOptions';
-import { genInitEventMaps } from './genInitEventMaps';
 import { Empty } from '@arco-design/web-react';
 import { ExternalInputContainer } from './styles';
 import { CustomTableSelect } from './components/CustomTableSelect';
 import { HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { ReactTabulatorProps } from './interface';
-import { useIntersectionObserver } from 'hooks/useIntersectionObserver';
 import { useTabulator } from './useTabulator';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
     classNames,
-    eventMaps = {},
     appMode,
     data: tableData,
     columns: columnDefs,
@@ -33,9 +25,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     onCustomSelectDropdownItem,
     actionId,
     tableMode = 'normal',
-    onEvents,
-    // enableRemote = false,
-    quickAddDropdownDefinitions,
     uniformProps = {},
   } = props;
   const { commonOptions = {}, enableIndexedDBQuery } = uniformProps;
