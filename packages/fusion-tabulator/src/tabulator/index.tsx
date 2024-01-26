@@ -13,7 +13,6 @@ import { CustomTableSelect } from './components/CustomTableSelect';
 import { HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
-import { TableTypeFlag } from 'src/interface';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
