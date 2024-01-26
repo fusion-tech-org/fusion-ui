@@ -28,7 +28,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     tableMode = 'normal',
     uniformProps = {},
   } = props;
-  const { commonOptions = {}, enableIndexedDBQuery, isRemote = false, indexedInitDefs = {} } = uniformProps;
+  const { commonOptions = {}, enableIndexedDBQuery, isRemote = false, indexdbConfigs } = uniformProps;
+  const { indexedInitDefs = {} } = indexdbConfigs || {};
   const { headerVisible = true } = commonOptions;
   console.log('TabulatorReact -> ', props);
   // const {
