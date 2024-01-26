@@ -130,9 +130,7 @@ Tabulator.extendModule('mutator', 'mutators', {
 /**
  * default options
  */
-Tabulator.defaultOptions.columnDefaults.headerSort = false;
-
-
+// Tabulator.defaultOptions.columnDefaults.headerSort = false;
 export const useTabulator = ({
   ref,
   props,

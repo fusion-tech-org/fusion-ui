@@ -101,6 +101,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   function handleTableEventCallback(eventName: string, data: Record<string, any>[]) {
     if (eventName === 'dataProcessed' || eventName === 'dataChanged') {
       // reCalcInputTop(data);
+      console.log('handleTableEventCallback', eventName);
       setLoadedData(data);
     }
   }
@@ -151,7 +152,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     const curData = tabulatorRef.getData();
 
     if (!isUndefined(tableData) && JSON.stringify(curData) !== JSON.stringify(tableData)) {
-      tabulatorRef.setData(tableData);
+      tabulatorRef.replaceData(tableData);
       return;
     }
 

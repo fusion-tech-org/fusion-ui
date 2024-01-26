@@ -6,17 +6,59 @@ import {
   // OptionsGeneral,
   // OptionsLocale,
   ColumnDefinition,
-  Editor,
-  Formatter,
 } from 'tabulator-tables';
-import { isArray, isObject, isString, map } from 'lodash';
+import { isArray, isObject, map } from 'lodash';
 
 // import zhCNLang from 'langs/zh-cn.json';
 import type { ReactTabulatorProps, TableMode } from './interface';
 import { Message } from '@arco-design/web-react';
-import { CUSTOM_EDITOR_MAP, checkIsCustomEditor } from './editors';
-import { CUSTOM_FORMATTER_MAP, checkIsCustomFormatter } from './formatters';
 import { PlatformAppMode } from 'src/interface';
+
+export const genInitOptions = (
+  tabulatorProps: ReactTabulatorProps,
+): Options => {
+  const {
+    layout = "fitDataStretch",
+    data: tableData,
+    actionId,
+    columns: columnDefs,
+    enableRemote = false,
+    tableMode = 'editable',
+    appMode,
+    uniformProps,
+  } = tabulatorProps;
+  let { commonOptions = {} } = uniformProps || {};
+  const { enableIndexedDBQuery = false, quickAddConfigs, indexdbConfigs, dbType, remoteAjax } = uniformProps || {};
+  const generalOptions = genGeneralOptions();
+
+  const formatColumnDefs = dbType === 'cutomTableSelect' ? quickAddConfigs.columns : columnDefs;
+  const formatTableData = dbType === 'cutomTableSelect' ? quickAddConfigs.data : tableData;
+
+  const columnDefsOptions = genColumnDefsOptions(formatColumnDefs, appMode);
+  const ajaxOptions = genAjaxOptions({ actionId, enableRemote, enableIndexedDBQuery, params: remoteAjax?.params });
+  const staticDataOptions = genStaticDataOptions({ tableData: formatTableData, columnDefs, tableMode, enableIndexedDBQuery });
+  const paginationOptions = genPaginationOptions({
+    enableRemote,
+    tableMode
+  });
+  const indexedDBOptions = genIndexedDBOptions(enableIndexedDBQuery, indexdbConfigs, dbType);
+
+  if (!isObject(commonOptions)) {
+    commonOptions = {};
+  }
+
+  return {
+    ...generalOptions,
+    ...columnDefsOptions,
+    ...indexedDBOptions,
+    ...ajaxOptions,
+    ...staticDataOptions,
+    ...paginationOptions,
+    layout, // fit columns to width of table (optional)
+    // ...options // props.options are passed to Tabulator's options.
+    ...commonOptions,
+  } as Options;
+};
 
 const genGeneralOptions = (): Options => {
   return {
@@ -47,12 +89,13 @@ const genGeneralOptions = (): Options => {
 
 function customEditorAndFormatterPipe(tempColDefs: ColumnDefinition[], appMode?: PlatformAppMode): ColumnDefinition[] {
   return map(tempColDefs, item => {
-    const { editableTitle = false, ...rest } = item;
+    const { headerSort = false, editableTitle = false, ...rest } = item;
 
     const formatEditableTitle = appMode !== 'EDIT' ? false : editableTitle;
 
     return {
       editableTitle: formatEditableTitle,
+      headerSort,
       ...rest
     }
   })
@@ -68,11 +111,15 @@ const genColumnDefsOptions = (initColDefs: ColumnDefinition[], appMode?: Platfor
   return {
     autoColumns: true,
     autoColumnsDefinitions: function (definitions) {
+      definitions.forEach((column) => {
+        column.headerSort = false;
+      });
       //definitions - array of column definition objects
       if (appMode !== 'EDIT') return definitions;
 
       definitions.forEach((column) => {
         column.editableTitle = true;
+        column.headerSort = false;
         // column.headerFilter = true; // add header filter to every column
       });
 
@@ -199,51 +246,6 @@ const genPaginationOptions = ({ tableMode, enableRemote }: GenPaginationOptionsP
     paginationSizeSelector: [10, 30, 50, 100, 500, 1000],
     paginationMode: enableRemote ? 'remote' : 'local',
   };
-};
-
-export const genInitOptions = (
-  tabulatorProps: ReactTabulatorProps,
-): Options => {
-  const {
-    layout = "fitDataFill",
-    data: tableData,
-    actionId,
-    columns: columnDefs,
-    enableRemote = false,
-    tableMode = 'editable',
-    appMode,
-    uniformProps,
-  } = tabulatorProps;
-  let { commonOptions = {} } = uniformProps || {};
-  const { enableIndexedDBQuery = false, quickAddConfigs, indexdbConfigs, dbType, remoteAjax } = uniformProps || {};
-  const generalOptions = genGeneralOptions();
-
-  const formatColumnDefs = dbType === 'cutomTableSelect' ? quickAddConfigs.columns : columnDefs;
-
-  const columnDefsOptions = genColumnDefsOptions(formatColumnDefs, appMode);
-  const ajaxOptions = genAjaxOptions({ actionId, enableRemote, enableIndexedDBQuery, params: remoteAjax?.params });
-  const staticDataOptions = genStaticDataOptions({ tableData, columnDefs, tableMode, enableIndexedDBQuery });
-  const paginationOptions = genPaginationOptions({
-    enableRemote,
-    tableMode
-  });
-  const indexedDBOptions = genIndexedDBOptions(enableIndexedDBQuery, indexdbConfigs, dbType);
-
-  if (!isObject(commonOptions)) {
-    commonOptions = {};
-  }
-
-  return {
-    ...generalOptions,
-    ...columnDefsOptions,
-    ...indexedDBOptions,
-    ...ajaxOptions,
-    ...staticDataOptions,
-    ...paginationOptions,
-    layout, // fit columns to width of table (optional)
-    // ...options // props.options are passed to Tabulator's options.
-    ...commonOptions,
-  } as Options;
 };
 
 function genIndexedDBOptions(enableIndexedDBQuery: boolean, indexdbConfigs: Record<string, any>, dbType?: string) {
