@@ -28,7 +28,7 @@ export function genInitEventMaps({
     // }
     const curTableData = tabulatorRef?.getData();
     // console.log('data processed: ', curTableData);
-    onEvents('dataProcessed', curTableData);
+    onEvents?.('dataProcessed', curTableData);
     onUpdateWidgetMetaProperty?.({
       curTableData,
     });
@@ -40,7 +40,7 @@ export function genInitEventMaps({
 
   function handleDataChanged(data: any[]) {
     console.log('data changed: ', data);
-    onEvents('dataChanged', data);
+    onEvents?.('dataChanged', data);
     onUpdateWidgetMetaProperty?.({
       updatingRows: data,
     });
@@ -85,7 +85,6 @@ export function genInitEventMaps({
   }
 
   function handleRowClick(_event: UIEvent, row: RowComponent) {
-    console.log(row);
     const rowData = row.getData();
     onEvents?.('rowClick', rowData)
   }
@@ -96,7 +95,7 @@ export function genInitEventMaps({
   }
 
   function handleRowSelected(_event: UIEvent, row: RowComponent) {
-    const rowData = row.getData();
+    const rowData = row?.getData();
     onEvents?.('rowSelected', rowData)
   }
 

@@ -28,7 +28,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     tableMode = 'normal',
     uniformProps = {},
   } = props;
-  const { commonOptions = {}, enableIndexedDBQuery } = uniformProps;
+  const { commonOptions = {}, enableIndexedDBQuery, isRemote = false } = uniformProps;
   const { headerVisible = true } = commonOptions;
   console.log('TabulatorReact -> ', props);
   // const {
@@ -50,9 +50,9 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const { tableHeight, tabulatorRef, initTable } = useTabulator({
     ref: wrapperRef,
     props,
-    eventCallback: handleTableEventCallback,
+    // eventCallback: handleTableEventCallback,
   });
-  const [loadedData, setLoadedData] = useState([]);
+  // const [loadedData, setLoadedData] = useState([]);
   let isOverHeigth = false;
 
   // const initTabulator = () => {
@@ -99,13 +99,13 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   //   });
   // }
 
-  function handleTableEventCallback(eventName: string, data: Record<string, any>[], tableTypeFlag?: string) {
-    if ((eventName === 'dataProcessed' || eventName === 'dataChanged') && tableTypeFlag !== TableTypeFlag.customTableSelect) {
-      // reCalcInputTop(data);
-      console.log('handleTableEventCallback', eventName);
-      setLoadedData(data);
-    }
-  }
+  // function handleTableEventCallback(eventName: string, data: Record<string, any>[], tableTypeFlag?: string) {
+  //   if ((eventName === 'dataProcessed' || eventName === 'dataChanged') && tableTypeFlag !== TableTypeFlag.customTableSelect) {
+  //     // reCalcInputTop(data);
+  //     console.log('handleTableEventCallback', eventName);
+  //     // setLoadedData(data);
+  //   }
+  // }
 
   const reCalcInputTop = (data: any[]) => {
     if (!tableHeight) return;
@@ -134,10 +134,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   useEffect(() => {
     if (isNumber(tableHeight)) {
-      reCalcInputTop(loadedData)
+      reCalcInputTop(tableData)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableHeight, JSON.stringify(loadedData)]);
+  }, [tableHeight, JSON.stringify(tableData)]);
 
   const responsiveTabulator = () => {
     if (isEmpty(tableData) && !actionId && isEmpty(columnDefs) && !enableIndexedDBQuery) return;
@@ -171,12 +171,12 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   // }, [calcActionIdCombineDataHash]);
 
   useEffect(() => {
-    if (!actionId || !tabulatorRef) return;
+    if (!actionId || !tabulatorRef || !isRemote) return;
 
     const curAjax = tabulatorRef.getAjaxUrl();
     tabulatorRef.setData(curAjax);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actionId, !tabulatorRef]);
+  }, [actionId, !tabulatorRef, isRemote]);
 
   useEffect(() => {
     responsiveTabulator();
@@ -200,6 +200,9 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     }
 
     tabulatorRef.addRow(rest);
+
+    const newTableData = tabulatorRef.getData();
+    reCalcInputTop(newTableData);
   }
 
   const renderExtraInput = () => {

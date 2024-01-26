@@ -6,57 +6,30 @@ import React, { FC, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import ReactDOM from 'react-dom';
 
+import ExtendTabulator from '../../ExtendTabulator';
 import { DroplistWrapper } from "./styles";
 import { genTabulatorUUID } from 'utils/index';
-import { map } from 'lodash';
+import Dexie from 'dexie';
 
 
 interface TableSelectProps {
   onRef?: (ref: Tabulator) => void;
-  quickAddDropdownDefinitions?: {
-    data: any[];
-    columns: any[];
-  };
+  uniformProps: Record<string, any>;
 }
 
 export const TableSelect: FC<TableSelectProps> = (props) => {
-  const { onRef, quickAddDropdownDefinitions } = props;
+  const { onRef, uniformProps } = props;
   const [mainId] = useState(genTabulatorUUID());
   const instanceRef = useRef<Tabulator>();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const { data = [], columns = [] } = quickAddDropdownDefinitions || {};
 
   const initTabulator = () => {
     // mounted DOM element
     const domEle = ReactDOM.findDOMNode(wrapperRef.current) as HTMLElement;
-
-    const cloneData = map(data, (item) => ({ ...item }))
-    // generates initial options
-    const initOptions: Options = {
-      data: cloneData,
-      columns: [...columns],
-      layout: 'fitDataTable',
-      height: '320px',
-      selectable: 1,
-      rowHeight: 32,
-      keybindings: {
-        "navUp": false, // disable navUp keybinding
-        "navLeft": false,
-        "navRight": false,
-        "navDown": false,
-      },
-    };
-
-    console.log('initTabulatorOptions sub ->: ', initOptions);
+    const initOptions = genInitOptions(uniformProps);
+    console.log('TableSelect init options ->: ', initOptions);
     // init tabulator
-    instanceRef.current = new Tabulator(domEle, initOptions);
-
-    // instanceRef.current.on('rowSelected', (row) => {
-    //   console.log(row);
-    // })
-
-    // localization
-    // instanceRef.current.setLocale?.('zh');
+    instanceRef.current = new ExtendTabulator(domEle, initOptions);
 
     onRef?.(instanceRef.current);
   };
@@ -82,3 +55,50 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
     </DroplistWrapper>
   )
 };
+
+function genInitOptions(uniformProps: Record<string, any>): Options & {
+  dexie?: Dexie;
+  tableName?: string;
+} {
+  const { quickAddConfigs, enableIndexedDBQuery, indexdbConfigs } = uniformProps;
+  const { data, columns, isRemoteQuery, remoteQuery } = quickAddConfigs || {};
+  const { dexie, dropdownIndexedDBTableName, dropdownSimpleBuiltinQueryCondition } = indexdbConfigs || {};
+
+  // generates initial options
+  const commonOptions: Options = {
+    layout: 'fitDataTable',
+    height: '320px',
+    selectable: 1,
+    rowHeight: 32,
+    keybindings: {
+      "navUp": false, // disable navUp keybinding
+      "navLeft": false,
+      "navRight": false,
+      "navDown": false,
+    },
+  };
+
+  if (enableIndexedDBQuery) {
+    return {
+      dexie,
+      tableName: dropdownIndexedDBTableName,
+      ...commonOptions
+    }
+  }
+
+  if (isRemoteQuery) {
+    console.log(remoteQuery, 'remoteQuery');
+    return {
+      data: [],
+      columns: [],
+      ...commonOptions,
+    }
+  }
+
+
+  return {
+    data,
+    columns,
+    ...commonOptions,
+  }
+}
