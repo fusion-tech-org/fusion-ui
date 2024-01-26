@@ -9,18 +9,18 @@ export class DexieModule extends Module {
 
     // register table options
     this.registerTableOption("dexie", undefined);
-    this.registerTableOption("dexieTable", undefined);
+    this.registerTableOption("tableName", undefined);
   }
 
   //called by the table when it is ready for module interactions
   initialize() {
     console.log('Dexie Module Initialized');
     //check to see if module has been enabled before subscribing to events
-    if (this.options("dexie") && this.options("dexieTable")) {
+    if (this.options("dexie") && this.options("tableName")) {
 
       //copy table options to local variables for ease of access
       this.db = this.options("dexie");
-      this.dbTable = this.options("dexieTable");
+      this.dbTable = this.options("tableName");
       // debugger;
       //subscribe to events
       this.subscribe("data-loading", this.requestDataCheck.bind(this));

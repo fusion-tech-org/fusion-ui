@@ -10,6 +10,8 @@ import ExtendTabulator from '../../ExtendTabulator';
 import { DroplistWrapper } from "./styles";
 import { genTabulatorUUID } from 'utils/index';
 import Dexie from 'dexie';
+import dbDexie from 'src/tabulator/utils/dbDexie';
+import { isArray } from 'lodash';
 
 
 interface TableSelectProps {
@@ -62,7 +64,7 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
 } {
   const { quickAddConfigs, enableIndexedDBQuery, indexdbConfigs } = uniformProps;
   const { data, columns, isRemoteQuery, remoteQuery } = quickAddConfigs || {};
-  const { dexie, dropdownIndexedDBTableName, dropdownSimpleBuiltinQueryCondition } = indexdbConfigs || {};
+  const { dropdownIndexedDBTableName, dropdownSimpleBuiltinQueryCondition } = indexdbConfigs || {};
 
   // generates initial options
   const commonOptions: Options = {
@@ -79,9 +81,21 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
   };
 
   if (enableIndexedDBQuery) {
+    const colDefs: {
+      columns?: any[];
+      autoColumns?: true,
+    } = {};
+
+    if (isArray(columns) && columns.length > 0) {
+      colDefs.columns = columns;
+    } else {
+      colDefs.autoColumns = true;
+    }
+
     return {
-      dexie,
+      dexie: dbDexie.getDexie(),
       tableName: dropdownIndexedDBTableName,
+      ...colDefs,
       ...commonOptions
     }
   }

@@ -130,6 +130,10 @@ export const CustomTableSelect = (props) => {
     tabulatorRef.current.on('rowDblClick', handleSelectedRow);
   }
 
+  useEffect(() => {
+
+  }, []);
+
   return (
     <Container>
       <Dropdown

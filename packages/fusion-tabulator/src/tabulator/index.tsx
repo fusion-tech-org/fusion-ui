@@ -13,6 +13,7 @@ import { CustomTableSelect } from './components/CustomTableSelect';
 import { HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
+import dbDexie from './utils/dbDexie';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
@@ -27,7 +28,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     tableMode = 'normal',
     uniformProps = {},
   } = props;
-  const { commonOptions = {}, enableIndexedDBQuery, isRemote = false } = uniformProps;
+  const { commonOptions = {}, enableIndexedDBQuery, isRemote = false, indexedInitDefs } = uniformProps;
   const { headerVisible = true } = commonOptions;
   console.log('TabulatorReact -> ', props);
   // const {
@@ -181,6 +182,14 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     responsiveTabulator();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionId, JSON.stringify(columnDefs), JSON.stringify(tableData), enableIndexedDBQuery]);
+
+  // clone dexie instance
+  useEffect(() => {
+    if (!enableIndexedDBQuery || !indexedInitDefs.dbName || !indexedInitDefs.tableDefs || dbDexie.getDexie()) return;
+
+
+    dbDexie.init(indexedInitDefs.dbName, indexedInitDefs.tableDefs);
+  }, [enableIndexedDBQuery]);
 
 
   function handleSelectRowData(record) {
