@@ -187,9 +187,9 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   useEffect(() => {
     if (!enableIndexedDBQuery || !indexedInitDefs?.dbName || !indexedInitDefs?.tableDefs || dbDexie.getDexie()) return;
 
-
+    console.log('---->: init dexie');
     dbDexie.init(indexedInitDefs.dbName, indexedInitDefs.tableDefs);
-  }, [enableIndexedDBQuery]);
+  }, [enableIndexedDBQuery, JSON.stringify(indexedInitDefs)]);
 
 
   function handleSelectRowData(record) {
