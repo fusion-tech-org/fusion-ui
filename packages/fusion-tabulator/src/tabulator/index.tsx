@@ -28,7 +28,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     tableMode = 'normal',
     uniformProps = {},
   } = props;
-  const { commonOptions = {}, enableIndexedDBQuery, isRemote = false, indexedInitDefs } = uniformProps;
+  const { commonOptions = {}, enableIndexedDBQuery, isRemote = false, indexedInitDefs = {} } = uniformProps;
   const { headerVisible = true } = commonOptions;
   console.log('TabulatorReact -> ', props);
   // const {
@@ -185,7 +185,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   // clone dexie instance
   useEffect(() => {
-    if (!enableIndexedDBQuery || !indexedInitDefs.dbName || !indexedInitDefs.tableDefs || dbDexie.getDexie()) return;
+    if (!enableIndexedDBQuery || !indexedInitDefs?.dbName || !indexedInitDefs?.tableDefs || dbDexie.getDexie()) return;
 
 
     dbDexie.init(indexedInitDefs.dbName, indexedInitDefs.tableDefs);
