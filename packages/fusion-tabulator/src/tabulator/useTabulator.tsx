@@ -138,29 +138,19 @@ export const useTabulator = ({
 }: {
   ref: React.RefObject<HTMLElement>;
   props: any;
-  eventCallback?: (eventName: string, data?: Record<string, any>) => void;
+  eventCallback?: (eventName: string, data?: Record<string, any>, tableTypeFlag?: string) => void;
 }) => {
   const {
-    classNames,
     eventMaps = {},
     appMode,
-    data: tableData,
-    columns: columnDefs,
     onUpdateWidgetMetaProperty,
-    // onUpdateWidgetProperty,
-    onCustomSelectDropdownItem,
-    actionId,
-    tableMode = 'normal',
     onEvents,
-    // enableRemote = false,
-    quickAddDropdownDefinitions,
-    uniformProps = {},
   } = props;
   const instanceRef = useRef<Tabulator>();
   const [rectBound] = useIntersectionObserver(ref);
 
-  const handleTableEvents = (eventName: string, data?: Record<string, any>) => {
-    eventCallback?.(eventName, data);
+  const handleTableEvents = (eventName: string, data?: Record<string, any>, tableTypeFlag?: string) => {
+    eventCallback?.(eventName, data, tableTypeFlag);
 
     onEvents?.(eventName, data);
   }

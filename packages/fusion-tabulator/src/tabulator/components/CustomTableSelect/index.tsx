@@ -9,10 +9,11 @@ import { IconPlus } from '@arco-design/web-react/icon';
 // import { TableSelect } from './TableSelect';
 import { useClickOutside } from 'hooks/useClickOutsite';
 import { useKeyPress } from 'hooks/useKeyPress';
-import { RowComponent, Tabulator } from 'tabulator-tables';
+// import { RowComponent, Tabulator } from 'tabulator-tables';
 import { debounce, map, isArray, isEmpty } from 'lodash';
 import { genTabulatorUUID } from 'utils/index';
 import { useTabulator } from 'src/tabulator/useTabulator';
+import { TableTypeFlag } from 'src/interface';
 
 export const CustomTableSelect = (props) => {
   const { onSelectRowData, quickAddDropdownDefinitions, uniformProps } = props
@@ -39,12 +40,12 @@ export const CustomTableSelect = (props) => {
           selectable: 1,
           rowHeight: 32,
         },
-        dbType: 'cutomTableSelect'
+        tableTypeFlag: TableTypeFlag.customTableSelect
       }
     }
   });
 
-  const { quickAddConfigs, enableIndexedDBQuery = false, indexdbConfigs } = uniformProps || {};
+  const { quickAddConfigs, enableIndexedDBQuery = false } = uniformProps || {};
   const { filters = [], uniqueKey = 'id' } = quickAddConfigs || {};
   console.log('uniformProps ++++', uniformProps, quickAddConfigs);
 

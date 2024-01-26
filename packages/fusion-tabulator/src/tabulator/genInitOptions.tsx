@@ -12,13 +12,13 @@ import { isArray, isObject, map } from 'lodash';
 // import zhCNLang from 'langs/zh-cn.json';
 import type { ReactTabulatorProps, TableMode } from './interface';
 import { Message } from '@arco-design/web-react';
-import { PlatformAppMode } from 'src/interface';
+import { PlatformAppMode, TableTypeFlag } from 'src/interface';
 
 export const genInitOptions = (
   tabulatorProps: ReactTabulatorProps,
 ): Options => {
   const {
-    layout = "fitDataStretch",
+    layout = "fitColumns",
     data: tableData,
     actionId,
     columns: columnDefs,
@@ -28,11 +28,11 @@ export const genInitOptions = (
     uniformProps,
   } = tabulatorProps;
   let { commonOptions = {} } = uniformProps || {};
-  const { enableIndexedDBQuery = false, quickAddConfigs, indexdbConfigs, dbType, remoteAjax } = uniformProps || {};
+  const { enableIndexedDBQuery = false, quickAddConfigs, indexdbConfigs, tableTypeFlag, remoteAjax } = uniformProps || {};
   const generalOptions = genGeneralOptions();
 
-  const formatColumnDefs = dbType === 'cutomTableSelect' ? quickAddConfigs.columns : columnDefs;
-  const formatTableData = dbType === 'cutomTableSelect' ? quickAddConfigs.data : tableData;
+  const formatColumnDefs = tableTypeFlag === TableTypeFlag.customTableSelect ? quickAddConfigs.columns : columnDefs;
+  const formatTableData = tableTypeFlag === TableTypeFlag.customTableSelect ? quickAddConfigs.data : tableData;
 
   const columnDefsOptions = genColumnDefsOptions(formatColumnDefs, appMode);
   const ajaxOptions = genAjaxOptions({ actionId, enableRemote, enableIndexedDBQuery, params: remoteAjax?.params });
@@ -41,7 +41,7 @@ export const genInitOptions = (
     enableRemote,
     tableMode
   });
-  const indexedDBOptions = genIndexedDBOptions(enableIndexedDBQuery, indexdbConfigs, dbType);
+  const indexedDBOptions = genIndexedDBOptions(enableIndexedDBQuery, indexdbConfigs, tableTypeFlag);
 
   if (!isObject(commonOptions)) {
     commonOptions = {};
@@ -54,7 +54,7 @@ export const genInitOptions = (
     ...ajaxOptions,
     ...staticDataOptions,
     ...paginationOptions,
-    layout, // fit columns to width of table (optional)
+    layout: tableTypeFlag === TableTypeFlag.customTableSelect ? "fitDataStretch" : layout, // fit columns to width of table (optional)
     // ...options // props.options are passed to Tabulator's options.
     ...commonOptions,
   } as Options;
@@ -248,7 +248,7 @@ const genPaginationOptions = ({ tableMode, enableRemote }: GenPaginationOptionsP
   };
 };
 
-function genIndexedDBOptions(enableIndexedDBQuery: boolean, indexdbConfigs: Record<string, any>, dbType?: string) {
+function genIndexedDBOptions(enableIndexedDBQuery: boolean, indexdbConfigs: Record<string, any>, tableTypeFlag?: string) {
   if (!enableIndexedDBQuery) {
     return {};
   }
@@ -265,6 +265,6 @@ function genIndexedDBOptions(enableIndexedDBQuery: boolean, indexdbConfigs: Reco
     dropdownSimpleBuiltinQueryCondition,);
   return {
     dexie: dexie,
-    dexieTable: dbType === 'cutomTableSelect' ? dropdownIndexedDBTableName : tableName
+    dexieTable: tableTypeFlag === TableTypeFlag.customTableSelect ? dropdownIndexedDBTableName : tableName
   };
 }

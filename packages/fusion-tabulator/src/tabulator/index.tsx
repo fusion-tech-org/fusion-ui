@@ -13,6 +13,7 @@ import { CustomTableSelect } from './components/CustomTableSelect';
 import { HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
+import { TableTypeFlag } from 'src/interface';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
@@ -98,8 +99,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   //   });
   // }
 
-  function handleTableEventCallback(eventName: string, data: Record<string, any>[]) {
-    if (eventName === 'dataProcessed' || eventName === 'dataChanged') {
+  function handleTableEventCallback(eventName: string, data: Record<string, any>[], tableTypeFlag?: string) {
+    if ((eventName === 'dataProcessed' || eventName === 'dataChanged') && tableTypeFlag !== TableTypeFlag.customTableSelect) {
       // reCalcInputTop(data);
       console.log('handleTableEventCallback', eventName);
       setLoadedData(data);

@@ -3,6 +3,11 @@ import { S2ReactProps } from './s2/S2React';
 import { ReactTabulatorProps, TableMode } from './tabulator/interface';
 import Dexie from 'dexie';
 
+export const enum TableTypeFlag {
+  norma = 'normal',
+  customTableSelect = 'customTableSelect',
+}
+
 export type TabulatorTableType = 'tabulator' | 's2';
 
 export type PlatformAppMode = 'EDIT' | 'PUBLISHED' | 'INSTALL';
