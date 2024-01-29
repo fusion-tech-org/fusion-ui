@@ -80,7 +80,7 @@ export const autoTableData: TabulatorTableData[] = [
 
 export const colConfigTableData: TabulatorTableData[] = [
   {
-    name: '',
+    name: 'someone',
     age: '',
     height: '',
     id: 1,
@@ -89,6 +89,17 @@ export const colConfigTableData: TabulatorTableData[] = [
     dob: '',
     cheese: '',
     tuid: 1,
+  },
+  {
+    name: 'sunny',
+    age: 18,
+    height: 173,
+    id: 2,
+    gender: '',
+    col: '',
+    dob: '',
+    cheese: '',
+    tuid: 2,
   },
 ];
 
@@ -139,6 +150,16 @@ export const editableColDefs: ColumnDefinition[] = [
     editableTitle: true,
     hozAlign: 'center',
     // formatter: 'tickCross',
+  },
+  {
+    formatter: 'delRowIcon',
+    title: '操作',
+    hozAlign: 'center',
+    width: 60,
+    frozen: true,
+    formatterParams: {
+      action: 'iconDeleteRow',
+    },
   },
 ];
 

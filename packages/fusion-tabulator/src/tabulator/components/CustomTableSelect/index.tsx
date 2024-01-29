@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Dropdown, Input } from '@arco-design/web-react';
 import {
   Container,
@@ -25,7 +25,6 @@ export const CustomTableSelect = (props) => {
   const { quickAddConfigs } = uniformProps || {};
   const { filters = [], uniqueKey = 'id' } = quickAddConfigs || {};
   // console.log('uniformProps >>>> ', uniformProps, quickAddConfigs);
-
 
   const handleVisibleChange = (visible: boolean) => {
     console.log('visible', visible);
@@ -129,10 +128,6 @@ export const CustomTableSelect = (props) => {
     // tabulatorRef.current.on('rowSelected', handleSelectedRow);
     tabulatorRef.current.on('rowDblClick', handleSelectedRow);
   }
-
-  useEffect(() => {
-
-  }, []);
 
   return (
     <Container>

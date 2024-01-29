@@ -10,7 +10,7 @@ export function genInitEventMaps({
   appMode: PlatformAppMode;
   tabulatorRef: Tabulator;
   onUpdateWidgetMetaProperty: (params: Record<string, unknown>) => void;
-  onEvents: (eventName: string, data?: Record<string, any>) => void;
+  onEvents: (eventName: string, data?: Record<string, any>, extra?: Record<'action' | 'tableData', any>) => void;
 }): Partial<Record<keyof EventCallBackMethods, EventCallBackMethods[keyof EventCallBackMethods]>> {
   function handleDataLoaded() {
     const curTableData = tabulatorRef?.getData();
@@ -86,7 +86,30 @@ export function genInitEventMaps({
 
   function handleRowClick(_event: UIEvent, row: RowComponent) {
     const rowData = row.getData();
-    onEvents?.('rowClick', rowData)
+
+    // @ts-ignore
+    const { action } = _event.srcElement?.dataset || {};
+
+    if (action === 'del-row-icon') {
+      row
+        .delete()
+        .then(() => {
+          const curTable = row.getTable();
+          const tableData = curTable.getData();
+
+          onEvents?.('rowClick', rowData, {
+            action: 'delete-row',
+            tableData,
+          });
+        })
+        .catch(e => {
+          console.log("Deleting row failed: ", e);
+        });
+
+      return;
+    }
+
+    onEvents?.('rowClick', rowData);
   }
 
   function handleRowDoubleClick(_event: UIEvent, row: RowComponent) {
@@ -116,6 +139,9 @@ export function genInitEventMaps({
   function handleCellClick(_event: UIEvent, cell: CellComponent) {
     const cellField = cell.getField();
     const cellValue = cell.getValue();
+
+    if (!cellField || !cellValue) return;
+
     onEvents?.('cellClick', {
       [cellField]: cellValue
     });
@@ -123,6 +149,7 @@ export function genInitEventMaps({
 
   function handleCellDblClick(_event: UIEvent, cell: CellComponent) {
     const cellData = cell.getData();
+
     onEvents?.('cellDbClick', cellData);
   }
 

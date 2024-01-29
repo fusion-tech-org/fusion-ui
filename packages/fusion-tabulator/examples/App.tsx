@@ -18,6 +18,7 @@ import { TabulatorEditable } from "./TabulatorEditable";
 import { TabulatorTest } from "./TabulatorTest";
 import { GridExplore } from "./GridExplore";
 import { DBTable } from "./DBTable";
+import { CraftExplore } from "./CraftExplore";
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -26,7 +27,8 @@ const Content = Layout.Content;
 const collapsedWidth = 60;
 const normalWidth = 220;
 
-type MenuItemKeys = 'grid-explore' |
+type MenuItemKeys = 'craft-explore' |
+  'grid-explore' |
   'db-table' |
   'tabulator-test' |
   'tabulator-editable' |
@@ -39,6 +41,7 @@ type MenuItemKeys = 'grid-explore' |
   'tabulator-empty';
 
 const menuKeyMapComp = {
+  'craft-explore': <CraftExplore />,
   'db-table': <DBTable />,
   'tabulator-test': <TabulatorTest />,
   'tabulator-editable': <TabulatorEditable />,
@@ -55,7 +58,7 @@ const menuKeyMapComp = {
 function App() {
   const [collapsed, setCollapsed] = useState(false);
   const [siderWidth, setSiderWidth] = useState(normalWidth);
-  const [activeMenuKey, setActiveMenuKey] = useState<MenuItemKeys>('db-table');
+  const [activeMenuKey, setActiveMenuKey] = useState<MenuItemKeys>('tabulator-editable');
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);

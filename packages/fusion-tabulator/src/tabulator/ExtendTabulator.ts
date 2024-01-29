@@ -1,8 +1,5 @@
-import {
-  TabulatorFull as Tabulator,
-  EventCallBackMethods,
-} from 'tabulator-tables';
-import { filter, forIn, isNull, isUndefined, reduce } from 'lodash';
+import { TabulatorFull as Tabulator } from 'tabulator-tables';
+import { filter, isNull, isUndefined, reduce } from 'lodash';
 
 import { DexieModule } from './custom-modules/DexieModule';
 // import { AdvertModule } from './custom-modules/AdvertModule';
@@ -26,10 +23,15 @@ Tabulator.registerModule(DexieModule);
 
 // extendiing formatter
 Tabulator.extendModule('format', 'formatters', {
-  bold: function (cell, formatterParams) {
-    return '<strong>' + cell.getValue() + '</strong>'; //make the contents of the cell bold
+  delRowIcon: function () {
+    // const curRow = cell.getRow();
+
+    return `<span class="tabulator-row-del-icon" style="cursor: pointer; color: #666;">
+      <svg data-action="del-row-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 48 48" aria-hidden="true" focusable="false" stroke-linecap="butt" stroke-linejoin="miter" class="arco-icon arco-icon-close-circle" style="font-size: 24px;"><path d="m17.643 17.643 6.364 6.364m0 0 6.364 6.364m-6.364-6.364 6.364-6.364m-6.364 6.364-6.364 6.364M42 24c0 9.941-8.059 18-18 18S6 33.941 6 24 14.059 6 24 6s18 8.059 18 18Z"></path>
+      </svg>
+    </span>`; //make the contents of the cell bold
   },
-  placeholder: function (cell, formatterParams) {
+  placeholder: function (cell, formatterParams, _onRendered) {
     console.log('formatterParams', formatterParams);
     const cellValue = cell.getValue();
     const { placeholder } = formatterParams || {};

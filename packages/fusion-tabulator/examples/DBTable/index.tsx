@@ -2,6 +2,7 @@ import { db, seed } from '../db';
 import TabulatorWithRecoil from '../../src';
 import { useEffect, useRef } from 'react';
 import Dexie from 'dexie';
+import IndexClass from './IndexClass';
 
 const UNIFORM_PROPS = {
   tableType: 'tabulator',
@@ -113,6 +114,7 @@ export const DBTable = () => {
           columns: colDefs,
         }}
       />
+      <IndexClass />
     </div>
   );
 };

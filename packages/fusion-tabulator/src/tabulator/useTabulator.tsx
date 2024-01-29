@@ -55,12 +55,6 @@ export const useTabulator = ({
     // init tabulator
     instanceRef.current = new ExtendTabulator(domEle, initOptions);
 
-    // if (tableMode === 'editable' && !isEmpty(tableData)) {
-    //   const reCalcTop = headerVisible ? (tableData.length * ROW_HEIGHT) + HEADER_HEIGHT : tableData.length * ROW_HEIGHT;
-
-    //   setInputTop(reCalcTop);
-    // }
-
     // localization
     instanceRef.current.setLocale?.('zh');
 
@@ -86,6 +80,8 @@ export const useTabulator = ({
     // onUpdateWidgetMetaProperty?.({
     //   tabulatorRef: instanceRef.current,
     // });
+
+
 
     callback?.();
   }

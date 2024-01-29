@@ -63,7 +63,7 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
   tableName?: string;
 } {
   const { quickAddConfigs, enableIndexedDBQuery, indexdbConfigs } = uniformProps;
-  const { data, columns, isRemoteQuery, remoteQuery } = quickAddConfigs || {};
+  const { data = [], columns = [], isRemoteQuery, remoteQuery } = quickAddConfigs || {};
   const { dropdownIndexedDBTableName, dropdownSimpleBuiltinQueryCondition } = indexdbConfigs || {};
 
   // generates initial options
@@ -111,8 +111,8 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
 
 
   return {
-    data,
-    columns,
+    data: isArray(data) ? data : [],
+    columns: isArray(columns) ? columns : [],
     ...commonOptions,
   }
 }

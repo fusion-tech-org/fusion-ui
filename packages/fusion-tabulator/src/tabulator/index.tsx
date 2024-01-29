@@ -50,10 +50,13 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const [inputTop, setInputTop] = useState(initInputTop);
   const { tableHeight, tabulatorRef, initTable } = useTabulator({
     ref: wrapperRef,
-    props,
+    props: {
+      ...props,
+      onEvents: handleListenEvents
+    },
     // eventCallback: handleTableEventCallback,
   });
-  // const [loadedData, setLoadedData] = useState([]);
+  const [remainData, setRemainData] = useState([]);
   let isOverHeigth = false;
 
   // const initTabulator = () => {
@@ -108,7 +111,9 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   //   }
   // }
 
+
   const reCalcInputTop = (data: any[]) => {
+    console.log(tableHeight, tabulatorRef);
     if (!tableHeight) return;
     // const realTableData = tabulatorRef?.getData('active');
     const dataLen = data?.length || 0;
@@ -132,6 +137,19 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
     isOverHeigth = true;
   }
+
+  function handleListenEvents(eventName: string, data?: Record<string, any>, extra?: Record<'action' | 'tableData', any>) {
+    const { action, tableData = [] } = extra || {};
+
+    if (action === 'delete-row') {
+      setRemainData(tableData)
+      // reCalcInputTop(tableData);
+    }
+  }
+
+  useEffect(() => {
+    reCalcInputTop(remainData);
+  }, [remainData.length]);
 
   useEffect(() => {
     if (isNumber(tableHeight)) {
