@@ -138,7 +138,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     isOverHeigth = true;
   }
 
-  function handleListenEvents(eventName: string, data?: Record<string, any>, extra?: Record<'action' | 'tableData', any>) {
+  function handleListenEvents(_eventName: string, _data?: Record<string, any>, extra?: Record<'action' | 'tableData', any>) {
     const { action, tableData = [] } = extra || {};
 
     if (action === 'delete-row') {
