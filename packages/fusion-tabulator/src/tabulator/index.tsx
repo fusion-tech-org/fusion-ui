@@ -31,6 +31,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const { commonOptions = {}, enableIndexedDBQuery, isRemote = false, indexdbConfigs } = uniformProps;
   const { indexedInitDefs = {} } = indexdbConfigs || {};
   const { headerVisible = true } = commonOptions;
+  const commonOptionsRef = useRef(commonOptions);
   console.log('TabulatorReact -> ', props);
   // const {
   //   generalConfigs,
@@ -58,59 +59,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   });
   const [remainData, setRemainData] = useState([]);
   let isOverHeigth = false;
-
-  // const initTabulator = () => {
-  //   // mounted DOM element
-  //   const domEle = ReactDOM.findDOMNode(wrapperRef.current) as HTMLElement;
-
-  //   // generates initial options
-  //   const initOptions = genInitOptions(props)
-
-  //   console.log('initTabulatorOptions', initOptions);
-  //   // init tabulator
-  //   instanceRef.current = new Tabulator(domEle, initOptions);
-
-  //   if (tableMode === 'editable' && !isEmpty(tableData)) {
-  //     const reCalcTop = headerVisible ? (tableData.length * ROW_HEIGHT) + HEADER_HEIGHT : tableData.length * ROW_HEIGHT;
-
-  //     setInputTop(reCalcTop);
-  //   }
-
-  //   // localization
-  //   instanceRef.current.setLocale?.('zh');
-
-  //   /**
-  //   * NOTE: Binding events
-  //   */
-  //   const defaultEvents = genInitEventMaps({
-  //     appMode,
-  //     tabulatorRef: instanceRef.current,
-  //     onUpdateWidgetMetaProperty,
-  //     onEvents,
-  //   });
-  //   const mergeEvents = {
-  //     ...defaultEvents,
-  //     ...eventMaps,
-  //   };
-
-  //   forIn(mergeEvents, (handler, eventName: keyof EventCallBackMethods) => {
-  //     instanceRef.current.on(eventName, handler);
-  //   })
-
-  //   // props.onRef && props.onRef(instanceRef);
-  //   onUpdateWidgetMetaProperty?.({
-  //     tabulatorRef: instanceRef.current,
-  //   });
-  // }
-
-  // function handleTableEventCallback(eventName: string, data: Record<string, any>[], tableTypeFlag?: string) {
-  //   if ((eventName === 'dataProcessed' || eventName === 'dataChanged') && tableTypeFlag !== TableTypeFlag.customTableSelect) {
-  //     // reCalcInputTop(data);
-  //     console.log('handleTableEventCallback', eventName);
-  //     // setLoadedData(data);
-  //   }
-  // }
-
 
   const reCalcInputTop = (data: any[]) => {
     console.log(tableHeight, tabulatorRef);
@@ -188,6 +136,15 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   //   console.log('calcActionIdCombineDataHash', '<<<<<<');
   // }, [calcActionIdCombineDataHash]);
+
+  useEffect(() => {
+    if (!tabulatorRef || JSON.stringify(commonOptions) === JSON.stringify(JSON.stringify(commonOptionsRef.current))) {
+      return;
+    }
+    commonOptionsRef.current = commonOptions
+
+    initTable();
+  }, [JSON.stringify(commonOptions)]);
 
   useEffect(() => {
     if (!actionId || !tabulatorRef || !isRemote) return;

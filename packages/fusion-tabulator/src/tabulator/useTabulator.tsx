@@ -77,11 +77,9 @@ export const useTabulator = ({
     })
 
     // props.onRef && props.onRef(instanceRef);
-    // onUpdateWidgetMetaProperty?.({
-    //   tabulatorRef: instanceRef.current,
-    // });
-
-
+    onUpdateWidgetMetaProperty?.({
+      tabulatorRef: instanceRef.current,
+    });
 
     callback?.();
   }
