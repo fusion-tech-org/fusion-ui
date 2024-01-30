@@ -107,7 +107,6 @@ export const editableColDefs: ColumnDefinition[] = [
   {
     title: '姓名',
     field: 'name',
-    editor: true,
     editableTitle: true,
   },
   {

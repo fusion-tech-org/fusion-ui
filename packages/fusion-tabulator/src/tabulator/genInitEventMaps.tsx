@@ -118,7 +118,8 @@ export function genInitEventMaps({
   }
 
   function handleRowSelected(_event: UIEvent, row: RowComponent) {
-    const rowData = row?.getData();
+    const rowData = tabulatorRef?.getSelectedData() || [];
+
     onEvents?.('rowSelected', rowData)
   }
 
@@ -153,6 +154,11 @@ export function genInitEventMaps({
     onEvents?.('cellDbClick', cellData);
   }
 
+  // function handleRowSelectionChanged(data, _rows) {
+  //   console.log('>>>>>>>>>', data, _rows);
+  //   onEvents?.('rowSelectionChanged', data);
+  // }
+
 
   return {
     // data events
@@ -165,6 +171,7 @@ export function genInitEventMaps({
     rowClick: handleRowClick,
     rowDblClick: handleRowDoubleClick,
     rowSelected: handleRowSelected,
+    // rowSelectionChanged: handleRowSelectionChanged,
 
     // column events
     headerClick: handleHeaderClick,

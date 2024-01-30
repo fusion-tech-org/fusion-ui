@@ -49,6 +49,10 @@ export const TabulatorEditable = () => {
       <TabulatorWithRecoil appMode="EDIT" widgetId='ss33' tableType="tabulator" tableMode="editable" tabulatorOptions={{
         columns: editableColDefs,
         data: colConfigTableData
+      }} uniformProps={{
+        commonOptions: {
+          selectable: true,
+        }
       }} quickAddDropdownDefinitions={{
         data: initData,
         columns: colDefs
