@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Dropdown, Input } from '@arco-design/web-react';
+import { Dropdown, Input, Message } from '@arco-design/web-react';
 import {
   Container,
   DroplistWrapper,
@@ -10,7 +10,7 @@ import { TableSelect } from './TableSelect';
 import { useClickOutside } from 'hooks/useClickOutsite';
 import { useKeyPress } from 'hooks/useKeyPress';
 import { RowComponent, Tabulator } from 'tabulator-tables';
-import { debounce, map, isArray } from 'lodash';
+import { debounce, map, isArray, isEmpty } from 'lodash';
 
 export const CustomTableSelect = (props) => {
   const { onSelectRowData, uniformProps } = props
@@ -23,7 +23,7 @@ export const CustomTableSelect = (props) => {
   const tabulatorRef = useRef<Tabulator>(null);
 
   const { quickAddConfigs } = uniformProps || {};
-  const { filters = [], uniqueKey = 'id' } = quickAddConfigs || {};
+  const { filters = [], uniqueKey = 'id', enableIndexedDBQuery = false } = quickAddConfigs || {};
   // console.log('uniformProps >>>> ', uniformProps, quickAddConfigs);
 
   const handleVisibleChange = (visible: boolean) => {
@@ -93,6 +93,13 @@ export const CustomTableSelect = (props) => {
   useKeyPress(handleKeyPress);
 
   const handleInputFocus = () => {
+    const { data, columns } = quickAddConfigs || {};
+    if (isEmpty(data) && isEmpty(columns) && !enableIndexedDBQuery) {
+      Message.info('下拉项表格数据未定义');
+
+      return;
+    }
+
     setPopupVisble(true);
   }
 

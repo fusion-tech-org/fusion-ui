@@ -94,7 +94,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       // reCalcInputTop(tableData);
     }
 
-    props.onEvents(eventName, data);
+    props.onEvents?.(eventName, data);
   }
 
   useEffect(() => {

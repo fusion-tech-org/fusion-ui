@@ -1,3 +1,4 @@
+import { throttle } from "lodash";
 import { PlatformAppMode } from "src/interface";
 import { CellComponent, ColumnComponent, EventCallBackMethods, RowComponent, Tabulator } from "tabulator-tables";
 
@@ -117,9 +118,9 @@ export function genInitEventMaps({
     onEvents?.('rowDbClick', rowData)
   }
 
-  function handleRowSelected(_event: UIEvent, row: RowComponent) {
+  function handleRowSelected(_event: UIEvent, _row: RowComponent) {
     const rowData = tabulatorRef?.getSelectedData() || [];
-
+    console.log('rowData ------- ', rowData);
     onEvents?.('rowSelected', rowData)
   }
 
@@ -159,6 +160,10 @@ export function genInitEventMaps({
   //   onEvents?.('rowSelectionChanged', data);
   // }
 
+  const throttledHandleRowSelected = throttle(handleRowSelected, 500, {
+    trailing: true,
+    leading: false
+  });
 
   return {
     // data events
@@ -170,7 +175,8 @@ export function genInitEventMaps({
     // row events
     rowClick: handleRowClick,
     rowDblClick: handleRowDoubleClick,
-    rowSelected: handleRowSelected,
+    rowSelected: throttledHandleRowSelected,
+    rowDeselected: throttledHandleRowSelected,
     // rowSelectionChanged: handleRowSelectionChanged,
 
     // column events

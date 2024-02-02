@@ -115,20 +115,32 @@ Tabulator.extendModule('localize', 'langs', {
 // extending mutators
 Tabulator.extendModule('mutator', 'mutators', {
   linkedColumns: function (_value, data, _type, mutatorParams) {
-    const { columns = [] } = mutatorParams || {};
+    const { columns = [], operateType = 'plus' } = mutatorParams || {};
     console.log(_value, _type);
     const formatCols = filter(
       columns,
       (col) => !isUndefined(col) && !isNull(col)
     );
 
-    return reduce(
-      formatCols,
-      (acc, col) => {
-        return acc + (data[col] || 0);
-      },
-      0
-    );
+    switch (operateType) {
+      case 'plus':
+      default:
+        return reduce(
+          formatCols,
+          (acc, col) => {
+            return acc + (data[col] || 0);
+          },
+          0
+        );
+      case 'multiply':
+        return reduce(
+          formatCols,
+          (acc, col) => {
+            return acc * (data[col] || 1);
+          },
+          1
+        );
+    }
   },
 });
 
