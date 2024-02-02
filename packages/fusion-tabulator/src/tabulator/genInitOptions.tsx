@@ -15,10 +15,10 @@ import { Message } from '@arco-design/web-react';
 import { PlatformAppMode, TableTypeFlag } from 'src/interface';
 
 export const genInitOptions = (
-  tabulatorProps: ReactTabulatorProps,
+  tabulatorProps: ReactTabulatorProps
 ): Options => {
   const {
-    layout = "fitColumns",
+    layout = 'fitColumns',
     data: tableData,
     actionId,
     columns: columnDefs,
@@ -28,20 +28,46 @@ export const genInitOptions = (
     uniformProps,
   } = tabulatorProps;
   let { commonOptions = {} } = uniformProps || {};
-  const { enableIndexedDBQuery = false, quickAddConfigs, indexdbConfigs, tableTypeFlag, remoteAjax } = uniformProps || {};
+  const {
+    enableIndexedDBQuery = false,
+    quickAddConfigs,
+    indexdbConfigs,
+    tableTypeFlag,
+    remoteAjax,
+  } = uniformProps || {};
   const generalOptions = genGeneralOptions();
 
-  const formatColumnDefs = tableTypeFlag === TableTypeFlag.customTableSelect ? quickAddConfigs.columns : columnDefs;
-  const formatTableData = tableTypeFlag === TableTypeFlag.customTableSelect ? quickAddConfigs.data : tableData;
+  const formatColumnDefs =
+    tableTypeFlag === TableTypeFlag.customTableSelect
+      ? quickAddConfigs.columns
+      : columnDefs;
+  const formatTableData =
+    tableTypeFlag === TableTypeFlag.customTableSelect
+      ? quickAddConfigs.data
+      : tableData;
 
   const columnDefsOptions = genColumnDefsOptions(formatColumnDefs, appMode);
-  const ajaxOptions = genAjaxOptions({ actionId, enableRemote, enableIndexedDBQuery, params: remoteAjax?.params });
-  const staticDataOptions = genStaticDataOptions({ tableData: formatTableData, columnDefs, tableMode, enableIndexedDBQuery });
+  const ajaxOptions = genAjaxOptions({
+    actionId,
+    enableRemote,
+    enableIndexedDBQuery,
+    params: remoteAjax?.params,
+  });
+  const staticDataOptions = genStaticDataOptions({
+    tableData: formatTableData,
+    columnDefs,
+    tableMode,
+    enableIndexedDBQuery,
+  });
   const paginationOptions = genPaginationOptions({
     enableRemote,
-    tableMode
+    tableMode,
   });
-  const indexedDBOptions = genIndexedDBOptions(enableIndexedDBQuery, indexdbConfigs, tableTypeFlag);
+  const indexedDBOptions = genIndexedDBOptions(
+    enableIndexedDBQuery,
+    indexdbConfigs,
+    tableTypeFlag
+  );
 
   if (!isObject(commonOptions)) {
     commonOptions = {};
@@ -54,7 +80,10 @@ export const genInitOptions = (
     ...ajaxOptions,
     ...staticDataOptions,
     ...paginationOptions,
-    layout: tableTypeFlag === TableTypeFlag.customTableSelect ? "fitDataStretch" : layout, // fit columns to width of table (optional)
+    layout:
+      tableTypeFlag === TableTypeFlag.customTableSelect
+        ? 'fitDataStretch'
+        : layout, // fit columns to width of table (optional)
     // ...options // props.options are passed to Tabulator's options.
     ...commonOptions,
   } as Options;
@@ -63,22 +92,23 @@ export const genInitOptions = (
 const genGeneralOptions = (): Options => {
   return {
     height: '100%',
-    maxHeight: "100%",
+    maxHeight: '100%',
     reactiveData: true,
     placeholder: null,
     tabEndNewRow: true, // create empty new row on tab
     locale: true,
     selectable: false,
     selectableRollingSelection: false, // disable rolling selection
-    renderHorizontal: "virtual",
-    renderVertical: "virtual",
+    renderHorizontal: 'virtual',
+    renderVertical: 'virtual',
     // langs: {
     //   zh: zhCNLang,
     // },
+    // <div style='display:inline-block; border-radius:10px; background:#fff; font-weight:bold; font-size:16px; color:#000; padding:10px 20px;'>
+    //   数据加载中...
+    // </div>
     dataLoaderLoading: `
-      <div style='display:inline-block; border-radius:10px; background:#fff; font-weight:bold; font-size:16px; color:#000; padding:10px 20px;'>
-        数据加载中...
-      </div>
+      <div class="arco-spin"><span class="arco-spin-icon"><div class="arco-spin-dot-list"><div class="arco-spin-dot"></div><div class="arco-spin-dot"></div><div class="arco-spin-dot"></div><div class="arco-spin-dot"></div><div class="arco-spin-dot"></div></div></span></div>
     `,
     dataLoaderError: '',
     dataLoaderErrorTimeout: 0,
@@ -87,8 +117,11 @@ const genGeneralOptions = (): Options => {
   };
 };
 
-function customEditorAndFormatterPipe(tempColDefs: ColumnDefinition[], appMode?: PlatformAppMode): ColumnDefinition[] {
-  return map(tempColDefs, item => {
+function customEditorAndFormatterPipe(
+  tempColDefs: ColumnDefinition[],
+  appMode?: PlatformAppMode
+): ColumnDefinition[] {
+  return map(tempColDefs, (item) => {
     const { headerSort = false, editableTitle = false, ...rest } = item;
 
     const formatEditableTitle = appMode !== 'EDIT' ? false : editableTitle;
@@ -96,12 +129,15 @@ function customEditorAndFormatterPipe(tempColDefs: ColumnDefinition[], appMode?:
     return {
       editableTitle: formatEditableTitle,
       headerSort,
-      ...rest
-    }
-  })
+      ...rest,
+    };
+  });
 }
 
-const genColumnDefsOptions = (initColDefs: ColumnDefinition[], appMode?: PlatformAppMode): OptionsColumns => {
+const genColumnDefsOptions = (
+  initColDefs: ColumnDefinition[],
+  appMode?: PlatformAppMode
+): OptionsColumns => {
   if (isArray(initColDefs) && initColDefs.length > 0) {
     return {
       columns: customEditorAndFormatterPipe(initColDefs, appMode),
@@ -134,9 +170,9 @@ export const genAjaxOptions = ({
   enableIndexedDBQuery,
   params,
 }: {
-  actionId: string,
-  enableRemote: boolean,
-  enableIndexedDBQuery: boolean,
+  actionId: string;
+  enableRemote: boolean;
+  enableIndexedDBQuery: boolean;
   params?: Record<string, any>;
 }): OptionsData => {
   if (!actionId || !enableRemote || enableIndexedDBQuery) return {};
@@ -166,7 +202,7 @@ export const genAjaxOptions = ({
         size: 10,
         page: 1,
         where: {
-          ...formatParams
+          ...formatParams,
         },
         dateBetween: {},
       };
@@ -229,16 +265,18 @@ const genStaticDataOptions = ({
   };
 };
 
-
 export interface GenPaginationOptionsParams {
   enableRemote: boolean;
   tableMode: TableMode;
 }
-const genPaginationOptions = ({ tableMode, enableRemote }: GenPaginationOptionsParams): OptionsPagination => {
+const genPaginationOptions = ({
+  tableMode,
+  enableRemote,
+}: GenPaginationOptionsParams): OptionsPagination => {
   if (tableMode === 'editable') {
     return {
       pagination: false,
-    }
+    };
   }
   return {
     pagination: true,
@@ -248,7 +286,11 @@ const genPaginationOptions = ({ tableMode, enableRemote }: GenPaginationOptionsP
   };
 };
 
-function genIndexedDBOptions(enableIndexedDBQuery: boolean, indexdbConfigs: Record<string, any>, tableTypeFlag?: string) {
+function genIndexedDBOptions(
+  enableIndexedDBQuery: boolean,
+  indexdbConfigs: Record<string, any>,
+  tableTypeFlag?: string
+) {
   if (!enableIndexedDBQuery) {
     return {};
   }
@@ -260,11 +302,17 @@ function genIndexedDBOptions(enableIndexedDBQuery: boolean, indexdbConfigs: Reco
     simpleBuiltinQueryCondition,
     dropdownSimpleBuiltinQueryCondition,
   } = indexdbConfigs;
-  console.log('genIndexedDBOptions', tableName,
+  console.log(
+    'genIndexedDBOptions',
+    tableName,
     simpleBuiltinQueryCondition,
-    dropdownSimpleBuiltinQueryCondition,);
+    dropdownSimpleBuiltinQueryCondition
+  );
   return {
     dexie: dexie,
-    dexieTable: tableTypeFlag === TableTypeFlag.customTableSelect ? dropdownIndexedDBTableName : tableName
+    dexieTable:
+      tableTypeFlag === TableTypeFlag.customTableSelect
+        ? dropdownIndexedDBTableName
+        : tableName,
   };
 }

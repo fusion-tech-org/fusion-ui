@@ -174,11 +174,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   useEffect(() => {
     if (!tabulatorRef || !actionId || !isRemote) return;
-    if (!isFunction(tabulatorRef.getAjaxUrl)) return;
 
-    const curAjax = tabulatorRef.getAjaxUrl();
+    const curAjax = tabulatorRef.getAjaxUrl?.();
     console.log('curAjax', curAjax);
-    tabulatorRef.setData(curAjax);
+    curAjax && tabulatorRef.setData(curAjax);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionId, !tabulatorRef, isRemote]);
 
