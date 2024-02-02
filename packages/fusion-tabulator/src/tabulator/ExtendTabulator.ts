@@ -64,8 +64,8 @@ Tabulator.extendModule('accessor', 'accessors', {
 Tabulator.extendModule('edit', 'editors', {
   uppercaseInput: function (cell, onRendered, success, cancel, editorParams) {
     //create and style input
-    const cellValue = cell.getValue().toUpperCase(),
-      input = document.createElement('input');
+    const cellValue = cell.getValue().toUpperCase();
+    const input = document.createElement('input');
 
     input.setAttribute('type', 'text');
 
