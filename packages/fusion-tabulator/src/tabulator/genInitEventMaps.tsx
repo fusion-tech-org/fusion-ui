@@ -1,6 +1,12 @@
-import { throttle } from "lodash";
-import { PlatformAppMode } from "src/interface";
-import { CellComponent, ColumnComponent, EventCallBackMethods, RowComponent, Tabulator } from "tabulator-tables";
+import { throttle } from 'lodash';
+import { PlatformAppMode } from 'src/interface';
+import {
+  CellComponent,
+  ColumnComponent,
+  EventCallBackMethods,
+  RowComponent,
+  Tabulator,
+} from 'tabulator-tables';
 
 export function genInitEventMaps({
   appMode,
@@ -11,8 +17,17 @@ export function genInitEventMaps({
   appMode: PlatformAppMode;
   tabulatorRef: Tabulator;
   onUpdateWidgetMetaProperty: (params: Record<string, unknown>) => void;
-  onEvents: (eventName: string, data?: Record<string, any>, extra?: Record<'action' | 'tableData', any>) => void;
-}): Partial<Record<keyof EventCallBackMethods, EventCallBackMethods[keyof EventCallBackMethods]>> {
+  onEvents: (
+    eventName: string,
+    data?: Record<string, any>,
+    extra?: Record<'action' | 'tableData', any>
+  ) => void;
+}): Partial<
+  Record<
+    keyof EventCallBackMethods,
+    EventCallBackMethods[keyof EventCallBackMethods]
+  >
+> {
   function handleDataLoaded() {
     const curTableData = tabulatorRef?.getData();
     console.log('data loaded', curTableData);
@@ -80,7 +95,7 @@ export function genInitEventMaps({
 
     onUpdateWidgetMetaProperty?.({
       editingCell: {
-        [cellField]: cellValue
+        [cellField]: cellValue,
       },
     });
   }
@@ -103,8 +118,8 @@ export function genInitEventMaps({
             tableData,
           });
         })
-        .catch(e => {
-          console.log("Deleting row failed: ", e);
+        .catch((e) => {
+          console.log('Deleting row failed: ', e);
         });
 
       return;
@@ -115,27 +130,27 @@ export function genInitEventMaps({
 
   function handleRowDoubleClick(_event: UIEvent, row: RowComponent) {
     const rowData = row.getData();
-    onEvents?.('rowDbClick', rowData)
+    onEvents?.('rowDbClick', rowData);
   }
 
   function handleRowSelected(_event: UIEvent, _row: RowComponent) {
     const rowData = tabulatorRef?.getSelectedData() || [];
-    console.log('rowData ------- ', rowData);
-    onEvents?.('rowSelected', rowData)
+
+    onEvents?.('rowSelected', rowData);
   }
 
   function handleHeaderClick(_event: UIEvent, column: ColumnComponent) {
     const colField = column.getField();
     onEvents?.('headerClick', {
-      field: colField
-    })
+      field: colField,
+    });
   }
 
   function handleHeaderDblClick(_event: UIEvent, column: ColumnComponent) {
     const colField = column.getField();
     onEvents?.('headerDbClick', {
-      field: colField
-    })
+      field: colField,
+    });
   }
 
   function handleCellClick(_event: UIEvent, cell: CellComponent) {
@@ -145,7 +160,7 @@ export function genInitEventMaps({
     if (!cellField || !cellValue) return;
 
     onEvents?.('cellClick', {
-      [cellField]: cellValue
+      [cellField]: cellValue,
     });
   }
 
@@ -162,7 +177,7 @@ export function genInitEventMaps({
 
   const throttledHandleRowSelected = throttle(handleRowSelected, 500, {
     trailing: true,
-    leading: false
+    leading: false,
   });
 
   return {
@@ -191,7 +206,5 @@ export function genInitEventMaps({
     cellEdited: handleCellEdited,
     cellClick: handleCellClick,
     cellDblClick: handleCellDblClick,
-
-  }
+  };
 }
-

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useState, useEffect } from 'react';
 
-import { isEmpty, isNumber, isUndefined } from 'lodash';
+import { isEmpty, isFunction, isNumber, isUndefined } from 'lodash';
 
 // import { pickHTMLProps } from 'pick-react-known-prop';
 // import { propsToOptions } from 'utils/ConfigUtils';
@@ -66,7 +66,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   let isOverHeigth = false;
 
   const reCalcInputTop = (data: any[]) => {
-    console.log(tableHeight, tabulatorRef);
     if (!tableHeight || tableMode !== 'editable') return;
     // const realTableData = tabulatorRef?.getData('active');
     const dataLen = data?.length || 0;
@@ -175,8 +174,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   useEffect(() => {
     if (!tabulatorRef || !actionId || !isRemote) return;
+    if (!isFunction(tabulatorRef.getAjaxUrl)) return;
 
     const curAjax = tabulatorRef.getAjaxUrl();
+    console.log('curAjax', curAjax);
     tabulatorRef.setData(curAjax);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionId, !tabulatorRef, isRemote]);

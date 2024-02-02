@@ -1,21 +1,18 @@
 import { useRef, useState } from 'react';
 import TabulatorWithRecoil from '../../src';
-import {
-  colConfigTableData,
-  colConfigTableColumns
-} from '../constants';
+import { colConfigTableData, colConfigTableColumns } from '../constants';
 import { Input, Select, Form, Button } from '@arco-design/web-react';
 import { Editor } from '@monaco-editor/react';
 
 const tagsApi = 'https://api.fujia.site/api/v1/tags';
 const articlesApi = 'https://api.fujia.site/api/v1/articles';
-const platformApi = 'https://staging.fusiontech.cn/api/v1/actions/execute'
+const platformApi = 'https://staging.fusiontech.cn/api/v1/actions/execute';
 
 const defaultContent = {
   actionId: '',
   tableData: [],
-  colDef: []
-}
+  colDef: [],
+};
 
 export const TabulatorTest = () => {
   const [customProps, setCustomProps] = useState<{
@@ -27,7 +24,6 @@ export const TabulatorTest = () => {
 
   function handleEditorChange(value, event) {
     // here is the current value
-
   }
 
   function handleEditorDidMount(editor, monaco) {
@@ -65,39 +61,50 @@ export const TabulatorTest = () => {
   function hanldeEvents(eventName, data) {
     console.log(eventName, data);
   }
-  console.log(customProps, 'customProps');
+
   return (
     <div>
-      <div style={{
-        border: '1px dashed #ddd',
-        borderRadius: 6,
-        marginBottom: 24
-      }}>
-        <Editor height="30vh" defaultLanguage="json" defaultValue={JSON.stringify(defaultContent)}
+      <div
+        style={{
+          border: '1px dashed #ddd',
+          borderRadius: 6,
+          marginBottom: 24,
+        }}
+      >
+        <Editor
+          height="30vh"
+          defaultLanguage="json"
+          defaultValue={JSON.stringify(defaultContent)}
           onChange={handleEditorChange}
           onMount={handleEditorDidMount}
           options={{
-            tabSize: 2
+            tabSize: 2,
           }}
           beforeMount={handleEditorWillMount}
           onValidate={handleEditorValidation}
         />
-        <Button type="primary" onClick={handleSync}>确认</Button>
+        <Button type="primary" onClick={handleSync}>
+          确认
+        </Button>
       </div>
       <div style={{ height: '70vh', padding: '32px' }}>
-        <TabulatorWithRecoil onEvents={hanldeEvents} appMode="EDIT" widgetId='ss' tableType="tabulator" tabulatorOptions={
-          {
+        <TabulatorWithRecoil
+          onEvents={hanldeEvents}
+          appMode="EDIT"
+          widgetId="ss"
+          tableType="tabulator"
+          tabulatorOptions={{
             data: [
               {
-                "name": "",
-                "age": "",
-                "gender": "",
-                "height": ""
-              }
-            ]
-          }
-        } />
+                name: '',
+                age: '',
+                gender: '',
+                height: '',
+              },
+            ],
+          }}
+        />
       </div>
     </div>
-  )
+  );
 };

@@ -1,37 +1,57 @@
-import React, { useState, useRef, useEffect, useContext, useCallback } from 'react';
-import { Button, Table, Dropdown, Input, Select, Form, FormInstance } from '@arco-design/web-react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useContext,
+  useCallback,
+} from 'react';
+import {
+  Button,
+  Table,
+  Dropdown,
+  Input,
+  Select,
+  Form,
+  FormInstance,
+} from '@arco-design/web-react';
 
 const FormItem = Form.Item;
-const EditableContext = React.createContext<{ getForm?: () => FormInstance }>({});
+const EditableContext = React.createContext<{ getForm?: () => FormInstance }>(
+  {}
+);
 
 export const CustomSelect = (props) => {
-  const { onSelectRowData } = props
+  const { onSelectRowData } = props;
   const [popupVisible, setPopupVisble] = useState(false);
-  const handleVisibleChange = (visible: boolean) => {
-    console.log('visible', visible);
-  }
+  const handleVisibleChange = (_visible: boolean) => {
+    //
+  };
 
   const handleInputFocus = () => {
     setPopupVisble(true);
-  }
+  };
 
   const handleSelectedRow = (record) => {
-    onSelectRowData?.(record)
-    setPopupVisble(false)
-  }
-
+    onSelectRowData?.(record);
+    setPopupVisble(false);
+  };
 
   return (
     <div>
-      <Dropdown popupVisible={popupVisible} trigger="focus" onVisibleChange={handleVisibleChange} droplist={
-        <div>
-          <EditableTable onSelectedRow={handleSelectedRow} />
-        </div>
-      }>
+      <Dropdown
+        popupVisible={popupVisible}
+        trigger="focus"
+        onVisibleChange={handleVisibleChange}
+        droplist={
+          <div>
+            <EditableTable onSelectedRow={handleSelectedRow} />
+          </div>
+        }
+      >
         <Input onFocus={handleInputFocus} />
       </Dropdown>
     </div>
-  )
+  );
 };
 
 function EditableRow(props) {
@@ -50,7 +70,7 @@ function EditableRow(props) {
         style={{ display: 'table-row' }}
         children={children}
         ref={refForm}
-        wrapper='tr'
+        wrapper="tr"
         wrapperProps={rest}
         className={`${className} editable-row`}
       />
@@ -205,7 +225,11 @@ function EditableTable(props) {
       title: 'Operation',
       dataIndex: 'op',
       render: (_, record) => (
-        <Button onClick={() => removeRow(record.key)} type='primary' status='danger'>
+        <Button
+          onClick={() => removeRow(record.key)}
+          type="primary"
+          status="danger"
+        >
           Delete
         </Button>
       ),
@@ -239,10 +263,9 @@ function EditableTable(props) {
   function handleRowEvent(record, _index) {
     return {
       onClick: () => {
-        console.log(record);
-        onSelectedRow?.(record)
-      }
-    }
+        onSelectedRow?.(record);
+      },
+    };
   }
 
   return (
@@ -258,14 +281,14 @@ function EditableTable(props) {
       columns={columns.map((column) =>
         column.editable
           ? {
-            ...column,
-            onCell: () => ({
-              onHandleSave: handleSave,
-            }),
-          }
+              ...column,
+              onCell: () => ({
+                onHandleSave: handleSave,
+              }),
+            }
           : column
       )}
-      className='table-demo-editable-cell'
+      className="table-demo-editable-cell"
     />
   );
 }

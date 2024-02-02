@@ -1,10 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Dropdown, Input, Message } from '@arco-design/web-react';
-import {
-  Container,
-  DroplistWrapper,
-  InputWrapper,
-} from './styles';
+import { Container, DroplistWrapper, InputWrapper } from './styles';
 import { IconPlus } from '@arco-design/web-react/icon';
 // import { TableSelect } from './TableSelect';
 import { useClickOutside } from 'hooks/useClickOutsite';
@@ -16,7 +12,7 @@ import { useTabulator } from 'src/tabulator/useTabulator';
 import { TableTypeFlag } from 'src/interface';
 
 export const CustomTableSelect = (props) => {
-  const { onSelectRowData, quickAddDropdownDefinitions, uniformProps } = props
+  const { onSelectRowData, quickAddDropdownDefinitions, uniformProps } = props;
   const [popupVisible, setPopupVisble] = useState(false);
   const [cursor, setCursor] = useState<number>(-1);
   // const [tableData, setTableData] = useState([]);
@@ -41,15 +37,13 @@ export const CustomTableSelect = (props) => {
           selectable: 1,
           rowHeight: 32,
         },
-        tableTypeFlag: TableTypeFlag.customTableSelect
-      }
-    }
+        tableTypeFlag: TableTypeFlag.customTableSelect,
+      },
+    },
   });
 
   const { quickAddConfigs, enableIndexedDBQuery = false } = uniformProps || {};
   const { filters = [], uniqueKey = 'id' } = quickAddConfigs || {};
-  console.log('uniformProps ++++', uniformProps, quickAddConfigs);
-
 
   // const handleVisibleChange = (visible: boolean) => {
   //   console.log('visible', visible);
@@ -63,7 +57,7 @@ export const CustomTableSelect = (props) => {
     inputRef.current?.blur();
 
     destroyTable();
-  }
+  };
 
   const calcFilterDataLen = () => {
     const curTableData = tabulatorRef.getData('visible');
@@ -71,7 +65,7 @@ export const CustomTableSelect = (props) => {
     const len = curTableData.length;
 
     return len;
-  }
+  };
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (!tabulatorRef) return;
@@ -86,10 +80,9 @@ export const CustomTableSelect = (props) => {
       const len = calcFilterDataLen();
 
       setCursor((prev) => {
-
         if (prev - 1 <= 0) return 0;
 
-        return (prev - 1) % len
+        return (prev - 1) % len;
       });
     }
 
@@ -104,7 +97,7 @@ export const CustomTableSelect = (props) => {
     if (e.key === 'Escape') {
       hideDroplist();
     }
-  }
+  };
 
   useClickOutside([dropdownRef, inputRef], hideDroplist);
 
@@ -119,7 +112,7 @@ export const CustomTableSelect = (props) => {
 
     tabulatorRef.deselectRow();
     tabulatorRef.selectRow(uniqueKeys[cursor]);
-    tabulatorRef.scrollToRow(uniqueKeys[cursor], "center", false);
+    tabulatorRef.scrollToRow(uniqueKeys[cursor], 'center', false);
   }, [cursor]);
 
   // useEffect(() => {
@@ -139,37 +132,37 @@ export const CustomTableSelect = (props) => {
 
     setTimeout(() => {
       initTable();
-    }, 20)
-  }
+    }, 20);
+  };
 
   const handleSelectedRow = (rowData: any) => {
     // const rowData = row.getData();
-    onSelectRowData?.(rowData)
+    onSelectRowData?.(rowData);
 
     // setPopupVisble(false)
     hideDroplist();
-  }
+  };
 
-  const debouncedOnChange =
-    debounce((value) => {
-      if (!tabulatorRef) return;
+  const debouncedOnChange = debounce((value) => {
+    if (!tabulatorRef) return;
 
-      if (!isArray(filters) || filters.length <= 0) return;
+    if (!isArray(filters) || filters.length <= 0) return;
 
-      const buildFilters = map(filters, (filter) => ({ field: filter, type: 'like', value }))
-      console.log('buildFilters', buildFilters);
-      tabulatorRef.setFilter(buildFilters);
-    }, 500)
-    ;
-
+    const buildFilters = map(filters, (filter) => ({
+      field: filter,
+      type: 'like',
+      value,
+    }));
+    console.log('buildFilters', buildFilters);
+    tabulatorRef.setFilter(buildFilters);
+  }, 500);
   const handleValueChange = (value: string) => {
     setSearchText(value);
 
     debouncedOnChange(value);
-  }
+  };
 
   function handleEventCallback(eventName: string, data?: Record<string, any>) {
-    console.log('eventName', eventName, data, '<<<<<<<<');
     switch (eventName) {
       case 'rowDbClick':
         handleSelectedRow(data);
@@ -188,7 +181,8 @@ export const CustomTableSelect = (props) => {
         unmountOnExit
         droplist={
           <DroplistWrapper ref={dropdownRef}>
-            <div ref={tableRef}
+            <div
+              ref={tableRef}
               style={{
                 height: '100%',
               }}
@@ -206,10 +200,10 @@ export const CustomTableSelect = (props) => {
             prefix={<IconPlus />}
             allowClear
             value={searchText}
-            placeholder='请输入...'
+            placeholder="请输入..."
           />
         </InputWrapper>
       </Dropdown>
     </Container>
-  )
+  );
 };
