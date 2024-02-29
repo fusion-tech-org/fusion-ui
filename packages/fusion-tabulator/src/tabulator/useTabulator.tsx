@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 import * as ReactDOM from 'react-dom';
 import {
@@ -12,7 +11,6 @@ import { useIntersectionObserver } from 'hooks/useIntersectionObserver';
 import { genInitEventMaps } from './genInitEventMaps';
 import { genInitOptions } from './genInitOptions';
 
-
 export const useTabulator = ({
   ref,
   props,
@@ -20,7 +18,11 @@ export const useTabulator = ({
 }: {
   ref: React.RefObject<HTMLElement>;
   props: any;
-  eventCallback?: (eventName: string, data?: Record<string, any>, tableTypeFlag?: string) => void;
+  eventCallback?: (
+    eventName: string,
+    data?: Record<string, any>,
+    tableTypeFlag?: string
+  ) => void;
 }) => {
   const {
     eventMaps = {},
@@ -49,7 +51,7 @@ export const useTabulator = ({
     const domEle = ReactDOM.findDOMNode(ref.current) as HTMLElement;
 
     // generates initial options
-    const initOptions = genInitOptions(props)
+    const initOptions = genInitOptions(props);
 
     console.log('initTabulatorOptions', initOptions);
     // init tabulator
@@ -59,8 +61,8 @@ export const useTabulator = ({
     instanceRef.current.setLocale?.('zh');
 
     /**
-    * NOTE: Binding events
-    */
+     * NOTE: Binding events
+     */
     const defaultEvents = genInitEventMaps({
       appMode,
       tabulatorRef: instanceRef.current,
@@ -74,7 +76,7 @@ export const useTabulator = ({
 
     forIn(mergeEvents, (handler, eventName: keyof EventCallBackMethods) => {
       instanceRef.current.on(eventName, handler);
-    })
+    });
 
     // props.onRef && props.onRef(instanceRef);
     onUpdateWidgetMetaProperty?.({
@@ -82,19 +84,23 @@ export const useTabulator = ({
     });
 
     callback?.();
-  }
+  };
 
   const destroyTable = () => {
     if (instanceRef.current) {
       instanceRef.current.destroy();
       instanceRef.current = null;
     }
-  }
+  };
 
   return {
-    tableHeight: rectBound?.height,
+    tablePosition: {
+      left: rectBound?.left,
+      bottom: rectBound?.bottom,
+      width: rectBound?.width,
+    },
     tabulatorRef: instanceRef.current,
     initTable: initTabulator,
     destroyTable,
-  }
-}
+  };
+};

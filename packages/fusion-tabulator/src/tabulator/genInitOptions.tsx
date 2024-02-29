@@ -6,13 +6,18 @@ import {
   // OptionsGeneral,
   // OptionsLocale,
   ColumnDefinition,
+  RowComponent,
+  CellComponent,
 } from 'tabulator-tables';
-import { isArray, isObject, map } from 'lodash';
+import { isArray, isObject, isString, map } from 'lodash';
 
 // import zhCNLang from 'langs/zh-cn.json';
 import type { ReactTabulatorProps, TableMode } from './interface';
 import { Message } from '@arco-design/web-react';
 import { PlatformAppMode, TableTypeFlag } from 'src/interface';
+import { convertExpressionByRule, simpleExecExpression } from './utils';
+import { CUSTOM_EDITOR_MAP, checkIsCustomEditor } from './editors';
+import { ROW_HEIGHT } from './constants';
 
 export const genInitOptions = (
   tabulatorProps: ReactTabulatorProps
@@ -28,6 +33,13 @@ export const genInitOptions = (
     uniformProps,
   } = tabulatorProps;
   let { commonOptions = {} } = uniformProps || {};
+
+  if (!isObject(commonOptions)) {
+    commonOptions = {};
+  }
+
+  const { hidePagination = false, ...availableCommonOptions } = commonOptions;
+
   const {
     enableIndexedDBQuery = false,
     quickAddConfigs,
@@ -62,16 +74,13 @@ export const genInitOptions = (
   const paginationOptions = genPaginationOptions({
     enableRemote,
     tableMode,
+    hidePagination,
   });
   const indexedDBOptions = genIndexedDBOptions(
     enableIndexedDBQuery,
     indexdbConfigs,
     tableTypeFlag
   );
-
-  if (!isObject(commonOptions)) {
-    commonOptions = {};
-  }
 
   return {
     ...generalOptions,
@@ -85,11 +94,15 @@ export const genInitOptions = (
         ? 'fitDataStretch'
         : layout, // fit columns to width of table (optional)
     // ...options // props.options are passed to Tabulator's options.
-    ...commonOptions,
+    ...availableCommonOptions,
   } as Options;
 };
 
-const genGeneralOptions = (): Options => {
+const genGeneralOptions = (): Options & {
+  selectableRows?: boolean;
+  selectableRowsRollingSelection?: boolean;
+  selectableRowsCheck?: (row: RowComponent) => void;
+} => {
   return {
     height: '100%',
     maxHeight: '100%',
@@ -97,8 +110,9 @@ const genGeneralOptions = (): Options => {
     placeholder: null,
     tabEndNewRow: true, // create empty new row on tab
     locale: true,
-    selectable: false,
-    selectableRollingSelection: false, // disable rolling selection
+    selectableRows: false,
+    // selectableRollingSelection: false, // disable rolling selection
+    selectableRowsRollingSelection: false, //disable rolling selection
     renderHorizontal: 'virtual',
     renderVertical: 'virtual',
     // langs: {
@@ -112,24 +126,65 @@ const genGeneralOptions = (): Options => {
     `,
     dataLoaderError: '',
     dataLoaderErrorTimeout: 0,
+    rowHeight: ROW_HEIGHT,
     // adverts: true,
     // advertSrc: 'https://fujia.site/articles/632ef6cf86ce2500350b37a1'
   };
 };
+
+function editCheck(editorParams: Record<string, any>) {
+  return (cell: CellComponent) => {
+    //cell - the cell component for the editable cell
+    const { eqRule = '' } = editorParams || {};
+    //get row data
+    const data = cell.getRow().getData();
+
+    const execExpr = convertExpressionByRule(eqRule, { ...data });
+
+    if (!execExpr || execExpr.includes('undefined')) return true;
+
+    return simpleExecExpression(execExpr)();
+  };
+}
 
 function customEditorAndFormatterPipe(
   tempColDefs: ColumnDefinition[],
   appMode?: PlatformAppMode
 ): ColumnDefinition[] {
   return map(tempColDefs, (item) => {
-    const { headerSort = false, editableTitle = false, ...rest } = item;
+    const {
+      headerSort = false,
+      editableTitle = false,
+      editable = false,
+      editor,
+      editorParams = {},
+      ...rest
+    } = item;
 
     const formatEditableTitle = appMode !== 'EDIT' ? false : editableTitle;
 
-    return {
+    const isCustomEditor =
+      isString(editor) && checkIsCustomEditor(editor as any);
+
+    const customColDefs: Record<string, any> = {
       editableTitle: formatEditableTitle,
       headerSort,
+    };
+
+    if (isCustomEditor) {
+      customColDefs.editor = CUSTOM_EDITOR_MAP[editor];
+    } else if (editor) {
+      customColDefs.editor = editor;
+    }
+
+    if (editable) {
+      customColDefs.editable = editCheck(editorParams);
+    }
+
+    return {
+      editorParams,
       ...rest,
+      ...customColDefs,
     };
   });
 }
@@ -147,9 +202,9 @@ const genColumnDefsOptions = (
   return {
     autoColumns: true,
     autoColumnsDefinitions: function (definitions) {
-      definitions.forEach((column) => {
-        column.headerSort = false;
-      });
+      // definitions.forEach((column) => {
+      //   column.headerSort = false;
+      // });
       //definitions - array of column definition objects
       if (appMode !== 'EDIT') return definitions;
 
@@ -268,12 +323,14 @@ const genStaticDataOptions = ({
 export interface GenPaginationOptionsParams {
   enableRemote: boolean;
   tableMode: TableMode;
+  hidePagination: boolean;
 }
 const genPaginationOptions = ({
   tableMode,
   enableRemote,
+  hidePagination,
 }: GenPaginationOptionsParams): OptionsPagination => {
-  if (tableMode === 'editable') {
+  if (tableMode === 'editable' || hidePagination) {
     return {
       pagination: false,
     };

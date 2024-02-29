@@ -1,8 +1,5 @@
 import TabulatorWithRecoil from '../../src';
-import {
-  colConfigTableData,
-  editableColDefs,
-} from '../constants';
+import { colConfigTableData, editableColDefs } from '../constants';
 
 const colDefs = [
   {
@@ -31,6 +28,7 @@ const colDefs = [
     hozAlign: 'center',
   },
 ];
+
 const initData = (() => {
   return new Array(30).fill(0).map((_, i) => ({
     id: i + 1,
@@ -41,22 +39,28 @@ const initData = (() => {
   }));
 })();
 
-
 export const TabulatorEditable = () => {
-
   return (
     <div style={{ display: 'flex', padding: '32px', height: '200px' }}>
-      <TabulatorWithRecoil appMode="EDIT" widgetId='ss33' tableType="tabulator" tableMode="editable" tabulatorOptions={{
-        columns: editableColDefs,
-        data: colConfigTableData
-      }} uniformProps={{
-        commonOptions: {
-          selectable: true,
-        }
-      }} quickAddDropdownDefinitions={{
-        data: initData,
-        columns: colDefs
-      }} />
+      <TabulatorWithRecoil
+        appMode="EDIT"
+        widgetId="ss33"
+        tableType="tabulator"
+        tableMode="editable"
+        tabulatorOptions={{
+          columns: editableColDefs,
+          data: colConfigTableData,
+        }}
+        uniformProps={{
+          commonOptions: {
+            selectableRows: true,
+          },
+        }}
+        quickAddDropdownDefinitions={{
+          data: initData,
+          columns: colDefs,
+        }}
+      />
     </div>
   );
 };

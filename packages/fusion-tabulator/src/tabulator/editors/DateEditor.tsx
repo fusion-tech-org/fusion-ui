@@ -10,7 +10,7 @@ const inputCss = {
   width: '100%',
   height: '100%',
   fontSize: '1em',
-  fontFamily: 'inherit'
+  fontFamily: 'inherit',
 };
 
 interface IProps {
@@ -41,7 +41,7 @@ class Editor extends React.Component<IProps> {
       // user deleted value in the cell => set to ''
       // const result = format(new Date(), this.format);
       success('');
-      return
+      return;
     }
     let result = value;
     try {
@@ -85,7 +85,7 @@ class Editor extends React.Component<IProps> {
     // console.log('cell.getValue()', cell.getValue());
     // console.log('valueDt', valueDt);
 
-    let value = format(new Date(), DEFAULT_DATE_INPUT_FORMAT)
+    let value = format(new Date(), DEFAULT_DATE_INPUT_FORMAT);
     try {
       value = format(valueDt!, DEFAULT_DATE_INPUT_FORMAT);
     } catch (err) {
@@ -95,7 +95,7 @@ class Editor extends React.Component<IProps> {
     return (
       <input
         type="date"
-        ref={r => (this.ref = r)}
+        ref={(r) => (this.ref = r)}
         defaultValue={value}
         // value={value}
         onBlur={this.onBlur}
@@ -107,7 +107,7 @@ class Editor extends React.Component<IProps> {
   }
 }
 
-export default function (
+export default function DateEditor(
   cell: any,
   onRendered: (fn: any) => void,
   success: (value: any) => void,
@@ -118,7 +118,13 @@ export default function (
   container.style.height = '100%';
   console.log('using custom editor');
   render(
-    <Editor cell={cell} onRendered={onRendered} success={success} cancel={cancel} editorParams={editorParams} />,
+    <Editor
+      cell={cell}
+      onRendered={onRendered}
+      success={success}
+      cancel={cancel}
+      editorParams={editorParams}
+    />,
     container
   );
   return container;

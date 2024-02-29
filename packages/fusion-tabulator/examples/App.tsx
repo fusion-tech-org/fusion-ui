@@ -1,7 +1,7 @@
 // import { TabulatorExample } from './TabulatorExample';
 // import { TabulatorExamples } from './tabulator';
 // import { TabulatorFull } from './TabulatorFull';
-import "@arco-design/web-react/dist/css/arco.css";
+import '@arco-design/web-react/dist/css/arco.css';
 
 import { useState } from 'react';
 import { Layout, Menu } from '@arco-design/web-react';
@@ -11,14 +11,15 @@ import { TabulatorExamples } from './tabulator/index';
 import { TabulatorFull } from './TabulatorFull/index';
 import { TabulatorEmpty } from './TabulatorEmpty/index';
 import { MonacoEditor } from './MonacoEditor/index';
-import { ProxyPattern } from "./ProxyPattern";
-import { CustomSelect } from "./CustomSelect";
-import { TabulatorSelect } from "./TabulatorSelect";
-import { TabulatorEditable } from "./TabulatorEditable";
-import { TabulatorTest } from "./TabulatorTest";
-import { GridExplore } from "./GridExplore";
-import { DBTable } from "./DBTable";
-import { CraftExplore } from "./CraftExplore";
+import { ProxyPattern } from './ProxyPattern';
+import { CustomSelect } from './CustomSelect';
+import { TabulatorSelect } from './TabulatorSelect';
+import { TabulatorEditable } from './TabulatorEditable';
+import { TabulatorTest } from './TabulatorTest';
+import { GridExplore } from './GridExplore';
+import { DBTable } from './DBTable';
+import { CraftExplore } from './CraftExplore';
+import { CustomEditor } from './CustomEditor';
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -27,20 +28,23 @@ const Content = Layout.Content;
 const collapsedWidth = 60;
 const normalWidth = 220;
 
-type MenuItemKeys = 'craft-explore' |
-  'grid-explore' |
-  'db-table' |
-  'tabulator-test' |
-  'tabulator-editable' |
-  'tabulator-select' |
-  'monaco-editor' |
-  'tabulator-full' |
-  'tabulator' |
-  'proxy-pattern' |
-  'custom-select' |
-  'tabulator-empty';
+type MenuItemKeys =
+  | 'craft-explore'
+  | 'grid-explore'
+  | 'db-table'
+  | 'tabulator-test'
+  | 'tabulator-editable'
+  | 'tabulator-select'
+  | 'monaco-editor'
+  | 'tabulator-full'
+  | 'tabulator'
+  | 'proxy-pattern'
+  | 'custom-select'
+  | 'tabulator-empty'
+  | 'custom-editor';
 
 const menuKeyMapComp = {
+  'custom-editor': <CustomEditor />,
   'craft-explore': <CraftExplore />,
   'db-table': <DBTable />,
   'tabulator-test': <TabulatorTest />,
@@ -52,13 +56,14 @@ const menuKeyMapComp = {
   'tabulator-empty': <TabulatorEmpty />,
   'proxy-pattern': <ProxyPattern />,
   tabulator: <TabulatorExamples />,
-  'grid-explore': <GridExplore />
-}
+  'grid-explore': <GridExplore />,
+};
 
 function App() {
   const [collapsed, setCollapsed] = useState(false);
   const [siderWidth, setSiderWidth] = useState(normalWidth);
-  const [activeMenuKey, setActiveMenuKey] = useState<MenuItemKeys>('tabulator-editable');
+  const [activeMenuKey, setActiveMenuKey] =
+    useState<MenuItemKeys>('custom-editor');
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);
@@ -88,14 +93,16 @@ function App() {
   }
 
   return (
-    <section style={{
-      height: '100vh',
-      overflow: 'hidden'
-    }}>
+    <section
+      style={{
+        height: '100vh',
+        overflow: 'hidden',
+      }}
+    >
       <Layout style={{ height: '100%' }}>
         <Sider
           collapsible
-          theme='dark'
+          theme="dark"
           onCollapse={onCollapse}
           collapsed={collapsed}
           width={siderWidth}
@@ -104,50 +111,59 @@ function App() {
             onMoving: handleMoving,
           }}
         >
-          <Menu theme='dark' autoOpen style={{ width: '100%' }} onClickMenuItem={handleClickMenuItem}>
-            <MenuItem key='db-table'>
+          <Menu
+            theme="dark"
+            autoOpen
+            style={{ width: '100%' }}
+            onClickMenuItem={handleClickMenuItem}
+          >
+            <MenuItem key="custom-editor">
+              <IconCalendar />
+              custom-editor
+            </MenuItem>
+            <MenuItem key="db-table">
               <IconCalendar />
               db-table
             </MenuItem>
-            <MenuItem key='tabulator-select'>
+            <MenuItem key="tabulator-select">
               <IconCalendar />
               tabulator-select
             </MenuItem>
-            <MenuItem key='custom-select'>
+            <MenuItem key="custom-select">
               <IconCalendar />
               custom-select
             </MenuItem>
-            <MenuItem key='proxy-pattern'>
+            <MenuItem key="proxy-pattern">
               <IconCalendar />
               Proxy Pattern
             </MenuItem>
-            <MenuItem key='tabulator-full'>
+            <MenuItem key="tabulator-full">
               <IconCalendar />
               Tabulator 完整实例
             </MenuItem>
-            <MenuItem key='monaco-editor'>
+            <MenuItem key="monaco-editor">
               <IconCalendar />
               Monaco Editor示例
             </MenuItem>
-            <MenuItem key='tabulator'>
+            <MenuItem key="tabulator">
               <IconHome />
               Tabulator 简单示例
             </MenuItem>
-            <MenuItem key='tabulator-empty'>
+            <MenuItem key="tabulator-empty">
               <IconCalendar />
               Tabulator Empty
             </MenuItem>
             <SubMenu
-              key='layout'
+              key="layout"
               title={
                 <span>
                   <IconCalendar /> 布局组件
                 </span>
               }
             >
-              <MenuItem key='11'>栅格</MenuItem>
-              <MenuItem key='12'>分隔符</MenuItem>
-              <MenuItem key='13'>布局</MenuItem>
+              <MenuItem key="11">栅格</MenuItem>
+              <MenuItem key="12">分隔符</MenuItem>
+              <MenuItem key="13">布局</MenuItem>
             </SubMenu>
           </Menu>
         </Sider>

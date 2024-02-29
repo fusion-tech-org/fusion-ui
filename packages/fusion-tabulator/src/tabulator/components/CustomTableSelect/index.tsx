@@ -1,19 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { Dropdown, Input, Message } from '@arco-design/web-react';
-import {
-  Container,
-  DroplistWrapper,
-  InputWrapper,
-} from './styles';
+import { Container, DroplistWrapper, InputWrapper } from './styles';
 import { IconPlus } from '@arco-design/web-react/icon';
 import { TableSelect } from './TableSelect';
-import { useClickOutside } from 'hooks/useClickOutsite';
+// import { useClickOutside } from 'hooks/useClickOutsite';
 import { useKeyPress } from 'hooks/useKeyPress';
 import { RowComponent, Tabulator } from 'tabulator-tables';
 import { debounce, map, isArray, isEmpty } from 'lodash';
+import { ROW_HEIGHT } from 'src/tabulator/constants';
 
 export const CustomTableSelect = (props) => {
-  const { onSelectRowData, uniformProps } = props
+  const { onSelectRowData, uniformProps } = props;
   const [popupVisible, setPopupVisble] = useState(false);
   const [cursor, setCursor] = useState<number>(-1);
   // const [tableData, setTableData] = useState([]);
@@ -23,12 +20,17 @@ export const CustomTableSelect = (props) => {
   const tabulatorRef = useRef<Tabulator>(null);
 
   const { quickAddConfigs } = uniformProps || {};
-  const { filters = [], uniqueKey = 'id', enableIndexedDBQuery = false } = quickAddConfigs || {};
+  const {
+    filters = [],
+    uniqueKey = 'id',
+    enableIndexedDBQuery = false,
+    data,
+  } = quickAddConfigs || {};
   // console.log('uniformProps >>>> ', uniformProps, quickAddConfigs);
 
   const handleVisibleChange = (visible: boolean) => {
     console.log('visible', visible);
-  }
+  };
 
   const hideDroplist = () => {
     setPopupVisble(false);
@@ -36,33 +38,47 @@ export const CustomTableSelect = (props) => {
     setCursor(-1);
     setSearchText('');
     inputRef.current?.blur();
-  }
+  };
 
-  const calcFilterDataLen = () => {
-    const curTableData = tabulatorRef.current.getData('visible');
+  const memoAllData = useMemo(() => {
+    if (isArray(data) && data.length > 0) {
+      return {
+        total: data.length,
+        data,
+      };
+    }
 
-    const len = curTableData.length;
+    if (!tabulatorRef.current || isEmpty(data))
+      return {
+        total: 0,
+        data: [],
+      };
 
-    return len;
-  }
+    const curTableData = tabulatorRef.current.getData();
+
+    const total = curTableData.length;
+
+    return {
+      total,
+      data: curTableData,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enableIndexedDBQuery, data?.length, tabulatorRef.current]);
 
   const handleKeyPress = (e: KeyboardEvent) => {
-    if (!tabulatorRef.current) return;
+    e.stopPropagation();
+    if (!tabulatorRef.current || memoAllData.total === 0) return;
 
     if (e.key === 'ArrowDown') {
-      const len = calcFilterDataLen();
-      setCursor((prev) => (prev + 1) % len);
+      setCursor((prev) => (prev + 1) % memoAllData.total);
       // tabulatorRef.current.selectRow([1]);
     }
 
     if (e.key === 'ArrowUp') {
-      const len = calcFilterDataLen();
-
       setCursor((prev) => {
-
         if (prev - 1 <= 0) return 0;
 
-        return (prev - 1) % len
+        return (prev - 1) % memoAllData.total;
       });
     }
 
@@ -75,66 +91,70 @@ export const CustomTableSelect = (props) => {
     if (e.key === 'Escape') {
       hideDroplist();
     }
-  }
+  };
 
   useEffect(() => {
     if (!tabulatorRef.current) return;
 
-    const curTableData = tabulatorRef.current.getData('visible');
-
-    const uniqueKeys = map(curTableData, uniqueKey);
+    const uniqueKeys = map(memoAllData.data, uniqueKey);
 
     tabulatorRef.current.deselectRow();
     tabulatorRef.current.selectRow(uniqueKeys[cursor]);
-    tabulatorRef.current.scrollToRow(uniqueKeys[cursor], "center", false);
+    tabulatorRef.current.scrollToRow(uniqueKeys[cursor], 'center', false);
   }, [cursor]);
 
-  useClickOutside([dropdownRef, inputRef], hideDroplist);
+  // useClickOutside([dropdownRef, inputRef], hideDroplist);
   useKeyPress(handleKeyPress);
 
   const handleInputFocus = () => {
     const { data, columns } = quickAddConfigs || {};
     if (isEmpty(data) && isEmpty(columns) && !enableIndexedDBQuery) {
-      Message.info('下拉项表格数据未定义');
+      Message.info('请配置下拉项数据');
 
       return;
     }
 
     setPopupVisble(true);
-  }
+  };
 
   const handleSelectedRow = (_event: UIEvent, row: RowComponent) => {
     const rowData = row.getData();
-    onSelectRowData?.(rowData)
+    onSelectRowData?.(rowData);
 
     // setPopupVisble(false)
     hideDroplist();
-  }
+  };
 
-  const debouncedOnChange =
-    debounce((value) => {
-      if (!tabulatorRef.current) return;
+  const debouncedOnChange = debounce((value) => {
+    if (!tabulatorRef.current) return;
 
-      if (!isArray(filters) || filters.length <= 0) return;
+    if (!isArray(filters) || filters.length <= 0) return;
 
-      const buildFilters = map(filters, (filter) => ({ field: filter, type: 'like', value }))
-      console.log('buildFilters', buildFilters);
-      tabulatorRef.current.setFilter([buildFilters]);
-    }, 300)
-    ;
+    const buildFilters = map(filters, (filter) => ({
+      field: filter,
+      type: 'like',
+      value,
+    }));
+    console.log('buildFilters', buildFilters);
+    tabulatorRef.current.setFilter([buildFilters]);
+  }, 300);
 
   const handleValueChange = (value: string) => {
     setSearchText(value);
 
     debouncedOnChange(value);
-  }
+  };
 
   const handleTabulator = (ref) => {
     tabulatorRef.current = ref;
 
     // tabulatorRef.current.on('rowSelected', handleSelectedRow);
     tabulatorRef.current.on('rowDblClick', handleSelectedRow);
-  }
+  };
+
+  const handleInputBlur = () => {
+    hideDroplist();
+  };
 
   return (
     <Container>
@@ -153,14 +173,16 @@ export const CustomTableSelect = (props) => {
           <Input
             onFocus={handleInputFocus}
             ref={(ref) => (inputRef.current = ref?.dom)}
+            height={ROW_HEIGHT}
             onChange={handleValueChange}
+            onBlur={handleInputBlur}
             prefix={<IconPlus />}
             allowClear
             value={searchText}
-            placeholder='请输入...'
+            placeholder="请输入..."
           />
         </InputWrapper>
       </Dropdown>
     </Container>
-  )
+  );
 };

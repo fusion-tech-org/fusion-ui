@@ -1,18 +1,14 @@
-import {
-  TabulatorFull as Tabulator,
-  Options,
-} from 'tabulator-tables';
+import { TabulatorFull as Tabulator, Options } from 'tabulator-tables';
 import React, { FC, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import ReactDOM from 'react-dom';
 
 import ExtendTabulator from '../../ExtendTabulator';
-import { DroplistWrapper } from "./styles";
+import { DroplistWrapper } from './styles';
 import { genTabulatorUUID } from 'utils/index';
 import Dexie from 'dexie';
 import dbDexie from 'src/tabulator/utils/dbDexie';
 import { isArray } from 'lodash';
-
 
 interface TableSelectProps {
   onRef?: (ref: Tabulator) => void;
@@ -42,12 +38,13 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
 
     return () => {
       instanceRef.current?.destroy();
-    }
+    };
   }, []);
 
   return (
     <DroplistWrapper>
-      <div ref={wrapperRef}
+      <div
+        ref={wrapperRef}
         style={{
           height: '100%',
         }}
@@ -55,35 +52,47 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
         data-instance={mainId}
       />
     </DroplistWrapper>
-  )
+  );
 };
 
 function genInitOptions(uniformProps: Record<string, any>): Options & {
   dexie?: Dexie;
   tableName?: string;
 } {
-  const { quickAddConfigs, enableIndexedDBQuery, indexdbConfigs } = uniformProps;
-  const { data = [], columns = [], isRemoteQuery, remoteQuery } = quickAddConfigs || {};
-  const { dropdownIndexedDBTableName, dropdownSimpleBuiltinQueryCondition } = indexdbConfigs || {};
+  const { quickAddConfigs, enableIndexedDBQuery, indexdbConfigs } =
+    uniformProps;
+  const {
+    data = [],
+    columns = [],
+    isRemoteQuery,
+    remoteQuery,
+  } = quickAddConfigs || {};
+  const { dropdownIndexedDBTableName, dropdownSimpleBuiltinQueryCondition } =
+    indexdbConfigs || {};
 
   // generates initial options
-  const commonOptions: Options = {
+  const commonOptions: Options & {
+    selectableRows?: number;
+    selectableRowsRollingSelection?: boolean;
+  } = {
     layout: 'fitDataTable',
     height: '320px',
-    selectable: 1,
+    // selectable: 1,
+    selectableRows: 1,
+    selectableRowsRollingSelection: false,
     rowHeight: 32,
     keybindings: {
-      "navUp": false, // disable navUp keybinding
-      "navLeft": false,
-      "navRight": false,
-      "navDown": false,
+      navUp: false, // disable navUp keybinding
+      navLeft: false,
+      navRight: false,
+      navDown: false,
     },
   };
 
   if (enableIndexedDBQuery) {
     const colDefs: {
       columns?: any[];
-      autoColumns?: true,
+      autoColumns?: true;
     } = {};
 
     if (isArray(columns) && columns.length > 0) {
@@ -96,8 +105,8 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
       dexie: dbDexie.getDexie(),
       tableName: dropdownIndexedDBTableName,
       ...colDefs,
-      ...commonOptions
-    }
+      ...commonOptions,
+    };
   }
 
   if (isRemoteQuery) {
@@ -106,13 +115,12 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
       data: [],
       columns: [],
       ...commonOptions,
-    }
+    };
   }
-
 
   return {
     data: isArray(data) ? data : [],
     columns: isArray(columns) ? columns : [],
     ...commonOptions,
-  }
+  };
 }

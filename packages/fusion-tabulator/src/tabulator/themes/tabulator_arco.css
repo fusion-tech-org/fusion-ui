@@ -535,20 +535,21 @@ body {
   /* background-color: var(--color-fill-1); */
 }
 
-@media (hover: hover) and (pointer: fine) {
+/* @media (hover: hover) and (pointer: fine) {
   .tabulator-row.tabulator-selectable:hover {
     background-color: var(--color-fill-1);
     cursor: pointer;
   }
-}
+} */
 
 .tabulator-row.tabulator-selected {
-  background-color: #C3E7FE;
+  /* background-color:#E8F7FF; */
+  background-color:#F6F9F9;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .tabulator-row.tabulator-selected:hover {
-    background-color: #9FD4FD;
+    /* background-color: #C3E7FE; */
     cursor: pointer;
   }
 }

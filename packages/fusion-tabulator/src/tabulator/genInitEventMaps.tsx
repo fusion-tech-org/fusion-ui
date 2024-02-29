@@ -153,7 +153,7 @@ export function genInitEventMaps({
     });
   }
 
-  function handleCellClick(_event: UIEvent, cell: CellComponent) {
+  function handleCellClick(_e: UIEvent, cell: CellComponent) {
     const cellField = cell.getField();
     const cellValue = cell.getValue();
 

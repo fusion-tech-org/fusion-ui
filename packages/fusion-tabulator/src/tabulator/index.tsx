@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 import { isEmpty, isNumber, isUndefined } from 'lodash';
 
@@ -8,12 +8,13 @@ import { isEmpty, isNumber, isUndefined } from 'lodash';
 import './index.css';
 import { genTabulatorUUID } from 'utils/index';
 import { Empty } from '@arco-design/web-react';
-import { ExternalInputContainer } from './styles';
+import { ExternalInputContainer, TabulatorContainer } from './styles';
 import { CustomTableSelect } from './components/CustomTableSelect';
 import { HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
 import dbDexie from './utils/dbDexie';
+import { createPortal } from 'react-dom';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
@@ -54,7 +55,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   // const instanceRef = useRef<Tabulator>();
   const [mainId] = useState(genTabulatorUUID());
   const [inputTop, setInputTop] = useState(initInputTop);
-  const { tableHeight, tabulatorRef, initTable } = useTabulator({
+  const { tablePosition, tabulatorRef, initTable } = useTabulator({
     ref: wrapperRef,
     props: {
       ...props,
@@ -62,10 +63,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     },
     // eventCallback: handleTableEventCallback,
   });
-  const [remainData, setRemainData] = useState([]);
+  // const [remainData, setRemainData] = useState([]);
   let isOverHeigth = false;
 
   const reCalcInputTop = (data: any[]) => {
+    const tableHeight = 100; // fake code
     if (!tableHeight || tableMode !== 'editable') return;
     // const realTableData = tabulatorRef?.getData('active');
     const dataLen = data?.length || 0;
@@ -95,26 +97,26 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     data?: Record<string, any>,
     extra?: Record<'action' | 'tableData', any>
   ) {
-    const { action, tableData = [] } = extra || {};
+    // const { action, tableData = [] } = extra || {};
 
-    if (action === 'delete-row') {
-      setRemainData(tableData);
-      // reCalcInputTop(tableData);
-    }
+    // if (action === 'delete-row') {
+    //   setRemainData(tableData);
+    //   reCalcInputTop(tableData);
+    // }
 
     props.onEvents?.(eventName, data);
   }
 
-  useEffect(() => {
-    reCalcInputTop(remainData);
-  }, [remainData.length]);
+  // useEffect(() => {
+  //   reCalcInputTop(remainData);
+  // }, [remainData.length]);
 
-  useEffect(() => {
-    if (isNumber(tableHeight)) {
-      reCalcInputTop(tableData);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableHeight, JSON.stringify(tableData)]);
+  // useEffect(() => {
+  // if (isNumber(tableHeight)) {
+  // reCalcInputTop(tableData);
+  // }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [tableHeight, JSON.stringify(tableData)]);
 
   const responsiveTabulator = () => {
     if (
@@ -219,19 +221,24 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
     tabulatorRef.addRow(rest);
 
-    const newTableData = tabulatorRef.getData();
-    reCalcInputTop(newTableData);
+    // const newTableData = tabulatorRef.getData();
+    // reCalcInputTop(newTableData);
   }
 
-  const renderExtraInput = () => {
-    if (tableMode !== 'editable') return null;
-
-    return (
-      <ExternalInputContainer top={inputTop}>
+  const renderExtraInput = useCallback(() => {
+    if (tableMode !== 'editable' || !tablePosition.bottom) return null;
+    console.log(tablePosition, 'tablePosition');
+    return createPortal(
+      <ExternalInputContainer
+        left={tablePosition.left}
+        bottom={tablePosition.bottom}
+        width={tablePosition.width}
+      >
         <CustomTableSelect onSelectRowData={handleSelectRowData} {...props} />
-      </ExternalInputContainer>
+      </ExternalInputContainer>,
+      document.body
     );
-  };
+  }, [tablePosition.bottom, tableMode, JSON.stringify(props)]);
 
   if (
     isEmpty(tableData) &&
@@ -264,7 +271,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         height: '100%',
       }}
     >
-      <div
+      <TabulatorContainer
+        tableMode={tableMode}
         ref={wrapperRef}
         style={{
           height: '100%',

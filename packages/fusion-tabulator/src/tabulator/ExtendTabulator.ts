@@ -1,15 +1,17 @@
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
-import { filter, isNull, isUndefined, reduce } from 'lodash';
+import { filter, isNull, isNumber, isUndefined, reduce } from 'lodash';
 
 import { DexieModule } from './custom-modules/DexieModule';
 // import { AdvertModule } from './custom-modules/AdvertModule';
 
 import zhCNLang from 'langs/zh-cn.json';
+import { Message } from '@arco-design/web-react';
+import { convertExpressionByRule, simpleExecExpression } from './utils';
 
 /**
  * default options
  */
-// Tabulator.defaultOptions.columnDefaults.headerSort = false;
+Tabulator.defaultOptions.columnDefaults.headerSort = false;
 
 /**
  * register modules
@@ -114,6 +116,36 @@ Tabulator.extendModule('localize', 'langs', {
 
 // extending mutators
 Tabulator.extendModule('mutator', 'mutators', {
+  mathCalc: function (_value, data, _type, mutatorParams) {
+    /**
+     * NOTE: defining the calculate rules, for example: `([columnName] + [columnName]) * [columnName]`
+     */
+    const {
+      calcRule = '',
+      ellipsisType = 'round',
+      precision,
+    } = mutatorParams || {};
+    try {
+      const convertCalcRules: string = convertExpressionByRule(
+        calcRule,
+        data,
+        true
+      );
+      console.log('convertCalcRules', convertCalcRules);
+      if (convertCalcRules.includes('NaN')) return;
+
+      const result = simpleExecExpression(convertCalcRules)();
+
+      if (isNumber(precision) && precision > 0) {
+        return result.toFixed(precision);
+      }
+
+      return result;
+    } catch (e) {
+      console.error('mutator - mathCalc failed: ', e?.message);
+      Message.info('定义的列计算规则格式不正确');
+    }
+  },
   linkedColumns: function (_value, data, _type, mutatorParams) {
     const { columns = [], operateType = 'plus' } = mutatorParams || {};
     console.log(_value, _type);

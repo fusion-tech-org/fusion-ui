@@ -85,9 +85,10 @@ export const colConfigTableData: TabulatorTableData[] = [
     height: '',
     id: 1,
     gender: '',
-    col: '',
+    bmi: '',
     dob: '',
     cheese: '',
+    weight: 2,
     tuid: 1,
   },
   {
@@ -96,7 +97,8 @@ export const colConfigTableData: TabulatorTableData[] = [
     height: 173,
     id: 2,
     gender: '',
-    col: '',
+    weight: 4,
+    bmi: '',
     dob: '',
     cheese: '',
     tuid: 2,
@@ -114,6 +116,7 @@ export const editableColDefs: ColumnDefinition[] = [
     field: 'age',
     editor: true,
     editableTitle: true,
+    mutateLink: 'bmi',
     hozAlign: 'right',
   },
   {
@@ -126,14 +129,34 @@ export const editableColDefs: ColumnDefinition[] = [
     title: '身高',
     field: 'height',
     editor: true,
+    mutateLink: 'bmi',
     editableTitle: true,
     hozAlign: 'center',
   },
   {
-    title: '最喜欢的颜色',
-    field: 'col',
+    title: '体重',
+    field: 'weight',
     editor: true,
+    mutateLink: 'bmi',
     editableTitle: true,
+  },
+  {
+    title: 'BMI',
+    field: 'bmi',
+    editor: 'input',
+    editableTitle: true,
+    // mutator: 'mathCalc',
+    // mutatorParams: {
+    //   calcRule: '([age] + [height]) * [weight]',
+    //   ellipsisType: 'round',
+    //   precision: 2,
+    // },
+    editable: true,
+    editorParams: {
+      eqRule: '[weight] !== 4',
+    },
+    hozAlign: 'center',
+    // formatter: 'tickCross',
   },
   {
     title: '出生日期',
@@ -142,14 +165,7 @@ export const editableColDefs: ColumnDefinition[] = [
     editableTitle: true,
     hozAlign: 'center',
   },
-  {
-    title: '喜欢的奶酪',
-    field: 'cheese',
-    editor: true,
-    editableTitle: true,
-    hozAlign: 'center',
-    // formatter: 'tickCross',
-  },
+
   {
     formatter: 'delRowIcon',
     title: '操作',
@@ -183,9 +199,6 @@ export const colConfigTableColumns: ColumnDefinition[] = [
     field: 'gender',
     editor: true,
     editableTitle: true,
-    cellClick: function (e, cell) {
-      console.log('cell click');
-    },
   },
   {
     title: '身高',
@@ -197,8 +210,8 @@ export const colConfigTableColumns: ColumnDefinition[] = [
     width: 100,
   },
   {
-    title: '最喜欢的颜色',
-    field: 'col',
+    title: 'B',
+    field: 'bmi',
     editor: true,
     editableTitle: true,
   },
