@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useState, useEffect, useCallback } from 'react';
 
-import { isEmpty, isNumber, isUndefined } from 'lodash';
+import { isEmpty, isUndefined } from 'lodash';
 
 // import { pickHTMLProps } from 'pick-react-known-prop';
 // import { propsToOptions } from 'utils/ConfigUtils';
@@ -50,11 +50,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   //   styleConfigs,
   //   advancedConfigs,
   // } = configs;
-  const initInputTop = headerVisible ? HEADER_HEIGHT : 0;
+  // const initInputTop = headerVisible ? HEADER_HEIGHT : 0;
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   // const instanceRef = useRef<Tabulator>();
   const [mainId] = useState(genTabulatorUUID());
-  const [inputTop, setInputTop] = useState(initInputTop);
+  // const [inputTop, setInputTop] = useState(initInputTop);
   const { tablePosition, tabulatorRef, initTable } = useTabulator({
     ref: wrapperRef,
     props: {
@@ -64,38 +64,38 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // eventCallback: handleTableEventCallback,
   });
   // const [remainData, setRemainData] = useState([]);
-  let isOverHeigth = false;
+  // let isOverHeigth = false;
 
-  const reCalcInputTop = (data: any[]) => {
-    const tableHeight = 100; // fake code
-    if (!tableHeight || tableMode !== 'editable') return;
-    // const realTableData = tabulatorRef?.getData('active');
-    const dataLen = data?.length || 0;
-    const allRowHeight = dataLen * ROW_HEIGHT;
-    const nextTop = headerVisible ? HEADER_HEIGHT + allRowHeight : allRowHeight;
+  // const reCalcInputTop = (data: any[]) => {
+  //   const tableHeight = 100; // fake code
+  //   if (!tableHeight || tableMode !== 'editable') return;
+  //   // const realTableData = tabulatorRef?.getData('active');
+  //   const dataLen = data?.length || 0;
+  //   const allRowHeight = dataLen * ROW_HEIGHT;
+  //   const nextTop = headerVisible ? HEADER_HEIGHT + allRowHeight : allRowHeight;
 
-    // const tableHeight = wrapperRef.current.getBoundingClientRect().height;
+  //   // const tableHeight = wrapperRef.current.getBoundingClientRect().height;
 
-    if (nextTop < tableHeight - ROW_HEIGHT) {
-      setInputTop(nextTop);
-      return;
-    } else {
-      setInputTop(tableHeight - ROW_HEIGHT);
-    }
+  //   if (nextTop < tableHeight - ROW_HEIGHT) {
+  //     setInputTop(nextTop);
+  //     return;
+  //   } else {
+  //     setInputTop(tableHeight - ROW_HEIGHT);
+  //   }
 
-    if (!isOverHeigth) {
-      const tableEle = document.querySelector(`#${mainId} .tabulator-table`);
+  //   if (!isOverHeigth) {
+  //     const tableEle = document.querySelector(`#${mainId} .tabulator-table`);
 
-      tableEle?.setAttribute('style', `padding-bottom: ${ROW_HEIGHT}px`);
-    }
+  //     tableEle?.setAttribute('style', `padding-bottom: ${ROW_HEIGHT}px`);
+  //   }
 
-    isOverHeigth = true;
-  };
+  //   isOverHeigth = true;
+  // };
 
   function handleListenEvents(
     eventName: string,
     data?: Record<string, any>,
-    extra?: Record<'action' | 'tableData', any>
+    _extra?: Record<'action' | 'tableData', any>
   ) {
     // const { action, tableData = [] } = extra || {};
 

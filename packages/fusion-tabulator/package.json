@@ -20,7 +20,8 @@
     "luxon": "^3.4.4",
     "react-grid-layout": "^1.4.4",
     "react-tag-autocomplete": "^7.1.0",
-    "tabulator-tables": "5.6.1"
+    "tabulator-tables": "5.6.1",
+    "tsup": "^8.0.2"
   },
   "license": "MIT",
   "peerDependencies": {
@@ -58,7 +59,6 @@
     "react-router-dom": "^6.21.1",
     "recoil": "^0.7.7",
     "styled-components": "^6.1.1",
-    "tsup": "^8.0.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
   },
