@@ -4,6 +4,7 @@ const colDefs = [
   {
     title: '姓名',
     field: 'name',
+    editor: true,
   },
   {
     title: '年龄',
@@ -28,8 +29,17 @@ const colDefs = [
   {
     title: '身高',
     field: 'height',
-    editor: true,
+    editor: 'multiSelect',
     hozAlign: 'center',
+    editorParams: {
+      values: [
+        { value: '1', label: 'John' },
+        { value: '2', label: 'Jack' },
+        { value: '3', label: 'Jane' },
+        { value: '4', label: 'Mike' },
+      ],
+      placeholder: '请输入搜索值',
+    },
   },
 ];
 
@@ -39,7 +49,7 @@ const initData = (() => {
     name: `anyone_${i}`,
     age: 12,
     gender: '',
-    height: 95,
+    height: '',
   }));
 })();
 
@@ -335,29 +345,49 @@ const uniformProps = {
 
 export const CustomEditor = () => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        padding: '32px',
-        height: '200px',
-        backgroundColor: '#f5f5f5',
-      }}
-    >
-      <TabulatorWithRecoil
-        appMode="EDIT"
-        widgetId="ss33"
-        tableType="tabulator"
-        tableMode="editable"
-        tabulatorOptions={{
-          columns: colDefs,
-          data: initData,
+    <>
+      <div
+        style={{
+          display: 'flex',
+          padding: '32px',
+          height: '200px',
+          backgroundColor: '#f5f5f5',
         }}
-        uniformProps={uniformProps}
-        quickAddDropdownDefinitions={{
-          data: initData,
-          columns: colDefs,
+      >
+        <TabulatorWithRecoil
+          appMode="EDIT"
+          widgetId="ss33"
+          tableType="tabulator"
+          tableMode="editable"
+          tabulatorOptions={{
+            columns: colDefs,
+            data: initData,
+          }}
+          uniformProps={uniformProps}
+          quickAddDropdownDefinitions={{
+            data: initData,
+            columns: colDefs,
+          }}
+        />
+      </div>
+      <div
+        style={{
+          width: '100%',
+          height: '500px',
         }}
       />
-    </div>
+      <div
+        style={{
+          width: '100%',
+          height: '500px',
+        }}
+      />
+      <div
+        style={{
+          width: '100%',
+          height: '500px',
+        }}
+      />
+    </>
   );
 };

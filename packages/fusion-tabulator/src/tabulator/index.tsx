@@ -10,7 +10,6 @@ import { genTabulatorUUID } from 'utils/index';
 import { Empty } from '@arco-design/web-react';
 import { ExternalInputContainer, TabulatorContainer } from './styles';
 import { CustomTableSelect } from './components/CustomTableSelect';
-import { HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
 import dbDexie from './utils/dbDexie';
@@ -36,7 +35,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     indexdbConfigs,
   } = uniformProps;
   const { indexedInitDefs = {} } = indexdbConfigs || {};
-  const { headerVisible = true } = commonOptions;
   const commonOptionsRef = useRef(commonOptions);
   console.log('TabulatorReact -> ', props);
   // const {
@@ -227,7 +225,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   const renderExtraInput = useCallback(() => {
     if (tableMode !== 'editable' || !tablePosition.bottom) return null;
-    console.log(tablePosition, 'tablePosition');
+    const holdEle = document.getElementById('extra-input-markup');
+
     return createPortal(
       <ExternalInputContainer
         left={tablePosition.left}
@@ -236,7 +235,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       >
         <CustomTableSelect onSelectRowData={handleSelectRowData} {...props} />
       </ExternalInputContainer>,
-      document.body
+      holdEle
     );
   }, [tablePosition.bottom, tableMode, JSON.stringify(props)]);
 
@@ -281,6 +280,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         data-instance={mainId}
         className={classNames}
       />
+      {tableMode === 'editable' && <div id="extra-input-markup" />}
       {renderExtraInput()}
     </div>
   );

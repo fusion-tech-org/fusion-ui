@@ -107,6 +107,7 @@ const genGeneralOptions = (): Options & {
     height: '100%',
     maxHeight: '100%',
     reactiveData: true,
+    headerSort: false,
     placeholder: null,
     tabEndNewRow: true, // create empty new row on tab
     locale: true,
@@ -232,10 +233,11 @@ export const genAjaxOptions = ({
 }): OptionsData => {
   if (!actionId || !enableRemote || enableIndexedDBQuery) return {};
 
-  console.log(enableRemote, 'enableRemote');
   const formatParams = isObject(params) ? params : {};
+  console.log(formatParams, 'formatParams');
   return {
     ajaxURL: '/api/v1/actions/execute',
+    // ajaxURL: 'https://staging.fusiontech.cn/api/v1/actions/execute',
     ajaxConfig: {
       method: 'POST',
       // mode: 'cors', //set request mode to cors
@@ -249,7 +251,12 @@ export const genAjaxOptions = ({
         // Cookie: 'SESSION=0209b4c2-4e3a-4a21-b696-9329b3800427', //set specific content type
       },
     },
+    ajaxRequesting: (url: string, params: any) => {
+      console.log('url', url, 'params', params);
+      return true;
+    },
     ajaxParams: () => {
+      console.log('ajaxParams', '<<<<<<<<<<<<<<');
       const executeActionRequest = {
         actionId,
         viewMode: false,
@@ -268,8 +275,6 @@ export const genAjaxOptions = ({
       //url - the URL of the request
       //params - the parameters passed with the request
       //response - the JSON object returned in the body of the response.
-      console.log(response);
-
       const { data, responseMeta, size, total } = response;
       const { status, success } = responseMeta || {};
 
@@ -278,7 +283,7 @@ export const genAjaxOptions = ({
       }
       // return response.data.tags;
       const { body = [] } = data || {};
-      const lastPage = Math.max(Math.ceil(total / size), 1);
+      const lastPage = Math.max(Math.ceil(Number(total) / Number(size)), 1);
 
       return {
         data: body,

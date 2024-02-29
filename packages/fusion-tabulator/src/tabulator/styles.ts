@@ -17,10 +17,11 @@ export const ExternalInputContainer = styled.div<{
   width?: number;
 }>`
   position: absolute;
-  top: 0;
-  left: 0;
-  transform: ${({ left, bottom }) =>
-    `translate(${left}px, ${bottom - ROW_HEIGHT - 11}px)`};
+  /* top: 0; */
+  /* left: 0; */
+  transform: translateY(-62px);
+  /* transform: ${({ left, bottom }) =>
+    `translate(${left}px, ${bottom - ROW_HEIGHT - 11}px)`}; */
   width: ${({ width }) => (width ? `${width}px` : '100%')};
   height: 46px;
   min-height: 46px;

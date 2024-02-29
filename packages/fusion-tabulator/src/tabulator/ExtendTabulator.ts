@@ -11,7 +11,7 @@ import { convertExpressionByRule, simpleExecExpression } from './utils';
 /**
  * default options
  */
-Tabulator.defaultOptions.columnDefaults.headerSort = false;
+// Tabulator.defaultOptions.columnDefaults.headerSort = false;
 
 /**
  * register modules

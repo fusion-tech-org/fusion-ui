@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { IconSearch, IconSubscribe } from '@arco-design/web-react/icon';
-import { CellComponent, EmptyCallback } from 'tabulator-tables';
+import { CellComponent } from 'tabulator-tables';
 // import { createRoot } from 'react-dom/client';
 import ReactDOM, { createPortal } from 'react-dom';
 
@@ -13,7 +13,6 @@ import {
   SuggestionItemWrapper,
   SuggestionList,
 } from './styles';
-import { reduce } from 'lodash';
 
 interface AutoCompleteProps {
   initValue?: string;
@@ -128,7 +127,7 @@ export default function CustomAutoCompleteEditor(
     // const colDef = curCol.getDefinition();
 
     success(item.value);
-    cell.navigateRight();
+    cell.navigateNext();
 
     // if (!colDef.formatter && !colDef.formatterParams) {
     //   const convertedParams = reduce(
