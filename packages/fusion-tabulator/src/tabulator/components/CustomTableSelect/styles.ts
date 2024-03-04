@@ -11,7 +11,7 @@ export const InputWrapper = styled.div`
 export const DroplistWrapper = styled.div`
   min-height: 150px;
   max-height: 360px;
-  max-width: 640px;
+  max-width: 720px;
   border: 1px solid #f5f5f5;
   border-radius: 12px;
   overflow: hidden;

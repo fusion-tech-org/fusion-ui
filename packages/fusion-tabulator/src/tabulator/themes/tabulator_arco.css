@@ -544,7 +544,7 @@ body {
 
 .tabulator-row.tabulator-selected {
   /* background-color:#E8F7FF; */
-  background-color:#F6F9F9;
+  background-color:#E8F7FF;
 }
 
 @media (hover: hover) and (pointer: fine) {

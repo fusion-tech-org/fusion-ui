@@ -237,6 +237,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       </ExternalInputContainer>,
       holdEle
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tablePosition.bottom, tableMode, JSON.stringify(props)]);
 
   if (

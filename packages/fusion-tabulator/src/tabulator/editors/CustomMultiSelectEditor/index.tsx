@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CellComponent } from 'tabulator-tables';
 // import { createRoot } from 'react-dom/client';
 import ReactDOM from 'react-dom';
@@ -24,7 +24,8 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
     maxTagCount = 4,
     mode = 'multiple',
   } = editorParams || {};
-  const [selectedItem, setSelectedItem] = useState<string[]>(initValue);
+  const selectedListRef = useRef<string[]>(initValue);
+  // const [selectedItem, setSelectedItem] = useState<string[]>(initValue);
 
   const forceInnerInput = () => {
     const innerInputEle: HTMLInputElement = document.querySelector(
@@ -42,22 +43,27 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
     }, 20);
 
     return () => {
+      console.log('unmount, >>>>>>>>');
       timerId && clearTimeout(timerId);
     };
   }, []);
 
   const handleMultiSelect = (value, _option) => {
-    console.log('handleMultiSelect', value, _option);
-    setSelectedItem((prev) => [...prev, value]);
+    selectedListRef.current.push(value);
+    // setSelectedItem((prev) => [...prev, value]);
   };
 
   const handleDeselect = (value) => {
-    setSelectedItem((prev) => [...prev.filter((item) => item !== value)]);
+    selectedListRef.current = selectedListRef.current.filter(
+      (item) => item !== value
+    );
+    // setSelectedItem((prev) => [...prev.filter((item) => item !== value)]);
   };
 
   const handleBlur = () => {
-    if (selectedItem.length > 0) {
-      onSelectItem(selectedItem.join(','));
+    console.log('handleBlur', selectedListRef.current);
+    if (selectedListRef.current.length > 0) {
+      onSelectItem(selectedListRef.current.join(','));
       return;
     }
     onSelectItem('');
@@ -118,6 +124,7 @@ export default function CustomMultiSelectEditor(
     // const curCol = cell.getColumn();
     // const colDef = curCol.getDefinition();
     success(item);
+    console.log('handleSelectItem', item);
     cell.navigateNext();
   }
   console.log('curValue', curValue, convert2SelectDefaultValue);

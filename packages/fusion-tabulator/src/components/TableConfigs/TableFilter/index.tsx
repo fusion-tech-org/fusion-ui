@@ -14,10 +14,13 @@ const GridLayout = WidthProvider(RGL);
 
 const WrapperStyles: CSSProperties = {
   border: '1px dashed #e8e8e8',
-  borderRadius: 4
-}
+  borderRadius: 4,
+};
 
-export class TableFilter extends React.PureComponent<TableFilterProps, TableFilterState> {
+export class TableFilter extends React.PureComponent<
+  TableFilterProps,
+  TableFilterState
+> {
   static defaultProps: TableFilterProps = {
     onLayoutChange: _.noop,
     className: 'layout',
@@ -28,7 +31,10 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
   constructor(props) {
     super(props);
     const { savedLayout } = props;
-    const layout = isArray(savedLayout) && savedLayout.length > 0 ? savedLayout : this.genLayout();
+    const layout =
+      isArray(savedLayout) && savedLayout.length > 0
+        ? savedLayout
+        : this.genLayout();
 
     console.log(layout, '<<<<');
     this.state = { layout, enableEdit: false };
@@ -43,7 +49,7 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
       switch (type) {
         case 'button':
           return (
-            <div key={field} style={{ backgroundColor: '#f6f9f9' }}>
+            <div key={field} style={{ backgroundColor: '#E8F7FF' }}>
               {renderItemByType(type, label, extraProps)}
             </div>
           );
@@ -53,13 +59,10 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
         case 'checkbox':
         case 'radio':
           return (
-            <FormItem
-              key={field}
-              field={field}
-              label={label}>
+            <FormItem key={field} field={field} label={label}>
               {renderItemByType(type, label, extraProps)}
             </FormItem>
-          )
+          );
         default:
           break;
       }
@@ -77,14 +80,14 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
         y: y,
         w: item.wGrid,
         h: 1,
-        i: item.field
+        i: item.field,
       };
     });
   }
 
   onLayoutChange = (layout) => {
     this.props.onLayoutChange(layout);
-  }
+  };
 
   render() {
     const { layout, enableEdit } = this.state;
@@ -104,7 +107,7 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
             cols={24}
             rowHeight={rowHeight}
             verticalCompact
-          // {...this.props}
+            // {...this.props}
           >
             {this.genDOM()}
           </GridLayout>
@@ -125,19 +128,19 @@ export class TableFilter extends React.PureComponent<TableFilterProps, TableFilt
           )
         } */}
       </div>
-    )
+    );
   }
 
   handleStartEdit = () => {
     this.setState({ enableEdit: true });
-  }
+  };
 
   handleCancelEdit = () => {
     this.setState({ enableEdit: false });
-  }
+  };
 
   handleSaveLayout = () => {
     this.props.onLayoutSave?.(this.state.layout);
     this.setState({ enableEdit: false });
-  }
+  };
 }

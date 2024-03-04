@@ -83,7 +83,7 @@ const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
                 key={index}
                 style={{
                   backgroundColor:
-                    selectedIndex === index ? '#f6f9f9' : 'transparent',
+                    selectedIndex === index ? '#E8F7FF' : 'transparent',
                 }}
                 {...bindOption}
               >

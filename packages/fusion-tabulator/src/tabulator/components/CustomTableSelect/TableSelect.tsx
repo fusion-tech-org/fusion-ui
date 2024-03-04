@@ -61,21 +61,26 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
 } {
   const { quickAddConfigs, enableIndexedDBQuery, indexdbConfigs } =
     uniformProps;
+
   const {
     data = [],
     columns = [],
     isRemoteQuery,
     remoteQuery,
+    uniqueKey = 'id',
   } = quickAddConfigs || {};
-  const { dropdownIndexedDBTableName, dropdownSimpleBuiltinQueryCondition } =
-    indexdbConfigs || {};
+  const { dropdownIndexedDBTableName } = indexdbConfigs || {};
 
   // generates initial options
   const commonOptions: Options & {
     selectableRows?: number;
     selectableRowsRollingSelection?: boolean;
   } = {
-    layout: 'fitDataTable',
+    index: uniqueKey,
+    // layout: 'fitColumns',
+    // layout: 'fitDataTable',
+    // layout: 'fitData',
+    layout: 'fitDataStretch',
     height: '320px',
     // selectable: 1,
     selectableRows: 1,

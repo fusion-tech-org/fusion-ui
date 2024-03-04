@@ -7,7 +7,7 @@ import { TableSelect } from './TableSelect';
 import { useKeyPress } from 'hooks/useKeyPress';
 import { RowComponent, Tabulator } from 'tabulator-tables';
 import { debounce, map, isArray, isEmpty } from 'lodash';
-import { ROW_HEIGHT } from 'src/tabulator/constants';
+// import { ROW_HEIGHT } from 'src/tabulator/constants';
 
 export const CustomTableSelect = (props) => {
   const { onSelectRowData, uniformProps } = props;
@@ -117,12 +117,13 @@ export const CustomTableSelect = (props) => {
     setPopupVisble(true);
   };
 
-  const handleSelectedRow = (_event: UIEvent, row: RowComponent) => {
+  const handleSelectedRow = (e: UIEvent, row: RowComponent) => {
+    e.stopPropagation();
     const rowData = row.getData();
     onSelectRowData?.(rowData);
 
     // setPopupVisble(false)
-    hideDroplist();
+    // hideDroplist();
   };
 
   const debouncedOnChange = debounce((value) => {
@@ -149,11 +150,14 @@ export const CustomTableSelect = (props) => {
     tabulatorRef.current = ref;
 
     // tabulatorRef.current.on('rowSelected', handleSelectedRow);
-    tabulatorRef.current.on('rowDblClick', handleSelectedRow);
+    tabulatorRef.current.on('rowClick', handleSelectedRow);
+    // tabulatorRef.current.on('rowDblClick', handleSelectedRow);
   };
 
   const handleInputBlur = () => {
-    hideDroplist();
+    setTimeout(() => {
+      hideDroplist();
+    }, 150);
   };
 
   return (
@@ -162,7 +166,6 @@ export const CustomTableSelect = (props) => {
         popupVisible={popupVisible}
         trigger="focus"
         onVisibleChange={handleVisibleChange}
-        unmountOnExit
         droplist={
           <DroplistWrapper ref={dropdownRef}>
             <TableSelect onRef={handleTabulator} uniformProps={uniformProps} />
@@ -173,7 +176,7 @@ export const CustomTableSelect = (props) => {
           <Input
             onFocus={handleInputFocus}
             ref={(ref) => (inputRef.current = ref?.dom)}
-            height={ROW_HEIGHT}
+            height={36}
             onChange={handleValueChange}
             onBlur={handleInputBlur}
             prefix={<IconPlus />}
