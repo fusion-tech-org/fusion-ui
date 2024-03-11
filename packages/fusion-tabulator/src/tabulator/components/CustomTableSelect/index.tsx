@@ -94,8 +94,8 @@ export const CustomTableSelect = (props) => {
       const uniqueKeys = map(memoAllData.data, uniqueKey);
 
       tabulatorRef.current.deselectRow();
-      tabulatorRef.current.selectRow(uniqueKeys[cursor]);
-      tabulatorRef.current.scrollToRow(uniqueKeys[cursor], 'center', false);
+      tabulatorRef.current.selectRow(uniqueKeys[nextIndex]);
+      tabulatorRef.current.scrollToRow(uniqueKeys[nextIndex], 'center', false);
       // e.preventDefault()
     }
 

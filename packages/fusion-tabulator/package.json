@@ -1,7 +1,7 @@
 {
   "name": "fusion-tabulator",
   "private": false,
-  "version": "0.4.11",
+  "version": "0.4.12",
   "description": "The Awesome table build with tabulator-tables",
   "type": "module",
   "main": "lib/index.min.js",
@@ -21,6 +21,7 @@
     "luxon": "^3.4.4",
     "react-grid-layout": "^1.4.4",
     "react-tag-autocomplete": "^7.1.0",
+    "react-virtuoso": "^4.7.2",
     "tabulator-tables": "5.6.1",
     "tsup": "^8.0.2"
   },
