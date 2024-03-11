@@ -72,19 +72,31 @@ export const CustomTableSelect = (props) => {
 
   const handleKeyPress = (e: KeyboardEvent) => {
     e.stopPropagation();
+    let nextIndex = null;
     if (!tabulatorRef.current || memoAllData.total === 0) return;
 
     if (e.key === 'ArrowDown') {
-      setCursor((prev) => (prev + 1) % memoAllData.total);
+      nextIndex = Math.max(memoAllData.total, cursor + 1);
+      // setCursor((prev) => (prev + 1) % memoAllData.total);
       // tabulatorRef.current.selectRow([1]);
     }
 
     if (e.key === 'ArrowUp') {
-      setCursor((prev) => {
-        if (prev - 1 <= 0) return 0;
+      nextIndex = Math.min(0, cursor - 1);
+      // setCursor((prev) => {
+      //   if (prev - 1 <= 0) return 0;
 
-        return (prev - 1) % memoAllData.total;
-      });
+      //   return (prev - 1) % memoAllData.total;
+      // });
+    }
+
+    if (nextIndex !== null && tabulatorRef.current) {
+      const uniqueKeys = map(memoAllData.data, uniqueKey);
+
+      tabulatorRef.current.deselectRow();
+      tabulatorRef.current.selectRow(uniqueKeys[cursor]);
+      tabulatorRef.current.scrollToRow(uniqueKeys[cursor], 'center', false);
+      // e.preventDefault()
     }
 
     if (e.key === 'Enter') {
@@ -98,15 +110,16 @@ export const CustomTableSelect = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (!tabulatorRef.current) return;
+  // bad implemention
+  // useEffect(() => {
+  //   if (!tabulatorRef.current) return;
 
-    const uniqueKeys = map(memoAllData.data, uniqueKey);
+  //   const uniqueKeys = map(memoAllData.data, uniqueKey);
 
-    tabulatorRef.current.deselectRow();
-    tabulatorRef.current.selectRow(uniqueKeys[cursor]);
-    tabulatorRef.current.scrollToRow(uniqueKeys[cursor], 'center', false);
-  }, [cursor]);
+  //   tabulatorRef.current.deselectRow();
+  //   tabulatorRef.current.selectRow(uniqueKeys[cursor]);
+  //   tabulatorRef.current.scrollToRow(uniqueKeys[cursor], 'center', false);
+  // }, [cursor]);
 
   // useClickOutside([dropdownRef, inputRef], hideDroplist);
   useKeyPress(handleKeyPress);

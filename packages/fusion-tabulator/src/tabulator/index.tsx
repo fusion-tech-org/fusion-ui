@@ -120,10 +120,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [tableHeight, JSON.stringify(tableData)]);
 
-  const transformYInputElem = () => {
+  const transformYInputElem = (realData?: any[]) => {
     if (tableMode !== 'editable' || !inputWrapRef.current) return;
 
-    const len = tableData?.length || 0;
+    const len = realData?.length || tableData?.length || 0;
     let offsetHeight = HEADER_HEIGHT + len * ROW_HEIGHT;
     console.log('offsetHeight', offsetHeight);
 
@@ -181,6 +181,12 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // });
     tabulatorRef.on('rowAdded', (row: RowComponent) => {
       console.log(row.getData());
+    });
+
+    tabulatorRef.on('rowMoved', (row: RowComponent) => {
+      const curTableData = row.getTable().getData('visible');
+
+      transformYInputElem(curTableData);
     });
   };
 

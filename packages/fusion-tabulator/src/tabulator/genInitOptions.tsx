@@ -48,7 +48,7 @@ export const genInitOptions = (
     tableTypeFlag,
     remoteAjax,
   } = uniformProps || {};
-  const generalOptions = genGeneralOptions();
+  const generalOptions = genGeneralOptions(tableMode);
 
   const formatColumnDefs =
     tableTypeFlag === TableTypeFlag.customTableSelect
@@ -100,7 +100,9 @@ export const genInitOptions = (
   } as Options;
 };
 
-const genGeneralOptions = (): Options & {
+const genGeneralOptions = (
+  tableMode: TableMode
+): Options & {
   selectableRows?: boolean;
   selectableRowsRollingSelection?: boolean;
   selectableRowsCheck?: (row: RowComponent) => void;
@@ -129,7 +131,7 @@ const genGeneralOptions = (): Options & {
     dataLoaderError: '',
     dataLoaderErrorTimeout: 0,
     rowHeight: ROW_HEIGHT,
-    placeholder: '暂无数据',
+    placeholder: tableMode === 'editable' ? null : '暂无数据',
     // frozenRows: 1,
     // frozenRows: function (row) {
     //   const frozenFlag = row.getElement().dataset['frozen'];
