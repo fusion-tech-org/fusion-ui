@@ -76,13 +76,13 @@ export const CustomTableSelect = (props) => {
     if (!tabulatorRef.current || memoAllData.total === 0) return;
 
     if (e.key === 'ArrowDown') {
-      nextIndex = Math.max(memoAllData.total, cursor + 1);
+      nextIndex = Math.min(memoAllData.total, cursor + 1);
       // setCursor((prev) => (prev + 1) % memoAllData.total);
       // tabulatorRef.current.selectRow([1]);
     }
 
     if (e.key === 'ArrowUp') {
-      nextIndex = Math.min(0, cursor - 1);
+      nextIndex = Math.max(0, cursor - 1);
       // setCursor((prev) => {
       //   if (prev - 1 <= 0) return 0;
 
