@@ -2,13 +2,13 @@ import React, { useRef } from 'react';
 import * as ReactDOM from 'react-dom';
 import {
   TabulatorFull as Tabulator,
-  EventCallBackMethods,
+  // EventCallBackMethods,
 } from 'tabulator-tables';
-import { forIn } from 'lodash';
+// import { forIn } from 'lodash';
 
 import ExtendTabulator from './ExtendTabulator';
 import { useIntersectionObserver } from 'hooks/useIntersectionObserver';
-import { genInitEventMaps } from './genInitEventMaps';
+// import { genInitEventMaps } from './genInitEventMaps';
 import { genInitOptions } from './genInitOptions';
 
 export const useTabulator = ({
@@ -25,10 +25,10 @@ export const useTabulator = ({
   ) => void;
 }) => {
   const {
-    eventMaps = {},
-    appMode,
+    // eventMaps = {},
+    // appMode,
     onUpdateWidgetMetaProperty,
-    onEvents,
+    // onEvents,
   } = props;
   const instanceRef = useRef<Tabulator>();
   const [rectBound] = useIntersectionObserver(ref);
@@ -63,20 +63,20 @@ export const useTabulator = ({
     /**
      * NOTE: Binding events
      */
-    const defaultEvents = genInitEventMaps({
-      appMode,
-      tabulatorRef: instanceRef.current,
-      onUpdateWidgetMetaProperty,
-      onEvents,
-    });
-    const mergeEvents = {
-      ...defaultEvents,
-      ...eventMaps,
-    };
+    // const defaultEvents = genInitEventMaps({
+    //   appMode,
+    //   tabulatorRef: instanceRef.current,
+    //   onUpdateWidgetMetaProperty,
+    //   onEvents,
+    // });
+    // const mergeEvents = {
+    //   ...defaultEvents,
+    //   ...eventMaps,
+    // };
 
-    forIn(mergeEvents, (handler, eventName: keyof EventCallBackMethods) => {
-      instanceRef.current.on(eventName, handler);
-    });
+    // forIn(mergeEvents, (handler, eventName: keyof EventCallBackMethods) => {
+    //   instanceRef.current.on(eventName, handler);
+    // });
 
     // props.onRef && props.onRef(instanceRef);
     onUpdateWidgetMetaProperty?.({
@@ -95,9 +95,12 @@ export const useTabulator = ({
 
   return {
     tablePosition: {
+      top: rectBound?.top,
       left: rectBound?.left,
       bottom: rectBound?.bottom,
+      right: rectBound?.right,
       width: rectBound?.width,
+      height: rectBound?.height,
     },
     tabulatorRef: instanceRef.current,
     initTable: initTabulator,

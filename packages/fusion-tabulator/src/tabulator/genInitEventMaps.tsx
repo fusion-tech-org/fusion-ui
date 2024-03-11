@@ -1,9 +1,10 @@
-import { throttle } from 'lodash';
+import { isFunction, throttle } from 'lodash';
 import { PlatformAppMode } from 'src/interface';
 import {
   CellComponent,
   ColumnComponent,
   EventCallBackMethods,
+  PseudoRow,
   RowComponent,
   Tabulator,
 } from 'tabulator-tables';
@@ -86,23 +87,29 @@ export function genInitEventMaps({
 
   function handleCellEditing(cell: CellComponent) {
     //cell - cell component
-    console.log(cell);
+    console.log('handleCellEditing');
   }
 
   function handleCellEdited(cell: CellComponent) {
+    const row = cell.getRow();
     const cellField = cell.getField();
     const cellValue = cell.getValue();
+    const index = row.getIndex();
+    const postion = row.getPosition();
 
     onUpdateWidgetMetaProperty?.({
       editingCell: {
         [cellField]: cellValue,
+        index,
+        postion,
       },
     });
   }
 
   function handleRowClick(_event: UIEvent, row: RowComponent) {
+    if (!isFunction(row.getData)) return;
+    console.log('handleRowClick');
     const rowData = row.getData();
-
     // @ts-ignore
     const { action } = _event.srcElement?.dataset || {};
 
@@ -135,6 +142,7 @@ export function genInitEventMaps({
 
   function handleRowSelected(_event: UIEvent, _row: RowComponent) {
     const rowData = tabulatorRef?.getSelectedData() || [];
+    console.log('handleRowSelected');
 
     onEvents?.('rowSelected', rowData);
   }
@@ -154,6 +162,7 @@ export function genInitEventMaps({
   }
 
   function handleCellClick(_e: UIEvent, cell: CellComponent) {
+    console.log('handleCellClick');
     const cellField = cell.getField();
     const cellValue = cell.getValue();
 

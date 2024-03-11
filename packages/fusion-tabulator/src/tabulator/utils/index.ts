@@ -34,18 +34,19 @@ export function simpleExecExpression(expression: string) {
 export function convertExpressionByRule(
   expression: string,
   fieldMap: Record<string, any>,
-  isMathCalc = false
+  isMathCalc = false,
+  defaultValue = {}
 ) {
   const convertedRule: string = expression.replace(/\[(.*?)\]/g, (match) => {
     const field = match.replace(/(\[|\])/g, '');
 
-    if (isMathCalc) {
-      return fieldMap[field] || 'NaN';
+    if (fieldMap[field] === 0 || fieldMap[field]) {
+      return fieldMap[field];
     }
 
-    if (!fieldMap[field]) return 'undefined';
+    if (defaultValue[field] === 0) return 0;
 
-    return fieldMap[field];
+    return isMathCalc ? 'NaN' : 'undefined';
   });
 
   return convertedRule;

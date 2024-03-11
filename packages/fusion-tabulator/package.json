@@ -1,7 +1,7 @@
 {
   "name": "fusion-tabulator",
   "private": false,
-  "version": "0.4.7",
+  "version": "0.4.9",
   "description": "The Awesome table build with tabulator-tables",
   "type": "module",
   "main": "lib/index.min.js",
@@ -46,7 +46,7 @@
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitejs/plugin-react-swc": "^3.5.0",
-    "axios": "^1.6.2",
+    "axios": "^0.28.0",
     "dexie": "^3.2.4",
     "dexie-react-hooks": "^1.1.7",
     "eslint": "^8.55.0",

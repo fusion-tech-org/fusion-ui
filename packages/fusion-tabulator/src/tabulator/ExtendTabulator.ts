@@ -1,8 +1,9 @@
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
-import { filter, isNull, isNumber, isUndefined, reduce } from 'lodash';
+import { isNumber } from 'lodash';
 
 import { DexieModule } from './custom-modules/DexieModule';
 // import { AdvertModule } from './custom-modules/AdvertModule';
+// import { ExternalInputModule } from './custom-modules/ExternalInputModule';
 
 import zhCNLang from 'langs/zh-cn.json';
 import { Message } from '@arco-design/web-react';
@@ -18,6 +19,7 @@ import { convertExpressionByRule, simpleExecExpression } from './utils';
  */
 Tabulator.registerModule(DexieModule);
 
+// Tabulator.registerModule(ExternalInputModule);
 // Tabulator.registerModule(AdvertModule);
 /**
  * extending modules
@@ -27,20 +29,19 @@ Tabulator.registerModule(DexieModule);
 Tabulator.extendModule('format', 'formatters', {
   delRowIcon: function () {
     // const curRow = cell.getRow();
-
     return `<span class="tabulator-row-del-icon" style="cursor: pointer; color: #666;">
       <svg data-action="del-row-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 48 48" aria-hidden="true" focusable="false" stroke-linecap="butt" stroke-linejoin="miter" class="arco-icon arco-icon-close-circle" style="font-size: 24px;"><path d="m17.643 17.643 6.364 6.364m0 0 6.364 6.364m-6.364-6.364 6.364-6.364m-6.364 6.364-6.364 6.364M42 24c0 9.941-8.059 18-18 18S6 33.941 6 24 14.059 6 24 6s18 8.059 18 18Z"></path>
       </svg>
     </span>`; //make the contents of the cell bold
   },
   placeholder: function (cell, formatterParams, _onRendered) {
-    console.log('formatterParams', formatterParams);
     const cellValue = cell.getValue();
-    const { placeholder } = formatterParams || {};
+    const { placeholder, color = ' #A9AEB8' } = formatterParams || {};
 
     if (cellValue) return cellValue;
 
-    if (placeholder) return `<span style="color: #999">${placeholder}</span>`;
+    if (placeholder)
+      return `<span style="color: ${color}">${placeholder}</span>`;
 
     return '';
   },
@@ -122,14 +123,16 @@ Tabulator.extendModule('mutator', 'mutators', {
      */
     const {
       calcRule = '',
-      ellipsisType = 'round',
+      // ellipsisType = 'round',
       precision,
+      defaultValue = {},
     } = mutatorParams || {};
     try {
       const convertCalcRules: string = convertExpressionByRule(
         calcRule,
         data,
-        true
+        true,
+        defaultValue
       );
       console.log('convertCalcRules', convertCalcRules);
       if (convertCalcRules.includes('NaN')) return;
@@ -144,34 +147,6 @@ Tabulator.extendModule('mutator', 'mutators', {
     } catch (e) {
       console.error('mutator - mathCalc failed: ', e?.message);
       Message.info('定义的列计算规则格式不正确');
-    }
-  },
-  linkedColumns: function (_value, data, _type, mutatorParams) {
-    const { columns = [], operateType = 'plus' } = mutatorParams || {};
-    console.log(_value, _type);
-    const formatCols = filter(
-      columns,
-      (col) => !isUndefined(col) && !isNull(col)
-    );
-
-    switch (operateType) {
-      case 'plus':
-      default:
-        return reduce(
-          formatCols,
-          (acc, col) => {
-            return acc + (data[col] || 0);
-          },
-          0
-        );
-      case 'multiply':
-        return reduce(
-          formatCols,
-          (acc, col) => {
-            return acc * (data[col] || 1);
-          },
-          1
-        );
     }
   },
 });

@@ -14,9 +14,7 @@ import type {
   RenderCompByTypeProps,
   RenderConfigByTypeProps,
 } from './interface';
-import {
-  TabulatorReact,
-} from './tabulator/index';
+import { TabulatorReact } from './tabulator/index';
 import type { ReactTabulatorProps } from './tabulator/interface';
 import { S2React, S2ReactProps } from './s2/S2React';
 import { TabulatorTableType } from './interface';
@@ -47,7 +45,6 @@ const renderCompByTableType = (
     uniformProps,
   } = props;
   const { data = [], ...restTabulatorOptions } = tabulatorOptions || {};
-
   switch (tableType) {
     case 's2':
       return <S2React {...(s2Options as S2ReactProps)} />;
@@ -97,9 +94,19 @@ const renderConfigByTableType = (
   const { tabulatorProps = {}, onUpdateWidgetProperty } = props;
   switch (tableType) {
     case 'tabulator':
-      return <TabulatorConfigs {...tabulatorProps} onUpdateWidgetProperty={onUpdateWidgetProperty} />;
+      return (
+        <TabulatorConfigs
+          {...tabulatorProps}
+          onUpdateWidgetProperty={onUpdateWidgetProperty}
+        />
+      );
     default:
-      return <TabulatorConfigs {...tabulatorProps} onUpdateWidgetProperty={onUpdateWidgetProperty} />;
+      return (
+        <TabulatorConfigs
+          {...tabulatorProps}
+          onUpdateWidgetProperty={onUpdateWidgetProperty}
+        />
+      );
   }
 };
 
@@ -140,13 +147,17 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
     onUpdateWidgetMetaProperty({
       filterData: fieldValues,
     });
-  }
+  };
 
   return (
-    <Container widget-id={widgetId} id={`${TABULATOR_PREFIX}_${widgetId}`} appMode={appMode}>
+    <Container
+      widget-id={widgetId}
+      id={`${TABULATOR_PREFIX}_${widgetId}`}
+      appMode={appMode}
+    >
       <Main ref={refMain}>
-        {
-          isArray(filterDefinitions?.items) && filterDefinitions.items.length > 0 && (
+        {isArray(filterDefinitions?.items) &&
+          filterDefinitions.items.length > 0 && (
             <FilterContainer>
               <TableFilter
                 appMode={appMode}
@@ -156,10 +167,14 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
                 onLayoutSave={handleFilterLayoutSave}
               />
             </FilterContainer>
-          )
-        }
+          )}
         <TableContainer>
-          {renderCompByTableType(tableType, { onUpdateWidgetMetaProperty, tableMode, appMode, ...restProps })}
+          {renderCompByTableType(tableType, {
+            onUpdateWidgetMetaProperty,
+            tableMode,
+            appMode,
+            ...restProps,
+          })}
         </TableContainer>
         {/* <Footer>
             footer

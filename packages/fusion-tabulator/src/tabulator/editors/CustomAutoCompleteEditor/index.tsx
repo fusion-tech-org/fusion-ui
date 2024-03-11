@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { IconSearch, IconSubscribe } from '@arco-design/web-react/icon';
+import { IconSearch } from '@arco-design/web-react/icon';
 import { CellComponent } from 'tabulator-tables';
 // import { createRoot } from 'react-dom/client';
 import ReactDOM, { createPortal } from 'react-dom';
@@ -88,7 +88,7 @@ const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
                 {...bindOption}
               >
                 <SuggestionItem>
-                  <IconSubscribe />
+                  {/* <IconSubscribe /> */}
                   <div>{suggestions[index].label}</div>
                 </SuggestionItem>
               </SuggestionItemWrapper>

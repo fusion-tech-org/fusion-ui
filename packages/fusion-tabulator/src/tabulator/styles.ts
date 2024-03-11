@@ -7,22 +7,20 @@ export const TabulatorContainer = styled.div<{
 }>`
   .tabulator-table {
     padding-bottom: ${({ tableMode }) =>
-      tableMode === 'editable' ? '46px !important' : 0};
+      tableMode === 'editable' ? '36px !important' : 0};
   }
 `;
 
 export const ExternalInputContainer = styled.div<{
-  left: number;
-  bottom: number;
+  left?: number;
+  bottom?: number;
   width?: number;
 }>`
   position: absolute;
-  /* top: 0; */
-  /* left: 0; */
-  transform: translateY(-62px);
-  /* transform: ${({ left, bottom }) =>
-    `translate(${left}px, ${bottom - ROW_HEIGHT - 11}px)`}; */
-  width: ${({ width }) => (width ? `${width}px` : '100%')};
+  top: 0;
+  left: 0;
+  right: 0;
+  /* width: ${({ width }) => (width ? `${width}px` : '100%')}; */
   height: 36px;
   min-height: 36px;
   background-color: #fff;

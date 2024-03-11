@@ -6,11 +6,12 @@ import { TableSelect } from './TableSelect';
 // import { useClickOutside } from 'hooks/useClickOutsite';
 import { useKeyPress } from 'hooks/useKeyPress';
 import { RowComponent, Tabulator } from 'tabulator-tables';
-import { debounce, map, isArray, isEmpty } from 'lodash';
+import { debounce, map, isArray, isEmpty, isFunction } from 'lodash';
 // import { ROW_HEIGHT } from 'src/tabulator/constants';
 
 export const CustomTableSelect = (props) => {
-  const { onSelectRowData, uniformProps } = props;
+  const { onSelectRowData, uniformProps, onCreated, onExtraInputValueChanged } =
+    props;
   const [popupVisible, setPopupVisble] = useState(false);
   const [cursor, setCursor] = useState<number>(-1);
   // const [tableData, setTableData] = useState([]);
@@ -64,6 +65,10 @@ export const CustomTableSelect = (props) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableIndexedDBQuery, data?.length, tabulatorRef.current]);
+
+  useEffect(() => {
+    onCreated();
+  }, []);
 
   const handleKeyPress = (e: KeyboardEvent) => {
     e.stopPropagation();
@@ -127,6 +132,11 @@ export const CustomTableSelect = (props) => {
   };
 
   const debouncedOnChange = debounce((value) => {
+    if (isFunction(onExtraInputValueChanged)) {
+      onExtraInputValueChanged(value);
+      return;
+    }
+
     if (!tabulatorRef.current) return;
 
     if (!isArray(filters) || filters.length <= 0) return;

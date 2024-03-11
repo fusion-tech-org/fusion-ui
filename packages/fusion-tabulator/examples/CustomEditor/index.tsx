@@ -4,17 +4,6 @@ const colDefs = [
   {
     title: '姓名',
     field: 'name',
-    editor: true,
-  },
-  {
-    title: '年龄',
-    field: 'age',
-    editor: true,
-    hozAlign: 'right',
-  },
-  {
-    title: '性别',
-    field: 'gender',
     editor: 'autoComplete',
     editorParams: {
       values: [
@@ -25,6 +14,16 @@ const colDefs = [
       ],
       placeholder: '请输入搜索值',
     },
+  },
+  {
+    title: '年龄',
+    field: 'age',
+    editor: true,
+    hozAlign: 'right',
+  },
+  {
+    title: '性别',
+    field: 'gender',
   },
   {
     title: '身高',
@@ -44,7 +43,7 @@ const colDefs = [
 ];
 
 const initData = (() => {
-  return new Array(2).fill(0).map((_, i) => ({
+  return new Array(3).fill(0).map((_, i) => ({
     id: i + 1,
     name: `anyone_${i}`,
     age: 12,
@@ -950,7 +949,8 @@ const uniformProps = {
   },
   indexdbConfigs: {},
   commonOptions: {
-    selectable: false,
+    selectableRows: true, //make rows selectable
+    // selectable: false,
   },
 };
 
@@ -961,7 +961,7 @@ export const CustomEditor = () => {
         style={{
           display: 'flex',
           padding: '32px',
-          height: '200px',
+          height: '360px',
           backgroundColor: '#f5f5f5',
         }}
       >

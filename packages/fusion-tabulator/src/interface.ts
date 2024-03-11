@@ -87,6 +87,7 @@ export interface TabulatorProps {
   onUpdateWidgetMetaProperty?: (params: Record<string, unknown>) => void;
   onUpdateWidgetProperty?: (params: Record<string, unknown>) => void;
   onCustomSelectDropdownItem?: VoidFunction;
+  onExtraInputValueChanged?: (value: string) => void;
   actionId?: string;
   enableRemote?: boolean;
   tableMode?: TableMode;
