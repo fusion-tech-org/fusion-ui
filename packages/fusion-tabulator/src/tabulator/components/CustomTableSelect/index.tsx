@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Dropdown, Input, Message } from '@arco-design/web-react';
 import { Container, DroplistWrapper, InputWrapper } from './styles';
 import { IconPlus } from '@arco-design/web-react/icon';
@@ -70,45 +70,52 @@ export const CustomTableSelect = (props) => {
     onCreated();
   }, []);
 
-  const handleKeyPress = (e: KeyboardEvent) => {
-    e.stopPropagation();
-    let nextIndex = null;
-    if (!tabulatorRef.current || memoAllData.total === 0) return;
+  const handleKeyPress = useCallback(
+    (e: KeyboardEvent) => {
+      e.stopPropagation();
+      let nextIndex = null;
+      if (!tabulatorRef.current || memoAllData.total === 0) return;
 
-    if (e.key === 'ArrowDown') {
-      nextIndex = Math.min(memoAllData.total, cursor + 1);
-      // setCursor((prev) => (prev + 1) % memoAllData.total);
-      // tabulatorRef.current.selectRow([1]);
-    }
+      if (e.key === 'ArrowDown') {
+        nextIndex = Math.min(memoAllData.total, cursor + 1);
+        // setCursor((prev) => (prev + 1) % memoAllData.total);
+        // tabulatorRef.current.selectRow([1]);
+      }
 
-    if (e.key === 'ArrowUp') {
-      nextIndex = Math.max(0, cursor - 1);
-      // setCursor((prev) => {
-      //   if (prev - 1 <= 0) return 0;
+      if (e.key === 'ArrowUp') {
+        nextIndex = Math.max(0, cursor - 1);
+        // setCursor((prev) => {
+        //   if (prev - 1 <= 0) return 0;
 
-      //   return (prev - 1) % memoAllData.total;
-      // });
-    }
+        //   return (prev - 1) % memoAllData.total;
+        // });
+      }
 
-    if (nextIndex !== null && tabulatorRef.current) {
-      const uniqueKeys = map(memoAllData.data, uniqueKey);
+      if (nextIndex !== null && tabulatorRef.current) {
+        const uniqueKeys = map(memoAllData.data, uniqueKey);
 
-      tabulatorRef.current.deselectRow();
-      tabulatorRef.current.selectRow(uniqueKeys[nextIndex]);
-      tabulatorRef.current.scrollToRow(uniqueKeys[nextIndex], 'center', false);
-      // e.preventDefault()
-    }
+        tabulatorRef.current.deselectRow();
+        tabulatorRef.current.selectRow(uniqueKeys[nextIndex]);
+        tabulatorRef.current
+          .scrollToRow(uniqueKeys[nextIndex], 'center', false)
+          .then(() => {
+            setCursor(nextIndex);
+          });
+        // e.preventDefault()
+      }
 
-    if (e.key === 'Enter') {
-      const selectedRow = tabulatorRef.current.getSelectedData()[0];
-      onSelectRowData?.(selectedRow);
-      hideDroplist();
-    }
+      if (e.key === 'Enter') {
+        const selectedRow = tabulatorRef.current.getSelectedData()[0];
+        onSelectRowData?.(selectedRow);
+        hideDroplist();
+      }
 
-    if (e.key === 'Escape') {
-      hideDroplist();
-    }
-  };
+      if (e.key === 'Escape') {
+        hideDroplist();
+      }
+    },
+    [cursor, memoAllData.total, setCursor, tabulatorRef.current]
+  );
 
   // bad implemention
   // useEffect(() => {
