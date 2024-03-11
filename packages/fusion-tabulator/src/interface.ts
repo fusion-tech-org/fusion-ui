@@ -21,6 +21,7 @@ export type RenderCompByTypeProps = {
   widgetId?: string;
   onUpdateWidgetMetaProperty?: (params: Record<string, unknown>) => void;
   onCustomSelectDropdownItem?: VoidFunction;
+  onExtraInputValueChanged?: (value: string) => void;
   onEvents?: (eventName: string, data?: Record<string, any>) => void;
   eventMaps?: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

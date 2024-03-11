@@ -44,6 +44,7 @@ export interface ReactTabulatorProps {
   onUpdateWidgetMetaProperty?: (params: Record<string, any>) => void;
   onUpdateWidgetProperty?: (params: Record<string, any>) => void;
   onCustomSelectDropdownItem?: VoidFunction;
+  onExtraInputValueChanged?: (value: string) => void;
   actionId?: string;
   uniqueKey?: string; // the unique key for multi tabulator in one page
   enableRemote?: boolean;

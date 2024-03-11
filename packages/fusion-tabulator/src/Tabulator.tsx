@@ -36,6 +36,7 @@ const renderCompByTableType = (
     onUpdateWidgetMetaProperty,
     onEvents,
     onCustomSelectDropdownItem,
+    onExtraInputValueChanged,
     eventMaps = {},
     actionId,
     widgetId,
@@ -57,6 +58,7 @@ const renderCompByTableType = (
           widgetId={widgetId}
           onUpdateWidgetMetaProperty={onUpdateWidgetMetaProperty}
           onCustomSelectDropdownItem={onCustomSelectDropdownItem}
+          onExtraInputValueChanged={onExtraInputValueChanged}
           onEvents={onEvents}
           eventMaps={eventMaps['tabulator']}
           actionId={actionId}

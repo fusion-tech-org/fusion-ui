@@ -43,7 +43,7 @@ const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
   } = useAutoComplete({
     onChange: onSelectItem,
     onCancel: () => {
-      cancel();
+      // cancel();
     },
     source: (search) =>
       values.filter((option) =>
@@ -127,6 +127,7 @@ export default function CustomAutoCompleteEditor(
     // const colDef = curCol.getDefinition();
 
     success(item.value);
+    // cell.navigateRight();
     cell.navigateNext();
 
     // if (!colDef.formatter && !colDef.formatterParams) {
