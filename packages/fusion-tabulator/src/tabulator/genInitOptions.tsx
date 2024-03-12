@@ -152,10 +152,18 @@ function editCheck(editorParams: Record<string, any>) {
     const data = cell.getRow().getData();
 
     const execExpr = convertExpressionByRule(disabledRule, { ...data });
+    console.log('execExpr', execExpr);
 
     if (!execExpr || execExpr.includes('undefined')) return true;
 
-    return simpleExecExpression(execExpr)();
+    try {
+      const disableEditable = simpleExecExpression(execExpr)();
+
+      return !disableEditable;
+    } catch (e) {
+      console.error(`executing '${execExpr}' failed: `, e?.message);
+      return true;
+    }
   };
 }
 
@@ -169,6 +177,7 @@ function customEditorAndFormatterPipe(
       editableTitle = false,
       editable = false,
       editor,
+      // formatter,
       editorParams = {},
       ...rest
     } = item;
@@ -192,6 +201,16 @@ function customEditorAndFormatterPipe(
     if (editable) {
       customColDefs.editable = editCheck(editorParams);
     }
+
+    /**
+     * handle formatter
+     */
+    // if (formatter === 'rowSelection') {
+    //   customColDefs.cellClick = function (_e, cell: CellComponent) {
+    //     console.log('cellClick', cell);
+    //     cell.getRow().toggleSelect();
+    //   };
+    // }
 
     return {
       editorParams,

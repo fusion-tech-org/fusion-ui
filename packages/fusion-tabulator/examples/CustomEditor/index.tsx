@@ -1,6 +1,24 @@
 import TabulatorWithRecoil from '../../src';
 
 const colDefs = [
+  // {
+  //   formatter: 'rowSelection',
+  //   titleFormatter: 'rowSelection',
+  //   hozAlign: 'center',
+  //   headerSort: false,
+  //   // titleFormatterParams: {
+  //   //   rowRange: 'active', //only toggle the values of the active filtered rows
+  //   // },
+  // },
+  {
+    formatter: 'tickbox',
+    titleFormatter: 'rowSelection',
+    hozAlign: 'center',
+    headerSort: false,
+    // cellClick: function (e, cell) {
+    //   cell.getRow().toggleSelect();
+    // },
+  },
   {
     title: '姓名',
     field: 'name',
@@ -19,7 +37,10 @@ const colDefs = [
     title: '年龄',
     field: 'age',
     editor: true,
-    hozAlign: 'right',
+    editable: true,
+    editorParams: {
+      disabledRule: '[age] > 12 && [name] == 1',
+    },
   },
   {
     title: '性别',
@@ -949,7 +970,7 @@ const uniformProps = {
   },
   indexdbConfigs: {},
   commonOptions: {
-    selectableRows: true, //make rows selectable
+    // selectableRows: true, //make rows selectable
     // selectable: false,
   },
 };

@@ -1,4 +1,4 @@
-import { TabulatorFull as Tabulator } from 'tabulator-tables';
+import { CellComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
 import { isNumber } from 'lodash';
 
 import { DexieModule } from './custom-modules/DexieModule';
@@ -44,6 +44,13 @@ Tabulator.extendModule('format', 'formatters', {
       return `<span style="color: ${color}">${placeholder}</span>`;
 
     return '';
+  },
+  tickbox: function (_cell: CellComponent, _formatterParams, _onRendered) {
+    // cell.getColumn().getDefinition().cellClick = function (e, cell) {
+    //   // e.stopPropagation();
+    //   cell.getRow().toggleSelect();
+    // };
+    return `<input type="checkbox" aria-label="Select Row" data-action="tickbox">`;
   },
 });
 

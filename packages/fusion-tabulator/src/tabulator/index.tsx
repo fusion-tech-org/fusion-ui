@@ -129,7 +129,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
     if (offsetHeight > tablePosition.height) {
       offsetHeight = tablePosition.height - ROW_HEIGHT;
-      inputWrapRef.current.style.right = '16px';
+      inputWrapRef.current.style.right = '12px';
     }
     inputWrapRef.current.style.transform = `translateY(${offsetHeight}px)`;
     // inputWrapRef.current.style.top = `${320}px`;

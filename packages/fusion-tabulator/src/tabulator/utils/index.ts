@@ -1,3 +1,5 @@
+import { isNumber } from 'lodash';
+
 export const safeExec = (code: string) => {
   const proxyWindow = new Proxy(window, {
     get(target, prop: any, receiver: any) {
@@ -41,7 +43,9 @@ export function convertExpressionByRule(
     const field = match.replace(/(\[|\])/g, '');
 
     if (fieldMap[field] === 0 || fieldMap[field]) {
-      return fieldMap[field];
+      return isNumber(fieldMap[field])
+        ? fieldMap[field]
+        : `'${fieldMap[field]}'`;
     }
 
     if (defaultValue[field] === 0) return 0;
