@@ -135,7 +135,7 @@ const genGeneralOptions = (
     dataLoaderError: '',
     dataLoaderErrorTimeout: 0,
     rowHeight: ROW_HEIGHT,
-    placeholder: tableMode === 'editable' ? null : '暂无数据',
+    placeholder: tableMode === 'editable' ? '' : '暂无数据',
     // frozenRows: 1,
     // frozenRows: function (row) {
     //   const frozenFlag = row.getElement().dataset['frozen'];
