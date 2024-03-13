@@ -14,8 +14,9 @@ import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
 // import dbDexie from './utils/dbDexie';
 import { createPortal } from 'react-dom';
-import { HEADER_HEIGHT, ROW_HEIGHT } from './constants';
+import { EXTRA_INPUT_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { RowComponent } from 'tabulator-tables';
+import { customEditorAndFormatterPipe } from './genInitOptions';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
@@ -65,74 +66,18 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     },
     // eventCallback: handleTableEventCallback,
   });
-  // const [remainData, setRemainData] = useState([]);
-  // let isOverHeigth = false;
-
-  // const reCalcInputTop = (data: any[]) => {
-  //   const tableHeight = 100; // fake code
-  //   if (!tableHeight || tableMode !== 'editable') return;
-  //   // const realTableData = tabulatorRef?.getData('active');
-  //   const dataLen = data?.length || 0;
-  //   const allRowHeight = dataLen * ROW_HEIGHT;
-  //   const nextTop = headerVisible ? HEADER_HEIGHT + allRowHeight : allRowHeight;
-
-  //   // const tableHeight = wrapperRef.current.getBoundingClientRect().height;
-
-  //   if (nextTop < tableHeight - ROW_HEIGHT) {
-  //     setInputTop(nextTop);
-  //     return;
-  //   } else {
-  //     setInputTop(tableHeight - ROW_HEIGHT);
-  //   }
-
-  //   if (!isOverHeigth) {
-  //     const tableEle = document.querySelector(`#${mainId} .tabulator-table`);
-
-  //     tableEle?.setAttribute('style', `padding-bottom: ${ROW_HEIGHT}px`);
-  //   }
-
-  //   isOverHeigth = true;
-  // };
-
-  // function handleListenEvents(
-  //   eventName: string,
-  //   data?: Record<string, any>,
-  //   _extra?: Record<'action' | 'tableData', any>
-  // ) {
-  // const { action, tableData = [] } = extra || {};
-
-  // if (action === 'delete-row') {
-  //   setRemainData(tableData);
-  //   reCalcInputTop(tableData);
-  // }
-
-  // props.onEvents?.(eventName, data);
-  // }
-
-  // useEffect(() => {
-  //   reCalcInputTop(remainData);
-  // }, [remainData.length]);
-
-  // useEffect(() => {
-  // if (isNumber(tableHeight)) {
-  // reCalcInputTop(tableData);
-  // }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [tableHeight, JSON.stringify(tableData)]);
 
   const transformYInputElem = (realData?: any[]) => {
     if (tableMode !== 'editable' || !inputWrapRef.current) return;
 
     const len = realData?.length || tableData?.length || 0;
     let offsetHeight = HEADER_HEIGHT + len * ROW_HEIGHT;
-    console.log('offsetHeight', offsetHeight);
 
-    if (offsetHeight > tablePosition.height) {
+    if (offsetHeight + EXTRA_INPUT_HEIGHT > tablePosition.height) {
       offsetHeight = tablePosition.height - ROW_HEIGHT;
       inputWrapRef.current.style.right = '12px';
     }
     inputWrapRef.current.style.transform = `translateY(${offsetHeight}px)`;
-    // inputWrapRef.current.style.top = `${320}px`;
   };
 
   const responsiveTabulator = () => {
@@ -168,22 +113,20 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       isArray(columnDefs) &&
       JSON.stringify(curColumns) !== JSON.stringify(columnDefs)
     ) {
-      tabulatorRef.setColumns(columnDefs); //overwrite existing columns with new columns definition array
+      const formatColumns = customEditorAndFormatterPipe(columnDefs);
+
+      tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
 
       return;
     }
   };
 
   const handleAddExtraEvents = () => {
-    console.log('add event listener');
-    // tabulatorRef.on('dataChanged', (data) => {
-    //   console.log(data);
-    // });
     tabulatorRef.on('rowAdded', (row: RowComponent) => {
       console.log(row.getData());
     });
 
-    tabulatorRef.on('rowMoved', (row: RowComponent) => {
+    tabulatorRef.on('rowDeleted', (row: RowComponent) => {
       const curTableData = row.getTable().getData('visible');
 
       transformYInputElem(curTableData);

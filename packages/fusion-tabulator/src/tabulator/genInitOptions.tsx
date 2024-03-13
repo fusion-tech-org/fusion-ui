@@ -84,6 +84,10 @@ export const genInitOptions = (
   );
 
   return {
+    columnDefaults: {
+      // sorter: false,
+      headerSort: false,
+    },
     ...generalOptions,
     ...columnDefsOptions,
     ...indexedDBOptions,
@@ -111,7 +115,7 @@ const genGeneralOptions = (
     height: '100%',
     maxHeight: '100%',
     reactiveData: true,
-    headerSort: false,
+    // headerSort: false,
     tabEndNewRow: true, // create empty new row on tab
     locale: true,
     selectableRows: false,
@@ -167,13 +171,13 @@ function editCheck(editorParams: Record<string, any>) {
   };
 }
 
-function customEditorAndFormatterPipe(
+export function customEditorAndFormatterPipe(
   tempColDefs: ColumnDefinition[],
   appMode?: PlatformAppMode
 ): ColumnDefinition[] {
   return map(tempColDefs, (item) => {
     const {
-      headerSort = false,
+      // headerSort = false,
       editableTitle = false,
       editable = false,
       editor,
@@ -189,7 +193,7 @@ function customEditorAndFormatterPipe(
 
     const customColDefs: Record<string, any> = {
       editableTitle: formatEditableTitle,
-      headerSort,
+      // headerSort,
     };
 
     if (isCustomEditor) {
@@ -241,7 +245,7 @@ const genColumnDefsOptions = (
 
       definitions.forEach((column) => {
         column.editableTitle = true;
-        column.headerSort = false;
+        // column.headerSort = false;
         // column.headerFilter = true; // add header filter to every column
       });
 
