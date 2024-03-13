@@ -181,7 +181,7 @@ export function customEditorAndFormatterPipe(
       editableTitle = false,
       editable = false,
       editor,
-      // formatter,
+      formatter,
       editorParams = {},
       ...rest
     } = item;
@@ -209,14 +209,14 @@ export function customEditorAndFormatterPipe(
     /**
      * handle formatter
      */
-    // if (formatter === 'rowSelection') {
-    //   customColDefs.cellClick = function (_e, cell: CellComponent) {
-    //     console.log('cellClick', cell);
-    //     cell.getRow().toggleSelect();
-    //   };
-    // }
+    if (formatter === 'rowSelection') {
+      customColDefs.cellClick = function (_e, cell: CellComponent) {
+        cell.getRow().toggleSelect();
+      };
+    }
 
     return {
+      formatter,
       editorParams,
       ...rest,
       ...customColDefs,
