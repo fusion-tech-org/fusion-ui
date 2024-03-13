@@ -107,7 +107,7 @@ export const genInitOptions = (
 const genGeneralOptions = (
   tableMode: TableMode
 ): Options & {
-  selectableRows?: boolean;
+  selectableRows?: boolean | number | 'highlight';
   selectableRowsRollingSelection?: boolean;
   selectableRowsCheck?: (row: RowComponent) => void;
 } => {
@@ -118,7 +118,7 @@ const genGeneralOptions = (
     // headerSort: false,
     tabEndNewRow: true, // create empty new row on tab
     locale: true,
-    selectableRows: false,
+    selectableRows: 'highlight', // false, true, integer, highlight(default)
     // selectableRollingSelection: false, // disable rolling selection
     selectableRowsRollingSelection: false, //disable rolling selection
     renderHorizontal: 'virtual',
@@ -408,8 +408,8 @@ const genStaticDataOptions = ({
   columnDefs?: ColumnDefinition[];
   tableMode?: TableMode;
 }): OptionsData => {
-  console.log('genStaticDataOptions columnDefs:', columnDefs);
   if (!isArray(tableData) || enableIndexedDBQuery) {
+    console.log('genStaticDataOptions columnDefs:', columnDefs);
     // const initEditData = {};
 
     // forEach(columnDefs, (item) => {

@@ -11,14 +11,23 @@ const colDefs = [
   //   // },
   // },
   {
-    formatter: 'tickbox',
+    formatter: 'rowSelection',
     titleFormatter: 'rowSelection',
     hozAlign: 'center',
     headerSort: false,
-    // cellClick: function (e, cell) {
-    //   cell.getRow().toggleSelect();
-    // },
+    cellClick: function (e, cell) {
+      cell.getRow().toggleSelect();
+    },
   },
+  // {
+  //   formatter: 'tickbox',
+  //   titleFormatter: 'rowSelection',
+  //   hozAlign: 'center',
+  //   headerSort: false,
+  //   // cellClick: function (e, cell) {
+  //   //   cell.getRow().toggleSelect();
+  //   // },
+  // },
   {
     title: '姓名',
     field: 'name',
@@ -970,8 +979,8 @@ const uniformProps = {
   },
   indexdbConfigs: {},
   commonOptions: {
-    // selectableRows: true, //make rows selectable
-    // selectable: false,
+    selectableRows: 'highlight', //make rows selectable
+    // selectable: true,
   },
 };
 
