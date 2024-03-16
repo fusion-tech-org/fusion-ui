@@ -10,6 +10,7 @@ export const InputWrapper = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  padding: 0 6px;
 `;
 
 export const AutoInput = styled.input`
@@ -19,7 +20,32 @@ export const AutoInput = styled.input`
   font-size: 1rem;
 `;
 
-export const SuggestionList = styled.ul<{
+export const FlatListItemWrapper = styled.div`
+  .virtuoso-flat-item {
+    position: relative;
+    padding: 6px 12px;
+    margin-top: 4px;
+    transition: transform 0.3s;
+  }
+
+  .virtuoso-flat-item-active {
+    background-color: #f6f9f9;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+      height: 60%;
+      width: 2px;
+      border-radius: 1px;
+      background-color: rgb(var(--primary-6));
+    }
+  }
+`;
+
+export const SuggestionWrapper = styled.div<{
   left: number;
   bottom: number;
   width: number;
@@ -28,17 +54,21 @@ export const SuggestionList = styled.ul<{
   top: 0;
   left: 0;
   transform: ${({ left, bottom }) => `translate(${left}px, ${bottom}px)`};
+  width: ${({ width }) => `${width}px`};
+  background-color: #fff;
+`;
+
+export const SuggestionList = styled.ul`
   margin: 0;
   padding: 0;
   max-height: 300px;
+  width: 100%;
   overflow: hidden auto;
-  width: ${({ width }) => `${width}px`};
   scroll-behavior: smooth;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 999;
   border: 1px solid #ddd;
   border-radius: 4px;
-  background-color: #fff;
 `;
 
 export const SuggestionItemWrapper = styled.li`
@@ -55,5 +85,6 @@ export const SuggestionItemWrapper = styled.li`
 export const SuggestionItem = styled.div`
   display: flex;
   align-items: center;
+  padding: 0 4px;
   margin-left: 0.25rem;
 `;

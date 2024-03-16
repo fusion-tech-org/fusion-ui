@@ -1,5 +1,5 @@
-import { TabulatorFull as Tabulator } from 'tabulator-tables';
-import { isNumber } from 'lodash';
+import { CellComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
+import { isNumber, isString } from 'lodash';
 
 import { DexieModule } from './custom-modules/DexieModule';
 // import { AdvertModule } from './custom-modules/AdvertModule';
@@ -44,6 +44,37 @@ Tabulator.extendModule('format', 'formatters', {
       return `<span style="color: ${color}">${placeholder}</span>`;
 
     return '';
+  },
+  tags: function (cell: CellComponent, formatterParams, _onRendered) {
+    const cellValue = cell.getValue();
+    const {
+      separator = ',',
+      size = 'default', // 'small' | 'default' | 'medium' | 'large'
+      colors = [],
+    } = formatterParams || {};
+
+    if (!isString(cellValue) || !cellValue) return '';
+
+    const toArr = cellValue.split(separator);
+    let elemStr = '';
+
+    toArr.forEach((tag, _index) => {
+      const tagItemStr = `
+          <div class="arco-space-item" style="margin-right: 6px;">
+            <div class="arco-tag arco-tag-checked arco-tag-size-${size}">
+              <span class="arco-tag-content">${tag}</span>
+            </div>
+          </div>
+       `;
+
+      elemStr += tagItemStr;
+    });
+
+    return `
+      <div class="arco-space arco-space-horizontal arco-space-align-center">
+        ${elemStr}
+      </div>
+    `;
   },
   // tickbox: function (_cell: CellComponent, _formatterParams, _onRendered) {
   //   // cell.getColumn().getDefinition().cellClick = function (e, cell) {

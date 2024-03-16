@@ -35,6 +35,7 @@
     "@antv/s2-react": "^1.46.0",
     "@arco-design/web-react": "^2.57.1",
     "@craftjs/core": "^0.2.4",
+    "@faker-js/faker": "^8.4.1",
     "@loadable/component": "^5.16.3",
     "@monaco-editor/react": "^4.6.0",
     "@types/lodash": "^4.14.202",

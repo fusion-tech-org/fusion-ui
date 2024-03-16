@@ -25,7 +25,6 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
     mode = 'multiple',
   } = editorParams || {};
   const selectedListRef = useRef<string[]>(initValue);
-  // const [selectedItem, setSelectedItem] = useState<string[]>(initValue);
 
   const forceInnerInput = () => {
     const innerInputEle: HTMLInputElement = document.querySelector(
@@ -48,31 +47,29 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
     };
   }, []);
 
-  const handleMultiSelect = (value, _option) => {
-    selectedListRef.current.push(value);
+  // const handleMultiSelect = (value, _option) => {
+  //   selectedListRef.current.push(value);
+  //   // setSelectedItem((prev) => [...prev, value]);
+  // };
+
+  const handleChange = (value, _option) => {
+    selectedListRef.current = [...value];
     // setSelectedItem((prev) => [...prev, value]);
   };
 
-  const handleDeselect = (value) => {
-    selectedListRef.current = selectedListRef.current.filter(
-      (item) => item !== value
-    );
-    // setSelectedItem((prev) => [...prev.filter((item) => item !== value)]);
-  };
+  // const handleDeselect = (value) => {
+  //   selectedListRef.current = selectedListRef.current.filter(
+  //     (item) => item !== value
+  //   );
+  //   // setSelectedItem((prev) => [...prev.filter((item) => item !== value)]);
+  // };
 
   const handleBlur = () => {
-    console.log('handleBlur', selectedListRef.current);
     if (selectedListRef.current.length > 0) {
       onSelectItem(selectedListRef.current.join(','));
       return;
     }
     onSelectItem('');
-  };
-
-  const handleChange = (value, _option) => {
-    if (mode === 'multiple') return;
-    console.log('handleChange', value, _option);
-    // onSelectItem(value);
   };
 
   return (
@@ -83,8 +80,8 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
         mode={mode}
         placeholder={placeholder}
         style={{ width: '100%', height: '100%' }}
-        onSelect={handleMultiSelect}
-        onDeselect={handleDeselect}
+        // onSelect={handleMultiSelect} // this api available only version 2.52.0+, however, the main app's version is 2.49.0
+        // onDeselect={handleDeselect}
         onBlur={handleBlur}
         trigger="focus"
         // defaultPopupVisible
@@ -100,7 +97,7 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
 export default function CustomMultiSelectEditor(
   cell: CellComponent,
   onRendered: (fn: CallableFunction) => void,
-  success: (value: any) => void,
+  success: (value: any) => boolean,
   cancel: VoidFunction,
   editorParams: Record<string, any>
 ) {
@@ -111,21 +108,15 @@ export default function CustomMultiSelectEditor(
 
   const container = document.createElement('div');
   container.style.height = '100%';
-  // createRoot(container).render(
-  //   <AutoComplete
-  //     // cell={cell}
-  //     onRendered={onRendered}
-  //     success={success}
-  //     cancel={cancel}
-  //     editorParams={editorParams}
-  //   />
-  // );
+
   function handleSelectItem(item: string) {
     // const curCol = cell.getColumn();
     // const colDef = curCol.getDefinition();
-    success(item);
-    console.log('handleSelectItem', item);
-    cell.navigateNext();
+    const res = success(item);
+    console.log('handleSelectItem', item, res);
+    if (res) {
+      cell.navigateNext();
+    }
   }
   console.log('curValue', curValue, convert2SelectDefaultValue);
   ReactDOM.render(

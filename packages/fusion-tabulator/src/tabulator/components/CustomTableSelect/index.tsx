@@ -13,9 +13,11 @@ export const CustomTableSelect = (props) => {
   const { onSelectRowData, uniformProps, onCreated, onExtraInputValueChanged } =
     props;
   const [popupVisible, setPopupVisble] = useState(false);
+  // const [inputForced, setInputForce] = useState(false);
   const [cursor, setCursor] = useState<number>(-1);
   // const [tableData, setTableData] = useState([]);
   const [searchText, setSearchText] = useState('');
+  const [inZone, setInZone] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const tabulatorRef = useRef<Tabulator>(null);
@@ -93,14 +95,16 @@ export const CustomTableSelect = (props) => {
 
       if (nextIndex !== null && tabulatorRef.current) {
         const uniqueKeys = map(memoAllData.data, uniqueKey);
-
+        setCursor(nextIndex);
+        // console.log('uniqueKeys', uniqueKeys, nextIndex);
         tabulatorRef.current.deselectRow();
         tabulatorRef.current.selectRow(uniqueKeys[nextIndex]);
-        tabulatorRef.current
-          .scrollToRow(uniqueKeys[nextIndex], 'center', false)
-          .then(() => {
-            setCursor(nextIndex);
-          });
+        tabulatorRef.current.scrollToRow(
+          uniqueKeys[nextIndex],
+          'center',
+          false
+        );
+
         // e.preventDefault()
       }
 
@@ -133,6 +137,9 @@ export const CustomTableSelect = (props) => {
 
   const handleInputFocus = () => {
     const { data, columns } = quickAddConfigs || {};
+
+    // setInputForce(true);
+
     if (isEmpty(data) && isEmpty(columns) && !enableIndexedDBQuery) {
       Message.info('请配置下拉项数据');
 
@@ -142,13 +149,11 @@ export const CustomTableSelect = (props) => {
     setPopupVisble(true);
   };
 
-  const handleSelectedRow = (e: UIEvent, row: RowComponent) => {
-    e.stopPropagation();
+  const handleSelectedRow = (row: RowComponent) => {
     const rowData = row.getData();
     onSelectRowData?.(rowData);
 
-    // setPopupVisble(false)
-    // hideDroplist();
+    hideDroplist();
   };
 
   const debouncedOnChange = debounce((value) => {
@@ -179,15 +184,29 @@ export const CustomTableSelect = (props) => {
   const handleTabulator = (ref) => {
     tabulatorRef.current = ref;
 
-    // tabulatorRef.current.on('rowSelected', handleSelectedRow);
-    tabulatorRef.current.on('rowClick', handleSelectedRow);
+    tabulatorRef.current.on('rowSelected', handleSelectedRow);
+    // tabulatorRef.current.on('rowClick', handleSelectedRow);
     // tabulatorRef.current.on('rowDblClick', handleSelectedRow);
   };
 
   const handleInputBlur = () => {
-    setTimeout(() => {
+    // setInputForce(false);
+
+    if (inZone) return;
+
+    hideDroplist();
+  };
+
+  const handleMouseLeaveDropdown = () => {
+    setInZone(false);
+
+    if (document.activeElement !== inputRef.current) {
       hideDroplist();
-    }, 150);
+    }
+
+    // if (!inputForced) {
+    //   hideDroplist();
+    // }
   };
 
   return (
@@ -197,7 +216,11 @@ export const CustomTableSelect = (props) => {
         trigger="focus"
         onVisibleChange={handleVisibleChange}
         droplist={
-          <DroplistWrapper ref={dropdownRef}>
+          <DroplistWrapper
+            ref={dropdownRef}
+            onMouseEnter={() => setInZone(true)}
+            onMouseLeave={handleMouseLeaveDropdown}
+          >
             <TableSelect onRef={handleTabulator} uniformProps={uniformProps} />
           </DroplistWrapper>
         }

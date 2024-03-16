@@ -1,21 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useState, useEffect, useCallback } from 'react';
-
 import { isArray, isEmpty, isUndefined } from 'lodash';
+import { Empty } from '@arco-design/web-react';
+import { createPortal } from 'react-dom';
+import { RowComponent } from 'tabulator-tables';
 
-// import { pickHTMLProps } from 'pick-react-known-prop';
-// import { propsToOptions } from 'utils/ConfigUtils';
 import './index.css';
 import { genTabulatorUUID } from 'utils/index';
-import { Empty } from '@arco-design/web-react';
 import { ExternalInputContainer, TabulatorContainer } from './styles';
 import { CustomTableSelect } from './components/CustomTableSelect';
 import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
 // import dbDexie from './utils/dbDexie';
-import { createPortal } from 'react-dom';
 import { EXTRA_INPUT_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from './constants';
-import { RowComponent } from 'tabulator-tables';
 import { customEditorAndFormatterPipe } from './genInitOptions';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
@@ -35,29 +32,13 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     commonOptions = {},
     enableIndexedDBQuery,
     isRemote = true,
-    // indexdbConfigs,
   } = uniformProps;
-  // const { indexedInitDefs = {} } = indexdbConfigs || {};
   const commonOptionsRef = useRef(commonOptions);
-  // const {
-  //   generalConfigs,
-  //   loadedConfigs,
-  //   columnConfigs,
-  //   rowConfigs,
-  //   cellConfigs,
-  //   keyBindingConfigs,
-  //   eventConfigs,
-  //   styleConfigs,
-  //   advancedConfigs,
-  // } = configs;
-  // const initInputTop = headerVisible ? HEADER_HEIGHT : 0;
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
-  // const instanceRef = useRef<Tabulator>();
   const tabulatorId = genTabulatorUUID();
   const [mainId] = useState(tabulatorId);
   const [extraInputCreated, setExtraInputCreated] = useState(false);
-  // const [inputTop, setInputTop] = useState(initInputTop);
   const { tablePosition, tabulatorRef, initTable } = useTabulator({
     ref: wrapperRef,
     props: {
@@ -74,9 +55,12 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     let offsetHeight = HEADER_HEIGHT + len * ROW_HEIGHT;
 
     if (offsetHeight + EXTRA_INPUT_HEIGHT > tablePosition.height) {
-      offsetHeight = tablePosition.height - ROW_HEIGHT;
-      inputWrapRef.current.style.right = '12px';
+      offsetHeight = tablePosition.height - ROW_HEIGHT + 2;
+      inputWrapRef.current.style.right = '13px';
+    } else {
+      inputWrapRef.current.style.right = '0px';
     }
+
     inputWrapRef.current.style.transform = `translateY(${offsetHeight}px)`;
   };
 
@@ -89,8 +73,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     )
       return;
 
-    // initTable();
-    // NOTE: old logic
     if (!tabulatorRef) {
       initTable();
       return;
@@ -122,10 +104,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   };
 
   const handleAddExtraEvents = () => {
-    tabulatorRef.on('rowAdded', (row: RowComponent) => {
-      console.log(row.getData());
-    });
-
     tabulatorRef.on('rowDeleted', (row: RowComponent) => {
       const curTableData = row.getTable().getData('visible');
 
@@ -142,12 +120,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
     handleAddExtraEvents();
   }, [tabulatorRef]);
-
-  // useEffect(() => {
-  //   if (!calcActionIdCombineDataHash && !tabulatorRef) return;
-
-  //   console.log('calcActionIdCombineDataHash', '<<<<<<');
-  // }, [calcActionIdCombineDataHash]);
 
   useEffect(() => {
     if (
@@ -181,20 +153,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     enableIndexedDBQuery,
   ]);
 
-  // clone dexie instance
-  // useEffect(() => {
-  //   if (
-  //     !enableIndexedDBQuery ||
-  //     !indexedInitDefs?.dbName ||
-  //     !indexedInitDefs?.tableDefs ||
-  //     dbDexie.getDexie()
-  //   )
-  //     return;
-
-  //   console.log('---->: init dexie');
-  //   dbDexie.init(indexedInitDefs.dbName, indexedInitDefs.tableDefs);
-  // }, [enableIndexedDBQuery, JSON.stringify(indexedInitDefs)]);
-
   function handleSelectRowData(record) {
     const { id: _key, ...rest } = record || {};
 
@@ -208,10 +166,13 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       return;
     }
 
-    tabulatorRef.addRow(rest);
+    if (!tabulatorRef) return;
 
-    // const newTableData = tabulatorRef.getData();
-    // reCalcInputTop(newTableData);
+    tabulatorRef.addRow(rest).then((_row: RowComponent) => {
+      const curTableData = tabulatorRef.getData('visible');
+
+      transformYInputElem(curTableData);
+    });
   }
 
   const handleExtraInputCreated = () => {
@@ -234,7 +195,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       holdEle
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mainId, tableMode, JSON.stringify(props)]);
+  }, [mainId, tableMode, JSON.stringify(props), tabulatorRef]);
 
   if (
     isEmpty(tableData) &&

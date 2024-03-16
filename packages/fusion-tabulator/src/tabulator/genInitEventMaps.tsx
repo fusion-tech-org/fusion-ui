@@ -4,7 +4,6 @@ import {
   CellComponent,
   ColumnComponent,
   EventCallBackMethods,
-  PseudoRow,
   RowComponent,
   Tabulator,
 } from 'tabulator-tables';
@@ -163,6 +162,7 @@ export function genInitEventMaps({
 
   function handleCellClick(_e: UIEvent, cell: CellComponent) {
     console.log('handleCellClick');
+
     const cellField = cell.getField();
     const cellValue = cell.getValue();
 

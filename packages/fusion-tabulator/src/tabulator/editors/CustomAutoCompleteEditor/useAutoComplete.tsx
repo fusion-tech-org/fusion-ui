@@ -1,10 +1,5 @@
 import React, { KeyboardEvent, useRef, useState } from 'react';
-
-export interface AutoItem {
-  label: string;
-  value: any;
-  [key: string]: unknown;
-}
+import { UseAutoCompleteParams } from './interface';
 
 const KEY_CODES = {
   DOWN: 40,
@@ -15,25 +10,15 @@ const KEY_CODES = {
   ENTER: 13,
 };
 
-interface UseAutoCompleteParams {
-  source: (text: string) => Array<{
-    value: string;
-    label: string;
-    [key: string]: unknown;
-  }>;
-  onChange: (item: AutoItem) => void;
-  onCancel: CallableFunction;
-  delay?: number;
-}
-
 export const useAutoComplete = ({
   source,
   onChange,
   onCancel,
+  inZone,
   delay = 500,
 }: UseAutoCompleteParams) => {
   const [myTimeout, setMyTimeOut] = useState(setTimeout(() => {}, 0));
-  const listRef = useRef<HTMLUListElement>();
+  const listRef = useRef<HTMLDivElement>();
   const [suggestions, setSuggestions] = useState([]);
   const [isBusy, setBusy] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -131,10 +116,13 @@ export const useAutoComplete = ({
     }
   }
 
-  function handleBlur() {
-    clearSuggestions();
-    onCancel();
-  }
+  const handleBlur =
+    (focusBlur = false) =>
+    () => {
+      if ((inZone || suggestions.length > 0) && !focusBlur) return;
+      clearSuggestions();
+      onCancel();
+    };
 
   return {
     bindOption: {
@@ -147,7 +135,7 @@ export const useAutoComplete = ({
       value: textValue,
       onChange: (e) => onTextChange(e.target.value),
       onKeyDown,
-      onBlur: handleBlur,
+      onBlur: handleBlur(),
     },
     bindOptions: {
       ref: listRef,
@@ -155,5 +143,6 @@ export const useAutoComplete = ({
     isBusy,
     suggestions,
     selectedIndex,
+    handleBlur,
   };
 };

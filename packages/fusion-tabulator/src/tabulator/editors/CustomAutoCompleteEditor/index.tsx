@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { IconSearch } from '@arco-design/web-react/icon';
 import { CellComponent } from 'tabulator-tables';
 // import { createRoot } from 'react-dom/client';
 import ReactDOM, { createPortal } from 'react-dom';
 
-import { AutoItem, useAutoComplete } from './useAutoComplete';
+import { useAutoComplete } from './useAutoComplete';
 import {
   AutoCompleteContainer,
   AutoInput,
@@ -12,48 +12,138 @@ import {
   SuggestionItem,
   SuggestionItemWrapper,
   SuggestionList,
+  SuggestionWrapper,
 } from './styles';
-
-interface AutoCompleteProps {
-  initValue?: string;
-  editorParams?: Record<string, any>;
-  onRendered?: (fn: CallableFunction) => void;
-  // success: (value: any) => void;
-  onSelectItem: (item: AutoItem) => void;
-  cancel: VoidFunction;
-  rectStyle: {
-    left: number;
-    bottom: number;
-    width: number;
-  };
-}
+import { SimpleList } from './SimpleList';
+import { FlatList } from './FlatList';
+import { GroupList } from './GroupList';
+import { TableList } from './TableList';
+import { GridList } from './GridList';
+import { AutoCompleteProps, AutoItem } from './interface';
+import { VirtuosoHandle } from 'react-virtuoso';
 
 const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
-  const { editorParams, cancel, onSelectItem, rectStyle, initValue } = props;
+  const { editorParams, onSelectItem, rectStyle, initValue, mode } = props;
 
   const { values = [], placeholder = '' } = editorParams || {};
   const inputRef = useRef<HTMLInputElement>(null);
+  const [inZone, setInZone] = useState(false);
+
+  const virtuosoRef = useRef<VirtuosoHandle>(null);
+  const [currentItemIndex, setCurrentItemIndex] = useState(-1);
+  const listRef = useRef<HTMLElement | Window>(null);
+
   const {
     bindInput,
     bindOptions,
-    bindOption,
     isBusy,
     suggestions,
     selectedIndex,
+    handleBlur,
   } = useAutoComplete({
     onChange: onSelectItem,
     onCancel: () => {
       // cancel();
     },
+    inZone,
+    listRef,
     source: (search) =>
       values.filter((option) =>
         new RegExp(`^${search}`, 'i').test(option.label)
       ),
   });
 
+  const handleSelectItem = (value) => {
+    onSelectItem(value);
+    handleBlur(true)();
+  };
+
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  const keyDownCallback = useCallback(
+    (e) => {
+      let nextIndex = null;
+      console.log('e', e.code, nextIndex);
+      if (e.code === 'ArrowUp') {
+        nextIndex = Math.max(0, currentItemIndex - 1);
+      } else if (e.code === 'ArrowDown') {
+        nextIndex = Math.min(suggestions.length, currentItemIndex + 1);
+      } else if (e.code === 'Enter' && currentItemIndex >= 0) {
+        setTimeout(() => {
+          handleSelectItem(suggestions[currentItemIndex]);
+        }, 20);
+        return;
+      }
+
+      if (nextIndex !== null) {
+        // setCurrentItemIndex(nextIndex);
+        virtuosoRef.current.scrollIntoView({
+          index: nextIndex,
+          behavior: 'auto',
+          done: () => {
+            setCurrentItemIndex(nextIndex);
+          },
+        });
+
+        e.preventDefault();
+      }
+    },
+    [currentItemIndex, virtuosoRef, setCurrentItemIndex, suggestions.length]
+  );
+
+  const scrollerRef = useCallback(
+    (element: HTMLElement) => {
+      if (element && suggestions.length > 0) {
+        element.addEventListener('keydown', keyDownCallback);
+        listRef.current = element;
+        setInZone(() => true);
+
+        listRef.current.focus();
+      } else {
+        listRef.current.removeEventListener('keydown', keyDownCallback);
+      }
+    },
+    [keyDownCallback, suggestions.length]
+  );
+
+  // const handleMount = () => {
+  //   setInZone(true);
+  // };
+
+  const renderCompByMode = useCallback(() => {
+    const modeMapComp = {
+      simple: (
+        <SimpleList
+          onClickItem={handleSelectItem}
+          selectedIndex={selectedIndex}
+          data={suggestions}
+        />
+      ),
+      list: (
+        <FlatList
+          onClickItem={handleSelectItem}
+          ref={virtuosoRef}
+          currentItemIndex={currentItemIndex}
+          // onMount={handleMount}
+          scrollerRef={scrollerRef}
+        />
+      ),
+      groupList: <GroupList onClickItem={handleSelectItem} />,
+      grid: <GridList onClickItem={handleSelectItem} />,
+      table: <TableList onClickItem={handleSelectItem} />,
+    };
+    return modeMapComp[mode] || null;
+  }, [mode, currentItemIndex, virtuosoRef, scrollerRef]);
+
+  const handleMouseLeaveTargetZone = () => {
+    setInZone(false);
+
+    if (document.activeElement !== inputRef.current) {
+      handleBlur(true)();
+    }
+  };
 
   return (
     <AutoCompleteContainer>
@@ -70,30 +160,18 @@ const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
         )}
       </InputWrapper>
 
-      {suggestions?.length > 0 &&
+      {suggestions.length > 0 &&
         createPortal(
-          <SuggestionList
+          <SuggestionWrapper
             {...bindOptions}
             left={rectStyle.left}
             bottom={rectStyle.bottom}
             width={rectStyle.width}
+            onMouseEnter={() => setInZone(true)}
+            onMouseLeave={handleMouseLeaveTargetZone}
           >
-            {suggestions.map((_, index) => (
-              <SuggestionItemWrapper
-                key={index}
-                style={{
-                  backgroundColor:
-                    selectedIndex === index ? '#E8F7FF' : 'transparent',
-                }}
-                {...bindOption}
-              >
-                <SuggestionItem>
-                  {/* <IconSubscribe /> */}
-                  <div>{suggestions[index].label}</div>
-                </SuggestionItem>
-              </SuggestionItemWrapper>
-            ))}
-          </SuggestionList>,
+            {renderCompByMode()}
+          </SuggestionWrapper>,
           document.body
         )}
     </AutoCompleteContainer>
@@ -103,56 +181,29 @@ const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
 export default function CustomAutoCompleteEditor(
   cell: CellComponent,
   onRendered: (fn: CallableFunction) => void,
-  success: (value: any) => void,
+  success: (value: any) => boolean,
   cancel: VoidFunction,
   editorParams: Record<string, any>
 ) {
   const { left, bottom, width } = cell.getElement().getBoundingClientRect();
   const defValue = cell.getValue();
-  // const { values = [] } = editorParams || {};
+  const {
+    values = [],
+    mode = 'simple', // simple, list, grid, groupList, table
+  } = editorParams || {};
 
   const container = document.createElement('div');
   container.style.height = '100%';
-  // createRoot(container).render(
-  //   <AutoComplete
-  //     // cell={cell}
-  //     onRendered={onRendered}
-  //     success={success}
-  //     cancel={cancel}
-  //     editorParams={editorParams}
-  //   />
-  // );
-  function handleSelectItem(item: AutoItem) {
+
+  function handleSelectItem(item: AutoItem | Record<string, any>) {
     // const curCol = cell.getColumn();
     // const colDef = curCol.getDefinition();
-
-    success(item.value);
-    // cell.navigateRight();
-    cell.navigateNext();
-
-    // if (!colDef.formatter && !colDef.formatterParams) {
-    //   const convertedParams = reduce(
-    //     values,
-    //     (res, { label, value }) => {
-    //       res[value] = label;
-
-    //       return res;
-    //     },
-    //     {}
-    //   );
-    //   console.log('convertedParams', convertedParams);
-
-    //   colDef.formatter = 'lookup';
-    //   colDef.formatterParams = convertedParams || {};
-    // curCol
-    //   .updateDefinition({
-    //     title: colDef.title,
-    //     formatter: 'lookup',
-    //     formatterParams: convertedParams || {},
-    //   })
-    //   .then(() => {
-    //   });
-    // }
+    const res = success(item?.value || item);
+    console.log('selected item', item, res);
+    if (res) {
+      cell.navigateRight();
+      cell.navigateNext();
+    }
   }
 
   ReactDOM.render(
@@ -161,6 +212,7 @@ export default function CustomAutoCompleteEditor(
       onRendered={onRendered}
       onSelectItem={handleSelectItem}
       cancel={cancel}
+      mode={mode}
       editorParams={editorParams}
       rectStyle={{ left, bottom, width }}
     />,
