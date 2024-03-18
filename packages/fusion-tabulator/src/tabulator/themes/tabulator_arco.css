@@ -805,20 +805,20 @@ body {
 
 .tabulator-row.tabulator-group {
   box-sizing: border-box;
-  border-bottom: 1px solid #999;
+  /* border-bottom: 1px solid #999; */
   border-right: 1px solid #dee2e6;
-  border-top: 1px solid #999;
+  /* border-top: 1px solid #999; */
   padding: 5px;
   padding-left: 10px;
-  background: #ccc;
-  font-weight: bold;
+  background: #f6f9f9;
+  /* font-weight: bold; */
   min-width: 100%;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .tabulator-row.tabulator-group:hover {
     cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: #f6f9f9;
   }
 }
 
@@ -1641,9 +1641,9 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
   background: #ccc;
 }
 
-.tabulator-row.tabulator-group {
+/* .tabulator-row.tabulator-group {
   background: #fafafa;
-}
+} */
 
 .tabulator-row.tabulator-group span {
   color: #666;

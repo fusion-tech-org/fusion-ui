@@ -39,7 +39,12 @@ export const genInitOptions = (
     commonOptions = {};
   }
 
-  const { hidePagination = false, ...availableCommonOptions } = commonOptions;
+  const {
+    hidePagination = false,
+    rowGroupFieldList = [],
+    rowGroupHeaderFieldList = [],
+    ...availableCommonOptions
+  } = commonOptions;
 
   const {
     enableIndexedDBQuery = false,
@@ -72,6 +77,12 @@ export const genInitOptions = (
     tableMode,
     enableIndexedDBQuery,
   });
+
+  const rowGroupOptions = genRowGropOptions(
+    rowGroupFieldList,
+    rowGroupHeaderFieldList
+  );
+
   const paginationOptions = genPaginationOptions({
     enableRemote,
     tableMode,
@@ -94,6 +105,7 @@ export const genInitOptions = (
     ...ajaxOptions,
     ...staticDataOptions,
     ...paginationOptions,
+    ...rowGroupOptions,
     layout:
       tableTypeFlag === TableTypeFlag.customTableSelect
         ? 'fitDataStretch'
@@ -450,6 +462,46 @@ const genPaginationOptions = ({
     paginationSize: 10,
     paginationSizeSelector: [10, 30, 50, 100, 500, 1000],
     paginationMode: enableRemote ? 'remote' : 'local',
+  };
+};
+
+const genRowGropOptions = (
+  rowGroupFieldList: string[],
+  rowGroupHeaderFieldList: { label: string; value: string }[]
+) => {
+  if (rowGroupFieldList.length === 0) return {};
+
+  return {
+    groupBy: rowGroupFieldList,
+    groupToggleElement: 'header',
+    groupHeader: function (value, count, data, group) {
+      //value - the value all members of this group share
+      //count - the number of rows in this group
+      //data - an array of all the row data objects in this group
+      //group - the group component for the group
+
+      if (!rowGroupHeaderFieldList.length) {
+        return `
+            ${value}<span style='margin-left: 32px;'>(${count} 条记录)</span>
+          `;
+      }
+      let content = '';
+
+      rowGroupHeaderFieldList.forEach(({ label, value }) => {
+        content += `
+            <div style="magin-right: 32px;">
+              <span>${label}: </span>
+              <span>${data[0]?.[value]}</span>
+            </div>
+          `;
+      });
+
+      return `
+          <div style="display: flex; align-items=center;">
+            ${content}
+          <div>
+        `;
+    },
   };
 };
 

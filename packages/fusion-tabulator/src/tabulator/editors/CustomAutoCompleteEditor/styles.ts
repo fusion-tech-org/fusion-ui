@@ -8,6 +8,7 @@ export const AutoCompleteContainer = styled.div`
 export const InputWrapper = styled.div`
   display: flex;
   align-items: center;
+  padding: 0 8px;
   width: 100%;
   height: 100%;
   padding: 0 6px;
@@ -56,6 +57,7 @@ export const SuggestionWrapper = styled.div<{
   transform: ${({ left, bottom }) => `translate(${left}px, ${bottom}px)`};
   width: ${({ width }) => `${width}px`};
   background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 `;
 
 export const SuggestionList = styled.ul`

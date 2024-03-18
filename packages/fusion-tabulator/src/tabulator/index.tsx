@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { isArray, isEmpty, isUndefined } from 'lodash';
 import { Empty } from '@arco-design/web-react';
 import { createPortal } from 'react-dom';
@@ -48,21 +48,24 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // eventCallback: handleTableEventCallback,
   });
 
-  const transformYInputElem = (realData?: any[]) => {
-    if (tableMode !== 'editable' || !inputWrapRef.current) return;
+  const transformYInputElem = useCallback(
+    (realData?: any[]) => {
+      if (tableMode !== 'editable' || !inputWrapRef.current) return;
 
-    const len = realData?.length || tableData?.length || 0;
-    let offsetHeight = HEADER_HEIGHT + len * ROW_HEIGHT;
+      const len = realData?.length || tableData?.length || 0;
+      let offsetHeight = HEADER_HEIGHT + len * ROW_HEIGHT;
 
-    if (offsetHeight + EXTRA_INPUT_HEIGHT > tablePosition.height) {
-      offsetHeight = tablePosition.height - ROW_HEIGHT + 2;
-      inputWrapRef.current.style.right = '13px';
-    } else {
-      inputWrapRef.current.style.right = '0px';
-    }
+      if (offsetHeight + EXTRA_INPUT_HEIGHT > tablePosition.height) {
+        offsetHeight = tablePosition.height - ROW_HEIGHT + 2;
+        inputWrapRef.current.style.right = '13px';
+      } else {
+        inputWrapRef.current.style.right = '0px';
+      }
 
-    inputWrapRef.current.style.transform = `translateY(${offsetHeight}px)`;
-  };
+      inputWrapRef.current.style.transform = `translateY(${offsetHeight}px)`;
+    },
+    [tablePosition.height, tableMode]
+  );
 
   const responsiveTabulator = () => {
     if (
@@ -104,10 +107,18 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   };
 
   const handleAddExtraEvents = () => {
-    tabulatorRef.on('rowDeleted', (row: RowComponent) => {
-      const curTableData = row.getTable().getData('visible');
+    // tabulatorRef.on('rowDeleted', (row: RowComponent) => {
+    //   const curTableData = row.getTable().getData('visible');
 
-      transformYInputElem(curTableData);
+    //   transformYInputElem(curTableData);
+    // });
+
+    tabulatorRef.on('dataChanged', (data) => {
+      const visibleDataLen = tabulatorRef.getData('visible').length;
+
+      if (data.length === visibleDataLen + 1) {
+        transformYInputElem(data);
+      }
     });
   };
 
@@ -166,13 +177,13 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       return;
     }
 
-    if (!tabulatorRef) return;
+    // if (!tabulatorRef) return;
 
-    tabulatorRef.addRow(rest).then((_row: RowComponent) => {
-      const curTableData = tabulatorRef.getData('visible');
+    // tabulatorRef.addRow(rest).then((_row: RowComponent) => {
+    //   const curTableData = tabulatorRef.getData('visible');
 
-      transformYInputElem(curTableData);
-    });
+    //   transformYInputElem(curTableData);
+    // });
   }
 
   const handleExtraInputCreated = () => {

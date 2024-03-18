@@ -28,15 +28,15 @@ const colDefs = [
   //   //   cell.getRow().toggleSelect();
   //   // },
   // },
-  {
-    formatter: 'rowSelection',
-    titleFormatter: 'rowSelection',
-    hozAlign: 'center',
-    headerSort: false,
-    cellClick: function (e, cell) {
-      cell.getRow().toggleSelect();
-    },
-  },
+  // {
+  //   formatter: 'rowSelection',
+  //   titleFormatter: 'rowSelection',
+  //   hozAlign: 'center',
+  //   headerSort: false,
+  //   cellClick: function (e, cell) {
+  //     cell.getRow().toggleSelect();
+  //   },
+  // },
   {
     title: '姓名',
     field: 'name',
@@ -76,6 +76,7 @@ const colDefs = [
   {
     title: '性别',
     field: 'gender',
+    editor: true,
   },
 ];
 
@@ -937,7 +938,7 @@ const uniformProps = {
   },
   indexdbConfigs: {},
   commonOptions: {
-    selectableRows: 1, //make rows selectable
+    selectableRows: 'highlight', //make rows selectable
     // selectable: true,
   },
 };

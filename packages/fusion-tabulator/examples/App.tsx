@@ -20,6 +20,7 @@ import { GridExplore } from './GridExplore';
 import { DBTable } from './DBTable';
 import { CraftExplore } from './CraftExplore';
 import { CustomEditor } from './CustomEditor';
+import { DataGroup } from './DataGroup';
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -29,6 +30,7 @@ const collapsedWidth = 60;
 const normalWidth = 220;
 
 type MenuItemKeys =
+  | 'data-group'
   | 'craft-explore'
   | 'grid-explore'
   | 'db-table'
@@ -44,6 +46,7 @@ type MenuItemKeys =
   | 'custom-editor';
 
 const menuKeyMapComp = {
+  'data-group': <DataGroup />,
   'custom-editor': <CustomEditor />,
   'craft-explore': <CraftExplore />,
   'db-table': <DBTable />,
@@ -63,7 +66,7 @@ function App() {
   const [collapsed, setCollapsed] = useState(false);
   const [siderWidth, setSiderWidth] = useState(normalWidth);
   const [activeMenuKey, setActiveMenuKey] =
-    useState<MenuItemKeys>('custom-editor');
+    useState<MenuItemKeys>('data-group');
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);

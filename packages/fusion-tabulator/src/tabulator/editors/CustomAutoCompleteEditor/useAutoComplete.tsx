@@ -15,7 +15,7 @@ export const useAutoComplete = ({
   onChange,
   onCancel,
   inZone,
-  delay = 500,
+  delay = 300,
 }: UseAutoCompleteParams) => {
   const [myTimeout, setMyTimeOut] = useState(setTimeout(() => {}, 0));
   const listRef = useRef<HTMLDivElement>();

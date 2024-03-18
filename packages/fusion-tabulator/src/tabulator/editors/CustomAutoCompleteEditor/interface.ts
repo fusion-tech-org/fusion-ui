@@ -37,6 +37,7 @@ export interface UseAutoCompleteParams {
 }
 
 export interface VirtuosoWidgetCommonProps {
+  data?: any[];
   currentItemIndex?: number;
   onMount?: VoidFunction;
   // ref?: React.Ref<VirtuosoHandle>;

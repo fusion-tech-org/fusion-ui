@@ -9,9 +9,6 @@ import {
   AutoCompleteContainer,
   AutoInput,
   InputWrapper,
-  SuggestionItem,
-  SuggestionItemWrapper,
-  SuggestionList,
   SuggestionWrapper,
 } from './styles';
 import { SimpleList } from './SimpleList';
@@ -65,11 +62,11 @@ const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
   const keyDownCallback = useCallback(
     (e) => {
       let nextIndex = null;
-      console.log('e', e.code, nextIndex);
+
       if (e.code === 'ArrowUp') {
         nextIndex = Math.max(0, currentItemIndex - 1);
       } else if (e.code === 'ArrowDown') {
-        nextIndex = Math.min(suggestions.length, currentItemIndex + 1);
+        nextIndex = Math.min(suggestions.length - 1, currentItemIndex + 1);
       } else if (e.code === 'Enter' && currentItemIndex >= 0) {
         setTimeout(() => {
           handleSelectItem(suggestions[currentItemIndex]);
@@ -126,6 +123,7 @@ const AutoComplete: React.FC<AutoCompleteProps> = (props) => {
           onClickItem={handleSelectItem}
           ref={virtuosoRef}
           currentItemIndex={currentItemIndex}
+          data={suggestions}
           // onMount={handleMount}
           scrollerRef={scrollerRef}
         />
@@ -199,10 +197,10 @@ export default function CustomAutoCompleteEditor(
     // const curCol = cell.getColumn();
     // const colDef = curCol.getDefinition();
     const res = success(item?.value || item);
-    console.log('selected item', item, res);
+
     if (res) {
+      // console.log(cell.getElement());
       cell.navigateRight();
-      cell.navigateNext();
     }
   }
 
