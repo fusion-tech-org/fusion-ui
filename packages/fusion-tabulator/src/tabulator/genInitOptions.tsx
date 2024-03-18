@@ -489,7 +489,7 @@ const genRowGropOptions = (
 
       rowGroupHeaderFieldList.forEach(({ label, value }) => {
         content += `
-            <div style="magin-right: 32px;">
+            <div style="margin-right: 32px;">
               <span>${label}: </span>
               <span>${data[0]?.[value]}</span>
             </div>
@@ -497,8 +497,11 @@ const genRowGropOptions = (
       });
 
       return `
-          <div style="display: flex; align-items=center;">
-            ${content}
+          <div style="display: inline-block;">
+            <div style="display: flex; align-items: center;">
+              ${content}
+              <div>(${count} 条记录)</div>
+            <div>
           <div>
         `;
     },
