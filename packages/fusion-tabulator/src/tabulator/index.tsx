@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { isArray, isEmpty, isUndefined } from 'lodash';
 import { Empty } from '@arco-design/web-react';
 import { createPortal } from 'react-dom';
-import { RowComponent } from 'tabulator-tables';
 
 import './index.css';
 import { genTabulatorUUID } from 'utils/index';
@@ -165,7 +164,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   ]);
 
   function handleSelectRowData(record) {
-    const { id: _key, ...rest } = record || {};
+    const { id: _key } = record || {};
 
     onUpdateWidgetMetaProperty?.({
       selectedDropdownItem: record,
@@ -176,14 +175,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
       return;
     }
-
-    // if (!tabulatorRef) return;
-
-    // tabulatorRef.addRow(rest).then((_row: RowComponent) => {
-    //   const curTableData = tabulatorRef.getData('visible');
-
-    //   transformYInputElem(curTableData);
-    // });
   }
 
   const handleExtraInputCreated = () => {
