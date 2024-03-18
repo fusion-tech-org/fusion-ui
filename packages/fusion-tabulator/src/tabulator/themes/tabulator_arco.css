@@ -804,6 +804,8 @@ body {
 }
 
 .tabulator-row.tabulator-group {
+  display: flex;
+  align-items: center;
   box-sizing: border-box;
   /* border-bottom: 1px solid #999; */
   border-right: 1px solid #dee2e6;

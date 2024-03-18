@@ -115,7 +115,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     tabulatorRef.on('dataChanged', (data) => {
       const visibleDataLen = tabulatorRef.getData('visible').length;
 
-      if (data.length === visibleDataLen + 1) {
+      if (
+        data.length === visibleDataLen + 1 ||
+        data.length === visibleDataLen - 1
+      ) {
         transformYInputElem(data);
       }
     });

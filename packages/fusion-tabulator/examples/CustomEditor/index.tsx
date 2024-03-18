@@ -49,7 +49,7 @@ const colDefs = [
         { value: '4', label: 'Mike' },
       ],
       placeholder: '请输入搜索值',
-      mode: 'list',
+      mode: 'table',
     },
   },
   {
