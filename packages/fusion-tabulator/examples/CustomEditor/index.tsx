@@ -94,12 +94,14 @@ const colDefs = [
 ];
 
 const initData = (() => {
-  return new Array(3).fill(0).map((_, i) => ({
+  return new Array(5).fill(0).map((_, i) => ({
     id: i + 1,
     name: `anyone_${i}`,
     age: 12,
     gender: '',
     height: '',
+    site: 'sdfsdfsf',
+    phone: '1234567890',
   }));
 })();
 

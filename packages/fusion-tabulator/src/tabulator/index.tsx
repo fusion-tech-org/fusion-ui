@@ -33,6 +33,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     enableIndexedDBQuery,
     isRemote = true,
   } = uniformProps;
+  const { headerVisible = false } = commonOptions;
   const commonOptionsRef = useRef(commonOptions);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
@@ -53,11 +54,13 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       if (tableMode !== 'editable' || !inputWrapRef.current) return;
 
       const len = realData?.length || tableData?.length || 0;
-      let offsetHeight = HEADER_HEIGHT + len * ROW_HEIGHT;
+      let offsetHeight = headerVisible
+        ? len * ROW_HEIGHT + 1
+        : HEADER_HEIGHT + len * ROW_HEIGHT + 1;
 
       if (offsetHeight + EXTRA_INPUT_HEIGHT > tablePosition.height) {
         offsetHeight = tablePosition.height - ROW_HEIGHT + 2;
-        inputWrapRef.current.style.right = '13px';
+        inputWrapRef.current.style.right = '14px';
       } else {
         inputWrapRef.current.style.right = '0px';
       }
