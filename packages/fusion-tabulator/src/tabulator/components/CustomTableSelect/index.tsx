@@ -31,9 +31,9 @@ export const CustomTableSelect = (props) => {
   } = quickAddConfigs || {};
   // console.log('uniformProps >>>> ', uniformProps, quickAddConfigs);
 
-  const handleVisibleChange = (visible: boolean) => {
-    console.log('visible', visible);
-  };
+  // const handleVisibleChange = (visible: boolean) => {
+  //   console.log('visible', visible);
+  // };
 
   const hideDroplist = () => {
     setPopupVisble(false);
@@ -76,6 +76,7 @@ export const CustomTableSelect = (props) => {
     (e: KeyboardEvent) => {
       e.stopPropagation();
       let nextIndex = null;
+
       if (!tabulatorRef.current || memoAllData.total === 0) return;
 
       if (e.key === 'ArrowDown') {
@@ -94,9 +95,16 @@ export const CustomTableSelect = (props) => {
       }
 
       if (nextIndex !== null && tabulatorRef.current) {
-        const uniqueKeys = map(memoAllData.data, uniqueKey);
-        setCursor(nextIndex);
-        // console.log('uniqueKeys', uniqueKeys, nextIndex);
+        const uniqueKeys = map(
+          memoAllData.data,
+          (item) => item[uniqueKey]
+        ).filter(Boolean);
+
+        if (uniqueKeys.length === 0) {
+          Message.info('请正确设置唯一的表格索引字段');
+          return;
+        }
+
         tabulatorRef.current.deselectRow();
         tabulatorRef.current.selectRow(uniqueKeys[nextIndex]);
         tabulatorRef.current.scrollToRow(
@@ -104,8 +112,8 @@ export const CustomTableSelect = (props) => {
           'center',
           false
         );
-
-        // e.preventDefault()
+        setCursor(nextIndex);
+        e.preventDefault();
       }
 
       if (e.key === 'Enter') {
@@ -149,7 +157,7 @@ export const CustomTableSelect = (props) => {
     setPopupVisble(true);
   };
 
-  const handleSelectedRow = (row: RowComponent) => {
+  const handleSelectedRow = (_e, row: RowComponent) => {
     const rowData = row.getData();
     onSelectRowData?.(rowData);
 
@@ -184,15 +192,14 @@ export const CustomTableSelect = (props) => {
   const handleTabulator = (ref) => {
     tabulatorRef.current = ref;
 
-    tabulatorRef.current.on('rowSelected', handleSelectedRow);
-    // tabulatorRef.current.on('rowClick', handleSelectedRow);
+    // tabulatorRef.current.on('rowSelected', handleSelectedRow);
+    tabulatorRef.current.on('rowClick', handleSelectedRow);
     // tabulatorRef.current.on('rowDblClick', handleSelectedRow);
   };
 
   const handleInputBlur = () => {
     // setInputForce(false);
-
-    if (inZone) return;
+    if (inZone || cursor >= 0) return;
 
     hideDroplist();
   };
@@ -214,7 +221,7 @@ export const CustomTableSelect = (props) => {
       <Dropdown
         popupVisible={popupVisible}
         trigger="focus"
-        onVisibleChange={handleVisibleChange}
+        // onVisibleChange={handleVisibleChange}
         droplist={
           <DroplistWrapper
             ref={dropdownRef}

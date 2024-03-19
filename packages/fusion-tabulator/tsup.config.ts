@@ -14,7 +14,7 @@ export default defineConfig({
     };
   },
   splitting: false,
-  sourcemap: true,
+  sourcemap: false,
   clean: true,
   outDir: 'lib',
   minify: 'terser',
