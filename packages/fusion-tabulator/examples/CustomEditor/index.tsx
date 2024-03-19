@@ -38,6 +38,19 @@ const colDefs = [
   //   },
   // },
   {
+    formatter: 'delRowIcon',
+    title: '操作',
+    hozAlign: 'center',
+    width: 60,
+    frozen: true,
+    formatterParams: {
+      action: 'iconDeleteRow',
+    },
+    cellClick: function (e, cell) {
+      cell.getRow().delete();
+    },
+  },
+  {
     title: '姓名',
     field: 'name',
     editor: 'autoComplete',

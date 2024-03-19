@@ -13,6 +13,7 @@ import { useTabulator } from './useTabulator';
 // import dbDexie from './utils/dbDexie';
 import { EXTRA_INPUT_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { customEditorAndFormatterPipe } from './genInitOptions';
+import { RowComponent } from 'tabulator-tables';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
@@ -63,7 +64,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
       inputWrapRef.current.style.transform = `translateY(${offsetHeight}px)`;
     },
-    [tablePosition.height, tableMode]
+    [tablePosition.height, tableMode, tableData?.length]
   );
 
   const responsiveTabulator = () => {
@@ -106,19 +107,16 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   };
 
   const handleAddExtraEvents = () => {
-    // tabulatorRef.on('rowDeleted', (row: RowComponent) => {
-    //   const curTableData = row.getTable().getData('visible');
+    tabulatorRef.on('rowDeleted', (row: RowComponent) => {
+      const curTableData = row.getTable().getData('visible');
 
-    //   transformYInputElem(curTableData);
-    // });
+      transformYInputElem(curTableData);
+    });
 
     tabulatorRef.on('dataChanged', (data) => {
       const visibleDataLen = tabulatorRef.getData('visible').length;
 
-      if (
-        data.length === visibleDataLen + 1 ||
-        data.length === visibleDataLen - 1
-      ) {
+      if (data.length === visibleDataLen + 1) {
         transformYInputElem(data);
       }
     });
