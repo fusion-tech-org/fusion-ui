@@ -32,7 +32,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     commonOptions = {},
     enableIndexedDBQuery,
     isRemote = true,
-    // headerVisible = false,
+    headerVisible = false,
   } = uniformProps;
   const commonOptionsRef = useRef(commonOptions);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -107,7 +107,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       console.log('replace data: ', tableData);
       tabulatorRef.replaceData(tableData);
 
-      // return;
+      return;
     }
 
     if (
@@ -115,7 +115,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       isArray(columnDefs) &&
       JSON.stringify(curColumns) !== JSON.stringify(columnDefs)
     ) {
-      const formatColumns = customEditorAndFormatterPipe(columnDefs);
+      let formatColumns = columnDefs;
+      if (!headerVisible) {
+        formatColumns = customEditorAndFormatterPipe(columnDefs);
+      }
       console.log('set columns: ', formatColumns);
       tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
 
