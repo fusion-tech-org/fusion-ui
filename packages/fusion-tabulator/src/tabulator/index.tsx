@@ -88,24 +88,25 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     const curData = tabulatorRef.getData();
 
     if (
-      !isUndefined(columnDefs) &&
-      isArray(columnDefs) &&
-      JSON.stringify(curColumns) !== JSON.stringify(columnDefs)
+      !isUndefined(tableData) &&
+      JSON.stringify(curData) !== JSON.stringify(tableData)
     ) {
-      const formatColumns = customEditorAndFormatterPipe(columnDefs);
-      console.log('setColumns', formatColumns);
-      tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
+      console.log('replace data: ', tableData);
+      tabulatorRef.replaceData(tableData);
 
       return;
     }
 
     if (
-      !isUndefined(tableData) &&
-      JSON.stringify(curData) !== JSON.stringify(tableData)
+      !isUndefined(columnDefs) &&
+      isArray(columnDefs) &&
+      JSON.stringify(curColumns) !== JSON.stringify(columnDefs)
     ) {
-      console.log('replaceData', tableData);
-      tabulatorRef.replaceData(tableData);
-      // tabulatorRef.setData(tableData);
+      const formatColumns = customEditorAndFormatterPipe(columnDefs);
+      console.log('set columns: ', formatColumns);
+      tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
+
+      return;
     }
   };
 
