@@ -93,14 +93,17 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       JSON.stringify(curColumns) !== JSON.stringify(columnDefs)
     ) {
       const formatColumns = customEditorAndFormatterPipe(columnDefs);
-
+      console.log('setColumns', formatColumns);
       tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
+
+      return;
     }
 
     if (
       !isUndefined(tableData) &&
       JSON.stringify(curData) !== JSON.stringify(tableData)
     ) {
+      console.log('replaceData', tableData);
       tabulatorRef.replaceData(tableData);
       // tabulatorRef.setData(tableData);
     }
