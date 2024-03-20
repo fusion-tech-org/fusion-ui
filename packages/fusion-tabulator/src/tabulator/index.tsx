@@ -91,7 +91,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       !isUndefined(tableData) &&
       JSON.stringify(curData) !== JSON.stringify(tableData)
     ) {
-      tabulatorRef.replaceData(tableData);
+      // tabulatorRef.replaceData(tableData);
+      tabulatorRef.setData(tableData);
 
       return;
     }

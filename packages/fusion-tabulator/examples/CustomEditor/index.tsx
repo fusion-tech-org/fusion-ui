@@ -90,6 +90,7 @@ const colDefs = [
     title: '性别',
     field: 'gender',
     editor: true,
+    formatter: 'required',
   },
 ];
 

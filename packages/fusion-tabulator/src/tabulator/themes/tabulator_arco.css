@@ -1619,6 +1619,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 }
 
 .tabulator-row .tabulator-cell {
+  /* default: 12px */
   padding: 12px;
   border-right: none;
 }

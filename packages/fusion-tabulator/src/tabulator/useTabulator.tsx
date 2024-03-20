@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import * as ReactDOM from 'react-dom';
 import {
+  EventCallBackMethods,
   TabulatorFull as Tabulator,
   // EventCallBackMethods,
 } from 'tabulator-tables';
@@ -10,26 +11,30 @@ import ExtendTabulator from './ExtendTabulator';
 import { useIntersectionObserver } from 'hooks/useIntersectionObserver';
 // import { genInitEventMaps } from './genInitEventMaps';
 import { genInitOptions } from './genInitOptions';
+import { genInitEventMaps } from './genInitEventMaps';
+import { forIn } from 'lodash';
 
 export const useTabulator = ({
   ref,
   props,
-  eventCallback,
-}: {
+} // eventCallback,
+: {
   ref: React.RefObject<HTMLElement>;
   props: any;
-  eventCallback?: (
-    eventName: string,
-    data?: Record<string, any>,
-    tableTypeFlag?: string
-  ) => void;
+  // eventCallback?: (
+  //   eventName: string,
+  //   data?: Record<string, any>,
+  //   tableTypeFlag?: string
+  // ) => void;
 }) => {
   const {
-    // eventMaps = {},
-    // appMode,
+    eventMaps = {},
+    appMode,
     onUpdateWidgetMetaProperty,
-    // onEvents,
+    onEvents,
+    uniformProps,
   } = props;
+  const { enableTableEventBind = false } = uniformProps || {};
   const instanceRef = useRef<Tabulator>();
   const [rectBound] = useIntersectionObserver(ref);
 
@@ -63,20 +68,22 @@ export const useTabulator = ({
     /**
      * NOTE: Binding events
      */
-    // const defaultEvents = genInitEventMaps({
-    //   appMode,
-    //   tabulatorRef: instanceRef.current,
-    //   onUpdateWidgetMetaProperty,
-    //   onEvents,
-    // });
-    // const mergeEvents = {
-    //   ...defaultEvents,
-    //   ...eventMaps,
-    // };
+    if (enableTableEventBind) {
+      const defaultEvents = genInitEventMaps({
+        appMode,
+        tabulatorRef: instanceRef.current,
+        onUpdateWidgetMetaProperty,
+        onEvents,
+      });
+      const mergeEvents = {
+        ...defaultEvents,
+        ...eventMaps,
+      };
 
-    // forIn(mergeEvents, (handler, eventName: keyof EventCallBackMethods) => {
-    //   instanceRef.current.on(eventName, handler);
-    // });
+      forIn(mergeEvents, (handler, eventName: keyof EventCallBackMethods) => {
+        instanceRef.current.on(eventName, handler);
+      });
+    }
 
     // props.onRef && props.onRef(instanceRef);
     onUpdateWidgetMetaProperty?.({

@@ -36,7 +36,7 @@ Tabulator.extendModule('format', 'formatters', {
   },
   placeholder: function (cell, formatterParams, _onRendered) {
     const cellValue = cell.getValue();
-    const { placeholder, color = ' #A9AEB8' } = formatterParams || {};
+    const { placeholder, color = '#A9AEB8' } = formatterParams || {};
 
     if (cellValue) return cellValue;
 
@@ -44,6 +44,18 @@ Tabulator.extendModule('format', 'formatters', {
       return `<span style="color: ${color}">${placeholder}</span>`;
 
     return '';
+  },
+  required: function (cell, formatterParams, _onRendered) {
+    const cellValue = cell.getValue();
+    const { color = '#CF9FFF' } = formatterParams || {};
+
+    if (cellValue) return cellValue;
+
+    return `
+      <div style="height: 100%; width: 100%;margin-top: -5px;">
+        <div style="height: 32px; border: 1px solid ${color};border-radius: 12px;width: 100%;">
+        </div>
+      </div>`;
   },
   tags: function (cell: CellComponent, formatterParams, _onRendered) {
     const cellValue = cell.getValue();
