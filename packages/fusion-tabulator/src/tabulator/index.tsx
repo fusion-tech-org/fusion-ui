@@ -32,8 +32,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     commonOptions = {},
     enableIndexedDBQuery,
     isRemote = true,
+    headerVisible = false,
   } = uniformProps;
-  // const { headerVisible = false } = commonOptions;
   const commonOptionsRef = useRef(commonOptions);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
@@ -107,7 +107,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       console.log('replace data: ', tableData);
       tabulatorRef.replaceData(tableData);
 
-      return;
+      // return;
     }
 
     if (
@@ -119,7 +119,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       console.log('set columns: ', formatColumns);
       tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
 
-      return;
+      // return;
     }
   };
 

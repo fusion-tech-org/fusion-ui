@@ -33,7 +33,7 @@ export const genInitOptions = (
     appMode,
     uniformProps,
   } = tabulatorProps;
-  let { commonOptions = {} } = uniformProps || {};
+  let { commonOptions = {}, headerVisible = false } = uniformProps || {};
 
   if (!isObject(commonOptions)) {
     commonOptions = {};
@@ -106,6 +106,7 @@ export const genInitOptions = (
     ...staticDataOptions,
     ...paginationOptions,
     ...rowGroupOptions,
+    headerVisible,
     layout:
       tableTypeFlag === TableTypeFlag.customTableSelect
         ? 'fitDataStretch'
