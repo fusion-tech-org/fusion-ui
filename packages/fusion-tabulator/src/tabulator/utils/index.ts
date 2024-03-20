@@ -41,7 +41,7 @@ export function convertExpressionByRule(
 ) {
   const convertedRule: string = expression.replace(/\[(.*?)\]/g, (match) => {
     const field = match.replace(/(\[|\])/g, '');
-
+    console.log('fieldMap[field]', fieldMap[field]);
     if (fieldMap[field] === 0 || fieldMap[field]) {
       return isNumber(fieldMap[field])
         ? fieldMap[field]

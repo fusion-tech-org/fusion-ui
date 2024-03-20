@@ -166,7 +166,7 @@ function editCheck(editorParams: Record<string, any>) {
     const { disabledRule = '' } = editorParams || {};
     //get row data
     const data = cell.getRow().getData();
-
+    console.log('data checking: ', data);
     const execExpr = convertExpressionByRule(disabledRule, { ...data });
     console.log('execExpr', execExpr);
 
