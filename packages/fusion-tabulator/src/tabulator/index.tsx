@@ -95,8 +95,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       const formatColumns = customEditorAndFormatterPipe(columnDefs);
 
       tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
-
-      return;
     }
 
     if (
@@ -105,8 +103,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     ) {
       tabulatorRef.replaceData(tableData);
       // tabulatorRef.setData(tableData);
-
-      return;
     }
   };
 
