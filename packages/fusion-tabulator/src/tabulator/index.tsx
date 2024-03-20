@@ -32,7 +32,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     commonOptions = {},
     enableIndexedDBQuery,
     isRemote = true,
-    headerVisible = false,
+    // headerVisible = false,
   } = uniformProps;
   const commonOptionsRef = useRef(commonOptions);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
