@@ -33,7 +33,8 @@ export const genInitOptions = (
     appMode,
     uniformProps,
   } = tabulatorProps;
-  let { commonOptions = {}, headerVisible = false } = uniformProps || {};
+  let { commonOptions = {} } = uniformProps || {};
+  const { headerVisible = false } = uniformProps || {};
 
   if (!isObject(commonOptions)) {
     commonOptions = {};
