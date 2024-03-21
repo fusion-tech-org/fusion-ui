@@ -1,6 +1,8 @@
 import { Module, PseudoRow } from 'tabulator-tables'
 
 export class AdvertModule extends Module {
+  static moduleName = 'advert';
+
   constructor(table) {
     super(table);
 
@@ -66,5 +68,3 @@ export class AdvertModule extends Module {
     this.refreshData(true);
   }
 }
-
-AdvertModule.moduleName = "advert";

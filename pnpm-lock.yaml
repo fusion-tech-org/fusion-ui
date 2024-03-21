@@ -264,8 +264,8 @@ importers:
         specifier: ^4.7.2
         version: 4.7.2(react-dom@18.2.0)(react@18.2.0)
       tabulator-tables:
-        specifier: 5.6.1
-        version: 5.6.1
+        specifier: 6.0.1
+        version: 6.0.1
       tsup:
         specifier: ^8.0.2
         version: 8.0.2(typescript@5.2.2)
@@ -307,8 +307,8 @@ importers:
         specifier: ^1.3.5
         version: 1.3.5
       '@types/tabulator-tables':
-        specifier: ^5.5.10
-        version: 5.5.10
+        specifier: ^5.6.0
+        version: 5.6.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.14.0
         version: 6.14.0(@typescript-eslint/parser@6.14.0)(eslint@8.55.0)(typescript@5.2.2)
@@ -5722,8 +5722,8 @@ packages:
     resolution: {integrity: sha512-36ZrGJ8fgtBr6nwNnuJ9jXIj+bn/pF6UoqmrQT7+Y99+tFFeHHsoR54+194dHdyhPjgbeoNz3Qru0oRt0l6ASQ==}
     dev: true
 
-  /@types/tabulator-tables@5.5.10:
-    resolution: {integrity: sha512-IMoLlEroSJn0HdfL6EIAWatyul6XW8dzRsUJZ2z2dDh3P9JVSvpDsPILLV1Fw6PxpeoU9WGwo+qxUOK7k5aKQw==}
+  /@types/tabulator-tables@5.6.0:
+    resolution: {integrity: sha512-si5S49dCsVgUhLS2PIP93xXZtdrZEPldWDXzCTMtCgmoKP7rTM6eQOpeR+EW5YtyNDS2vAqQPlQ1ddBoFKIbAQ==}
     dev: true
 
   /@types/through@0.0.30:
@@ -14209,8 +14209,8 @@ packages:
     resolution: {integrity: sha512-GlzUPXeH9Rw1iPXcl3uBLJk6Sz51xdwscZ5RrsKxDQDQ+t2g31hGq/0xjaj6ea62wHgl8vzVsHuwap0jKzsUNg==}
     dev: false
 
-  /tabulator-tables@5.6.1:
-    resolution: {integrity: sha512-DsmaZqEmlQS/NL5ZJbVtoaeYjJgofEFp+2er7+uwKerGwd/E2rZbeQgux4+Ab1dxNJcbptiX7oUiTwogOnUdgQ==}
+  /tabulator-tables@6.0.1:
+    resolution: {integrity: sha512-wdxqWajUoG/K8rZNdWgoTuFN/qWEzqTrg4C+LyVuVWSij9hx/edL3G54h2nJRD9d+VrymQg4juTWTj84hVmC8A==}
     dev: false
 
   /tapable@2.2.1:

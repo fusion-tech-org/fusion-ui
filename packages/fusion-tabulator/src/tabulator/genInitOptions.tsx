@@ -100,6 +100,10 @@ export const genInitOptions = (
       // sorter: false,
       headerSort: false,
     },
+    keybindings: {
+      // "redo" : "ctrl + 82", //bind redo function to ctrl + r
+      // navNext: 'enter',
+    },
     ...generalOptions,
     ...columnDefsOptions,
     ...indexedDBOptions,

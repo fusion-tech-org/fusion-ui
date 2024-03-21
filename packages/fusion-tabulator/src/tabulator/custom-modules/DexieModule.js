@@ -1,6 +1,8 @@
 import { Module } from 'tabulator-tables';
 
 export class DexieModule extends Module {
+  static moduleName = "DexieModule";
+
   constructor(table) {
     super(table);
 
@@ -57,5 +59,3 @@ export class DexieModule extends Module {
     return this.db[this.dbTable].toArray();
   }
 }
-
-DexieModule.moduleName = "DexieModule";

@@ -1,6 +1,8 @@
 import { Module, PseudoRow } from 'tabulator-tables'
 
 export class ExternalInputModule extends Module {
+  static moduleName = 'externalInput';
+
   constructor(table) {
     super(table);
 
@@ -58,5 +60,3 @@ export class ExternalInputModule extends Module {
   //   this.refreshData(true);
   // }
 }
-
-ExternalInputModule.moduleName = "advert";
