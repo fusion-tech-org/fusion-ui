@@ -11,7 +11,7 @@ import { CustomTableSelect } from './components/CustomTableSelect';
 import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
 // import dbDexie from './utils/dbDexie';
-import { EXTRA_INPUT_HEIGHT, ROW_HEIGHT } from './constants';
+import { EXTRA_INPUT_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { customEditorAndFormatterPipe } from './genInitOptions';
 import { RowComponent } from 'tabulator-tables';
 
@@ -29,6 +29,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     uniformProps = {},
   } = props;
   const {
+    headerVisible = true,
     commonOptions = {},
     enableIndexedDBQuery,
     isRemote = true,
@@ -53,10 +54,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       if (tableMode !== 'editable' || !inputWrapRef.current) return;
 
       const len = realData?.length || tableData?.length || 0;
-      // let offsetHeight = headerVisible
-      //   ? len * ROW_HEIGHT + 1
-      //   : HEADER_HEIGHT + len * ROW_HEIGHT + 1;
-      let offsetHeight = len * ROW_HEIGHT + 1;
+      let offsetHeight = headerVisible
+        ? HEADER_HEIGHT + len * ROW_HEIGHT + 1
+        : len * ROW_HEIGHT + 1;
+      // let offsetHeight = len * ROW_HEIGHT + 1;
 
       // console.log(
       //   headerVisible,
