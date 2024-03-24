@@ -180,17 +180,19 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   ]);
 
   function handleSelectRowData(record) {
-    const { id: _key } = record || {};
+    const { id: _key, ...rest } = record || {};
 
     onUpdateWidgetMetaProperty?.({
       selectedDropdownItem: record,
     });
 
     if (onCustomSelectDropdownItem) {
-      onCustomSelectDropdownItem?.();
+      onCustomSelectDropdownItem?.(record);
 
       return;
     }
+
+    tabulatorRef.addRow(rest);
   }
 
   const handleExtraInputCreated = () => {

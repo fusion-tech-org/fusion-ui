@@ -3,6 +3,8 @@ import { RecoilRoot } from 'recoil';
 import { Tabulator } from './Tabulator';
 import { FusionTabulatorProps } from './interface';
 
+export type { FusionTabulatorProps } from './interface';
+
 export type {
   ColumnDefinition,
   Options as FusionTabulatorOptions,
