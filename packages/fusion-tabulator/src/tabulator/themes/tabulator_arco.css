@@ -4,7 +4,7 @@ body {
   --gray-10: 29,33,41;
   --color-fill-1: rgb(247, 248, 250);
   --color-neutral-2: rgb(var(--gray-2));
-  --custom-header-color: #F2F7FC;
+  --custom-header-color: var(--color-neutral-2);;
   --primary-6: var(--arcoblue-6);
 }
 
@@ -38,10 +38,10 @@ body {
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  border-bottom: 1px solid #dee2e6;
+  /* border-bottom: 1px solid #dee2e6; */
   background-color: var(--custom-header-color);
   color: #555;
-  font-weight: bold;
+  /* font-weight: bold; */
   white-space: nowrap;
   overflow: hidden;
   -moz-user-select: none;
@@ -1237,13 +1237,13 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 
 .tabulator .tabulator-header {
   border-top: 1px solid #dee2e6;
-  border-bottom: 2px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
   color: inherit;
 }
 
 .tabulator .tabulator-header .tabulator-col {
   border-right: none;
-  background-color: #fff;
+  background-color: transparent;
 }
 
 .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
