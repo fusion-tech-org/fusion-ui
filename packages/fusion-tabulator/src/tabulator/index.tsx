@@ -33,7 +33,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     commonOptions = {},
     enableIndexedDBQuery,
     isRemote = true,
-    themeConfig,
   } = uniformProps;
   const commonOptionsRef = useRef(commonOptions);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -49,8 +48,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     },
     // eventCallback: handleTableEventCallback,
   });
-  const { headerTextSize, headerTextColor, headerBackground, headerFontStyle } =
-    themeConfig || {};
 
   const transformYInputElem = useCallback(
     (realData?: any[]) => {
@@ -260,12 +257,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         id={mainId}
         data-instance={mainId}
         className={classNames}
-        headerStyleConfig={{
-          headerTextSize,
-          headerTextColor,
-          headerBackground,
-          headerFontStyle,
-        }}
       />
       {tableMode === 'editable' && <div id={`extra-input-markup-${mainId}`} />}
       {renderExtraInput()}

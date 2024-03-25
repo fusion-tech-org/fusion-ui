@@ -22,14 +22,18 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
     values = [],
     placeholder = '',
     maxTagCount = 4,
-    mode = 'multiple',
+    mode,
   } = editorParams || {};
   const selectedListRef = useRef<string[]>(initValue);
 
   const forceInnerInput = () => {
-    const innerInputEle: HTMLInputElement = document.querySelector(
-      '#custom-select-editor-container .arco-input-tag-input'
-    );
+    const innerInputEle: HTMLInputElement =
+      document.querySelector(
+        '#custom-select-editor-container .arco-select-view-input'
+      ) ||
+      document.querySelector(
+        '#custom-select-editor-container .arco-input-tag-input'
+      );
 
     if (innerInputEle) {
       innerInputEle.focus();
@@ -42,7 +46,6 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
     }, 20);
 
     return () => {
-      console.log('unmount, >>>>>>>>');
       timerId && clearTimeout(timerId);
     };
   }, []);
@@ -84,8 +87,6 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
         // onDeselect={handleDeselect}
         onBlur={handleBlur}
         trigger="focus"
-        // defaultPopupVisible
-        // labelInValue
         onChange={handleChange}
         bordered={false}
         options={values}
@@ -114,11 +115,11 @@ export default function CustomMultiSelectEditor(
     // const colDef = curCol.getDefinition();
     const res = success(item);
     console.log('handleSelectItem', item, res);
-    if (res) {
-      cell.navigateNext();
-    }
+    // if (res) {
+    //   cell.navigateNext();
+    // }
   }
-  console.log('curValue', curValue, convert2SelectDefaultValue);
+
   ReactDOM.render(
     <MultiSelect
       initValue={convert2SelectDefaultValue}
