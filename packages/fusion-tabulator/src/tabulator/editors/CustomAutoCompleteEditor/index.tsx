@@ -196,12 +196,12 @@ export default function CustomAutoCompleteEditor(
   function handleSelectItem(item: AutoItem | Record<string, any>) {
     // const curCol = cell.getColumn();
     // const colDef = curCol.getDefinition();
-    const res = success(item?.value || item);
+    success(item?.value || item);
 
-    if (res) {
-      // console.log(cell.getElement());
-      cell.navigateRight();
-    }
+    // if (res) {
+    // console.log(cell.getElement());
+    // cell.navigateRight();
+    // }
   }
 
   ReactDOM.render(
