@@ -4,9 +4,25 @@ import { TableMode } from './interface';
 export const TabulatorContainer = styled.div<{
   tableMode: TableMode;
 }>`
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  overflow: hidden;
+
+  .tabulator-header {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    overflow: hidden;
+  }
+
   .tabulator-table {
     padding-bottom: ${({ tableMode }) =>
       tableMode === 'editable' ? '36px !important' : 0};
+  }
+
+  .tabulator-footer {
+    border-bottom-left-radius: 80px;
+    border-bottom-right-radius: 80px;
+    overflow: hidden;
   }
 `;
 
