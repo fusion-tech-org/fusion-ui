@@ -66,7 +66,6 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     data = [],
     columns = [],
     isRemoteQuery,
-    remoteQuery,
     uniqueKey = 'id',
   } = quickAddConfigs || {};
   const { dropdownIndexedDBTableName } = indexdbConfigs || {};
@@ -77,10 +76,13 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     selectableRowsRollingSelection?: boolean;
   } = {
     index: uniqueKey,
+    columnDefaults: {
+      headerSort: false,
+    },
     // layout: 'fitColumns',
-    // layout: 'fitDataTable',
+    layout: 'fitDataTable',
     // layout: 'fitData',
-    layout: 'fitDataStretch',
+    // layout: 'fitDataStretch',
     height: '320px',
     // selectable: 1,
     selectableRows: 1,
@@ -115,7 +117,6 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
   }
 
   if (isRemoteQuery) {
-    console.log(remoteQuery, 'remoteQuery');
     return {
       data: [],
       columns: [],

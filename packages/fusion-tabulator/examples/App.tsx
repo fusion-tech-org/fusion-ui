@@ -66,7 +66,7 @@ function App() {
   const [collapsed, setCollapsed] = useState(false);
   const [siderWidth, setSiderWidth] = useState(normalWidth);
   const [activeMenuKey, setActiveMenuKey] =
-    useState<MenuItemKeys>('data-group');
+    useState<MenuItemKeys>('custom-editor');
 
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);

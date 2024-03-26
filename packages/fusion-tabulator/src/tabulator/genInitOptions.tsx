@@ -180,6 +180,12 @@ function editCheck(editorParams: Record<string, any>) {
 
     try {
       const disableEditable = simpleExecExpression(execExpr)();
+      // console.log('disableEditable', !disableEditable);
+
+      if (disableEditable) {
+        cell.getElement().classList.add('cell-edit-disable');
+        cell.getElement().replaceChildren();
+      }
 
       return !disableEditable;
     } catch (e) {

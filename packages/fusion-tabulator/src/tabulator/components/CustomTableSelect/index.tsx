@@ -5,9 +5,11 @@ import { IconPlus } from '@arco-design/web-react/icon';
 import { TableSelect } from './TableSelect';
 // import { useClickOutside } from 'hooks/useClickOutsite';
 import { useKeyPress } from 'hooks/useKeyPress';
-import { RowComponent, Tabulator } from 'tabulator-tables';
+import { Filter, RowComponent, Tabulator } from 'tabulator-tables';
 import { debounce, map, isArray, isEmpty, isFunction } from 'lodash';
 // import { ROW_HEIGHT } from 'src/tabulator/constants';
+
+const DEFAULT_EXTRA_INPUT_PLACEHOLD = '请输入...';
 
 export const CustomTableSelect = (props) => {
   const { onSelectRowData, uniformProps, onCreated, onExtraInputValueChanged } =
@@ -21,19 +23,19 @@ export const CustomTableSelect = (props) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const tabulatorRef = useRef<Tabulator>(null);
+  const [filteredData, setFilteredData] = useState([]);
 
-  const { quickAddConfigs } = uniformProps || {};
+  const {
+    quickAddConfigs,
+    extraInputPlaceholder = DEFAULT_EXTRA_INPUT_PLACEHOLD,
+  } = uniformProps || {};
+
   const {
     filters = [],
     uniqueKey = 'id',
     enableIndexedDBQuery = false,
     data,
   } = quickAddConfigs || {};
-  // console.log('uniformProps >>>> ', uniformProps, quickAddConfigs);
-
-  // const handleVisibleChange = (visible: boolean) => {
-  //   console.log('visible', visible);
-  // };
 
   const hideDroplist = () => {
     setPopupVisble(false);
@@ -44,6 +46,13 @@ export const CustomTableSelect = (props) => {
   };
 
   const memoAllData = useMemo(() => {
+    if (filteredData.length > 0) {
+      return {
+        total: filteredData.length,
+        data: filteredData,
+      };
+    }
+
     if (isArray(data) && data.length > 0) {
       return {
         total: data.length,
@@ -59,14 +68,15 @@ export const CustomTableSelect = (props) => {
 
     const curTableData = tabulatorRef.current.getData();
 
-    const total = curTableData.length;
+    const total =
+      filteredData.length > 0 ? filteredData.length : curTableData.length;
 
     return {
       total,
-      data: curTableData,
+      data: filteredData.length > 0 ? filteredData : curTableData,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enableIndexedDBQuery, data?.length, tabulatorRef.current]);
+  }, [enableIndexedDBQuery, data?.length, tabulatorRef.current, filteredData]);
 
   useEffect(() => {
     onCreated();
@@ -76,11 +86,12 @@ export const CustomTableSelect = (props) => {
     (e: KeyboardEvent) => {
       e.stopPropagation();
       let nextIndex = null;
+      console.log('nextIndex', memoAllData.total, cursor);
 
       if (!tabulatorRef.current || memoAllData.total === 0) return;
 
       if (e.key === 'ArrowDown') {
-        nextIndex = Math.min(memoAllData.total, cursor + 1);
+        nextIndex = Math.min(memoAllData.total - 1, cursor + 1);
         // setCursor((prev) => (prev + 1) % memoAllData.total);
         // tabulatorRef.current.selectRow([1]);
       }
@@ -107,11 +118,15 @@ export const CustomTableSelect = (props) => {
 
         tabulatorRef.current.deselectRow();
         tabulatorRef.current.selectRow(uniqueKeys[nextIndex]);
-        tabulatorRef.current.scrollToRow(
-          uniqueKeys[nextIndex],
-          'center',
-          false
-        );
+
+        if (memoAllData.total > 7) {
+          tabulatorRef.current.scrollToRow(
+            uniqueKeys[nextIndex],
+            'center',
+            false
+          );
+        }
+
         setCursor(nextIndex);
         e.preventDefault();
       }
@@ -126,7 +141,7 @@ export const CustomTableSelect = (props) => {
         hideDroplist();
       }
     },
-    [cursor, memoAllData.total, setCursor, tabulatorRef.current]
+    [cursor, memoAllData.total, setCursor, tabulatorRef.current, filteredData]
   );
 
   // bad implemention
@@ -165,6 +180,7 @@ export const CustomTableSelect = (props) => {
   };
 
   const debouncedOnChange = debounce((value) => {
+    setCursor(-1);
     if (isFunction(onExtraInputValueChanged)) {
       onExtraInputValueChanged(value);
       return;
@@ -189,11 +205,18 @@ export const CustomTableSelect = (props) => {
     debouncedOnChange(value);
   };
 
+  const handelDataFiltered = (_filters: Filter[], rows: RowComponent[]) => {
+    const rowData = rows.map((row) => row.getData());
+
+    setFilteredData(rowData);
+  };
+
   const handleTabulator = (ref) => {
     tabulatorRef.current = ref;
 
     // tabulatorRef.current.on('rowSelected', handleSelectedRow);
     tabulatorRef.current.on('rowClick', handleSelectedRow);
+    tabulatorRef.current.on('dataFiltered', handelDataFiltered);
     // tabulatorRef.current.on('rowDblClick', handleSelectedRow);
   };
 
@@ -242,7 +265,7 @@ export const CustomTableSelect = (props) => {
             prefix={<IconPlus />}
             allowClear
             value={searchText}
-            placeholder="请输入..."
+            placeholder={extraInputPlaceholder}
           />
         </InputWrapper>
       </Dropdown>

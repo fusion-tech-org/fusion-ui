@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import TabulatorWithRecoil from '../../src';
+import { Button, Input } from '@arco-design/web-react';
 
 const colDefs = [
   // {
@@ -54,6 +56,7 @@ const colDefs = [
     title: '姓名',
     field: 'name',
     editor: 'autoComplete',
+    mutateLink: 'gender',
     editorParams: {
       values: [
         { value: '1', label: 'John' },
@@ -62,7 +65,7 @@ const colDefs = [
         { value: '4', label: 'Mike' },
       ],
       placeholder: '请输入搜索值',
-      mode: 'table',
+      mode: 'list',
     },
   },
   {
@@ -84,12 +87,16 @@ const colDefs = [
   {
     title: '年龄',
     field: 'age',
-    editor: 'input',
+    // editor: 'input',
   },
   {
     title: '性别',
     field: 'gender',
     editor: true,
+    editable: true,
+    editorParams: {
+      disabledRule: '[name] === `1`',
+    },
     formatter: 'required',
   },
 ];
@@ -109,6 +116,7 @@ const initData = (() => {
 const uniformProps = {
   tableType: 'tabulator',
   filterDefs: {},
+
   columnDefs: [
     {
       field: 'name',
@@ -960,8 +968,23 @@ const uniformProps = {
 };
 
 export const CustomEditor = () => {
+  const [inputValue, setInputValue] = useState(undefined);
+  const [feedValue, setFeedValue] = useState(undefined);
+
+  const handleSearch = () => {
+    setFeedValue(inputValue);
+  };
+
   return (
-    <>
+    <div>
+      <Input
+        style={{ width: 350, margin: 12 }}
+        addBefore={<Button onClick={handleSearch}>search</Button>}
+        onChange={(value) => setInputValue(value)}
+        value={inputValue}
+        allowClear={true}
+        placeholder="Please enter something"
+      />
       <div
         style={{
           display: 'flex',
@@ -979,7 +1002,10 @@ export const CustomEditor = () => {
             columns: colDefs,
             data: initData,
           }}
-          uniformProps={uniformProps}
+          uniformProps={{
+            ...uniformProps,
+            externalInputValue: feedValue,
+          }}
           quickAddDropdownDefinitions={{
             data: initData,
             columns: colDefs,
@@ -1004,6 +1030,6 @@ export const CustomEditor = () => {
           height: '500px',
         }}
       />
-    </>
+    </div>
   );
 };

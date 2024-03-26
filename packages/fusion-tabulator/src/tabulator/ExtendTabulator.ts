@@ -34,22 +34,33 @@ Tabulator.extendModule('format', 'formatters', {
       </svg>
     </span>`; //make the contents of the cell bold
   },
-  placeholder: function (cell, formatterParams, _onRendered) {
+  placeholder: function (cell: CellComponent, formatterParams, _onRendered) {
     const cellValue = cell.getValue();
     const { placeholder, color = '#A9AEB8' } = formatterParams || {};
 
     if (cellValue) return cellValue;
 
-    if (placeholder)
+    const cellElmHasDisableClass = cell
+      .getElement()
+      .classList.contains('cell-edit-disable');
+
+    if (placeholder && !cellElmHasDisableClass) {
       return `<span style="color: ${color}">${placeholder}</span>`;
+    }
 
     return '';
   },
-  required: function (cell, formatterParams, _onRendered) {
+  required: function (cell: CellComponent, formatterParams, _onRendered) {
     const cellValue = cell.getValue();
     const { color = '#CF9FFF' } = formatterParams || {};
 
     if (cellValue) return cellValue;
+
+    const cellElmHasDisableClass = cell
+      .getElement()
+      .classList.contains('cell-edit-disable');
+    console.log(cellElmHasDisableClass);
+    if (cellElmHasDisableClass) return '';
 
     return `
       <div style="height: 100%; width: 100%;margin-top: -5px;">

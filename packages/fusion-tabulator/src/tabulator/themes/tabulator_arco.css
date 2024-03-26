@@ -621,6 +621,10 @@ body {
   text-overflow: ellipsis;
 }
 
+.tabulator-row .tabulator-editable {
+
+}
+
 .tabulator-row .tabulator-cell.tabulator-frozen {
   display: inline-block;
   position: sticky;

@@ -25,6 +25,7 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
     mode,
   } = editorParams || {};
   const selectedListRef = useRef<string[]>(initValue);
+  const isMultiMode = mode === 'multiple';
 
   const forceInnerInput = () => {
     const innerInputEle: HTMLInputElement =
@@ -56,7 +57,7 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
   // };
 
   const handleChange = (value, _option) => {
-    selectedListRef.current = [...value];
+    selectedListRef.current = isMultiMode ? [...value] : value;
     // setSelectedItem((prev) => [...prev, value]);
   };
 
@@ -68,11 +69,12 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
   // };
 
   const handleBlur = () => {
-    if (selectedListRef.current.length > 0) {
+    if (isMultiMode && selectedListRef.current.length > 0) {
       onSelectItem(selectedListRef.current.join(','));
       return;
     }
-    onSelectItem('');
+
+    onSelectItem(selectedListRef.current);
   };
 
   return (
@@ -103,9 +105,11 @@ export default function CustomMultiSelectEditor(
   editorParams: Record<string, any>
 ) {
   const curValue = cell.getValue();
-  // const { values = [] } = editorParams || {};
+  const { mode } = editorParams || {};
   const convert2SelectDefaultValue =
     isString(curValue) && !!curValue ? curValue.split(',') : undefined;
+
+  const initValue = mode === 'multiple' ? convert2SelectDefaultValue : curValue;
 
   const container = document.createElement('div');
   container.style.height = '100%';
@@ -122,7 +126,7 @@ export default function CustomMultiSelectEditor(
 
   ReactDOM.render(
     <MultiSelect
-      initValue={convert2SelectDefaultValue}
+      initValue={initValue}
       onRendered={onRendered}
       onSelectItem={handleSelectItem}
       cancel={cancel}
