@@ -58,7 +58,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         'tablePosition.height',
         tablePosition.height,
         'tableData?.length',
-        tableData?.length
+        tableData?.length,
+        headerVisible
       );
       if (
         tableMode !== 'editable' ||
@@ -91,7 +92,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       } else {
         inputWrapRef.current.style.right = '0px';
       }
-
+      console.log(offsetHeight, 'offsetHeight');
       inputWrapRef.current.style.transform = `translateY(${offsetHeight}px)`;
     },
     [tablePosition.height, tableMode, tableData?.length, headerVisible]
@@ -153,7 +154,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   useEffect(() => {
     transformYInputElem();
-  }, [tableMode, tableData?.length, extraInputCreated]);
+  }, [tableMode, tableData?.length, extraInputCreated, headerVisible]);
 
   useEffect(() => {
     if (!tabulatorRef) return;
