@@ -51,7 +51,21 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   const transformYInputElem = useCallback(
     (realData?: any[]) => {
-      if (tableMode !== 'editable' || !inputWrapRef.current) return;
+      console.log(
+        'transformYInputElem',
+        'realData -> ',
+        realData,
+        'tablePosition.height',
+        tablePosition.height,
+        'tableData?.length',
+        tableData?.length
+      );
+      if (
+        tableMode !== 'editable' ||
+        !inputWrapRef.current ||
+        tablePosition.height <= 0
+      )
+        return;
 
       const len = realData?.length || tableData?.length || 0;
       let offsetHeight = headerVisible
