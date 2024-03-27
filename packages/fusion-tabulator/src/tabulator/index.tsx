@@ -94,7 +94,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
       inputWrapRef.current.style.transform = `translateY(${offsetHeight}px)`;
     },
-    [tablePosition.height, tableMode, tableData?.length]
+    [tablePosition.height, tableMode, tableData?.length, headerVisible]
   );
 
   const responsiveTabulator = () => {
