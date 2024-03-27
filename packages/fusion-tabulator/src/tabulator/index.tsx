@@ -62,27 +62,14 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       let offsetHeight = headerVisible
         ? HEADER_HEIGHT + len * ROW_HEIGHT + 1
         : len * ROW_HEIGHT + 1;
-      // let offsetHeight = len * ROW_HEIGHT + 1;
 
-      // console.log(
-      //   headerVisible,
-      //   '<- headerVisible',
-      //   'offsetHeight',
-      //   offsetHeight,
-      //   'height: ',
-      //   tablePosition.height,
-      //   'len: ',
-      //   len,
-      //   'tableData.len',
-      //   tableData?.length
-      // );
       if (offsetHeight + EXTRA_INPUT_HEIGHT > tablePosition.height) {
         offsetHeight = tablePosition.height - ROW_HEIGHT + 2;
         inputWrapRef.current.style.right = '14px';
       } else {
         inputWrapRef.current.style.right = '0px';
       }
-      console.log(offsetHeight, 'offsetHeight');
+
       inputWrapRef.current.style.transform = `translateY(${offsetHeight}px)`;
     },
     [tablePosition.height, tableMode, tableData?.length, headerVisible]
@@ -121,8 +108,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       JSON.stringify(curColumns) !== JSON.stringify(columnDefs)
     ) {
       const formatColumns = customEditorAndFormatterPipe(columnDefs);
-
-      tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
+      try {
+        tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
+      } catch (error) {
+        console.log('setColumns failed: ', error, formatColumns);
+      }
     }
   };
 

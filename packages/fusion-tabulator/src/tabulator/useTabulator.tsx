@@ -16,9 +16,8 @@ import { forIn } from 'lodash';
 
 export const useTabulator = ({
   ref,
-  props,
-} // eventCallback,
-: {
+  props, // eventCallback,
+}: {
   ref: React.RefObject<HTMLElement>;
   props: any;
   // eventCallback?: (
@@ -59,38 +58,42 @@ export const useTabulator = ({
     const initOptions = genInitOptions(props);
 
     console.log('initTabulatorOptions', initOptions);
-    // init tabulator
-    instanceRef.current = new ExtendTabulator(domEle, initOptions);
+    try {
+      // init tabulator
+      instanceRef.current = new ExtendTabulator(domEle, initOptions);
 
-    // localization
-    instanceRef.current.setLocale?.('zh');
+      // localization
+      instanceRef.current.setLocale?.('zh');
 
-    /**
-     * NOTE: Binding events
-     */
-    if (enableTableEventBind) {
-      const defaultEvents = genInitEventMaps({
-        appMode,
+      /**
+       * NOTE: Binding events
+       */
+      if (enableTableEventBind) {
+        const defaultEvents = genInitEventMaps({
+          appMode,
+          tabulatorRef: instanceRef.current,
+          onUpdateWidgetMetaProperty,
+          onEvents,
+        });
+        const mergeEvents = {
+          ...defaultEvents,
+          ...eventMaps,
+        };
+
+        forIn(mergeEvents, (handler, eventName: keyof EventCallBackMethods) => {
+          instanceRef.current.on(eventName, handler);
+        });
+      }
+
+      // props.onRef && props.onRef(instanceRef);
+      onUpdateWidgetMetaProperty?.({
         tabulatorRef: instanceRef.current,
-        onUpdateWidgetMetaProperty,
-        onEvents,
       });
-      const mergeEvents = {
-        ...defaultEvents,
-        ...eventMaps,
-      };
 
-      forIn(mergeEvents, (handler, eventName: keyof EventCallBackMethods) => {
-        instanceRef.current.on(eventName, handler);
-      });
+      callback?.();
+    } catch (error) {
+      console.log('init table failed: ', error);
     }
-
-    // props.onRef && props.onRef(instanceRef);
-    onUpdateWidgetMetaProperty?.({
-      tabulatorRef: instanceRef.current,
-    });
-
-    callback?.();
   };
 
   const destroyTable = () => {
