@@ -51,16 +51,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   const transformYInputElem = useCallback(
     (realData?: any[]) => {
-      console.log(
-        'transformYInputElem',
-        'realData -> ',
-        realData,
-        'tablePosition.height',
-        tablePosition.height,
-        'tableData?.length',
-        tableData?.length,
-        headerVisible
-      );
       if (
         tableMode !== 'editable' ||
         !inputWrapRef.current ||
@@ -154,7 +144,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   useEffect(() => {
     transformYInputElem();
-  }, [tableMode, tableData?.length, extraInputCreated, headerVisible]);
+  }, [tableMode, tableData?.length, extraInputCreated]);
 
   useEffect(() => {
     if (!tabulatorRef) return;

@@ -9,7 +9,7 @@ const inputCss = {
   width: '100%',
   height: '100%',
   fontSize: '1em',
-  fontFamily: 'inherit'
+  fontFamily: 'inherit',
 };
 
 interface IProps {
@@ -40,7 +40,7 @@ class Editor extends React.Component<IProps> {
       // user deleted value in the cell => set to ''
       // const result = format(new Date(), this.format);
       success('');
-      return
+      return;
     }
     let result = value;
     try {
@@ -49,7 +49,7 @@ class Editor extends React.Component<IProps> {
         const valueDate = parse(value, 'YYYY-MM-DD');
         result = format(valueDate, this.format);
       }
-    } catch(err) {
+    } catch (err) {
       console.error('ERROR', err);
       result = format(new Date(), DEFAULT_DATE_INPUT_FORMAT);
     }
@@ -80,19 +80,16 @@ class Editor extends React.Component<IProps> {
   render() {
     const { cell } = this.props;
     const valueDt = parse(cell.getValue(), this.format);
-    // console.log('this.format', this.format);
-    // console.log('cell.getValue()', cell.getValue());
-    // console.log('valueDt', valueDt);
 
-    let value = format(new Date(), DEFAULT_DATE_INPUT_FORMAT)
+    let value = format(new Date(), DEFAULT_DATE_INPUT_FORMAT);
     try {
       value = format(valueDt, DEFAULT_DATE_INPUT_FORMAT);
-    } catch(err) {}
+    } catch (err) {}
 
     return (
       <input
         type="date"
-        ref={r => (this.ref = r)}
+        ref={(r) => (this.ref = r)}
         defaultValue={value}
         // value={value}
         onBlur={this.onBlur}
@@ -104,7 +101,7 @@ class Editor extends React.Component<IProps> {
   }
 }
 
-export default function(
+export default function (
   cell: any,
   onRendered: (fn: any) => void,
   success: (value: any) => void,
@@ -114,7 +111,13 @@ export default function(
   const container = document.createElement('div');
   container.style.height = '100%';
   render(
-    <Editor cell={cell} onRendered={onRendered} success={success} cancel={cancel} editorParams={editorParams} />,
+    <Editor
+      cell={cell}
+      onRendered={onRendered}
+      success={success}
+      cancel={cancel}
+      editorParams={editorParams}
+    />,
     container
   );
   return container;

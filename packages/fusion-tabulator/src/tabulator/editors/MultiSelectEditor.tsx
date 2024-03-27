@@ -53,13 +53,11 @@ class Editor extends React.Component<IProps, EditorState> {
 
   setValueOnSuccess = (values = this.state.values) => {
     const { success } = this.props;
-    // console.log('setValueOnSuccess: ', values);
+
     success(values);
-    // cancel();
   };
 
   handleDelete = (i: number) => {
-    // console.log('- handleDelete ', i);
     const { values } = this.state;
     const newValues = values.filter((_, index) => index !== i);
     this.setState({ values: newValues }, () => {
@@ -70,7 +68,6 @@ class Editor extends React.Component<IProps, EditorState> {
   handleAddition = (item: any) => {
     const { values } = this.state;
     if (item.name) {
-      // console.log('- handleAddition: ', item);
       values.push({ id: item.name, name: item.name });
       this.setState({ values }, () => {
         this.setValueOnSuccess(values);
@@ -83,10 +80,9 @@ class Editor extends React.Component<IProps, EditorState> {
     const { cancel } = this.props;
     const newValue = this.ref.input.input.value;
     if (newValue) {
-      // console.log(111, newValue, this.ref);
       const values = clone(this.state.values);
       values.push({ id: newValue, name: newValue });
-      // console.log('- handleBlur ', values);
+
       this.setValueOnSuccess(values);
     } else {
       cancel();
@@ -96,7 +92,6 @@ class Editor extends React.Component<IProps, EditorState> {
     if (el && el.parentElement.parentElement.parentElement) {
       el.parentElement.parentElement.parentElement.style.overflow = 'hidden';
     }
-    // console.log('- handleBlur END');
   };
 
   render() {
@@ -139,7 +134,13 @@ export default function MultiSelectEditor(
   const container = document.createElement('div');
   container.style.height = '100%';
   render(
-    <Editor cell={cell} onRendered={onRendered} success={success} cancel={cancel} editorParams={editorParams} />,
+    <Editor
+      cell={cell}
+      onRendered={onRendered}
+      success={success}
+      cancel={cancel}
+      editorParams={editorParams}
+    />,
     container
   );
   return container;
