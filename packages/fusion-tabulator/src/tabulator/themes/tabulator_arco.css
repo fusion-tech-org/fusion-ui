@@ -622,11 +622,15 @@ body {
 }
 
 .tabulator-row .cell-edit-disable {
-    display: none;
+    > div {
+      opacity: 0;
+    }
 }
 
 .tabulator-row .tabulator-editable {
-  display: inline-block;
+  > div {
+    opacity: 1;
+  }
 }
 
 .tabulator-row .tabulator-cell.tabulator-frozen {
