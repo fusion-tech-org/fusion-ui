@@ -59,7 +59,7 @@ Tabulator.extendModule('format', 'formatters', {
     const cellElmHasDisableClass = cell
       .getElement()
       .classList.contains('cell-edit-disable');
-    console.log(cellElmHasDisableClass);
+
     if (cellElmHasDisableClass) return '';
 
     return `
@@ -73,8 +73,22 @@ Tabulator.extendModule('format', 'formatters', {
     const {
       separator = ',',
       size = 'default', // 'small' | 'default' | 'medium' | 'large'
-      colors = [],
+      colors = {},
+      colorList = [],
     } = formatterParams || {};
+    // arco-tag-red
+    // arco-tag-orangered
+    // arco-tag-orange
+    // arco-tag-gold
+    // arco-tag-lime
+    // arco-tag-green
+    // arco-tag-cyan
+    // arco-tag-blue
+    // arco-tag-arcoblue
+    // arco-tag-purple
+    // arco-tag-pinkpurple
+    // arco-tag-magenta
+    // arco-tag-gray
 
     if (!isString(cellValue) || !cellValue) return '';
 
@@ -84,7 +98,9 @@ Tabulator.extendModule('format', 'formatters', {
     toArr.forEach((tag, _index) => {
       const tagItemStr = `
           <div class="arco-space-item" style="margin-right: 6px;">
-            <div class="arco-tag arco-tag-checked arco-tag-size-${size}">
+            <div class="arco-tag arco-tag-${
+              colors[tag] || 'gray'
+            } arco-tag-checked arco-tag-size-${size}">
               <span class="arco-tag-content">${tag}</span>
             </div>
           </div>

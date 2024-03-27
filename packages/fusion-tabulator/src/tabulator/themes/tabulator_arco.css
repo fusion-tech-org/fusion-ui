@@ -621,8 +621,12 @@ body {
   text-overflow: ellipsis;
 }
 
-.tabulator-row .tabulator-editable {
+.tabulator-row .cell-edit-disable {
+    display: none;
+}
 
+.tabulator-row .tabulator-editable {
+  display: inline-block;
 }
 
 .tabulator-row .tabulator-cell.tabulator-frozen {

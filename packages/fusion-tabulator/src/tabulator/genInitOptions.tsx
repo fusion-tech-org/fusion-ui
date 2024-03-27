@@ -184,7 +184,14 @@ function editCheck(editorParams: Record<string, any>) {
 
       if (disableEditable) {
         cell.getElement().classList.add('cell-edit-disable');
-        cell.getElement().replaceChildren();
+        // cell.getElement().replaceChildren();
+      }
+
+      if (
+        !disableEditable &&
+        cell.getElement().classList.contains('cell-edit-disable')
+      ) {
+        cell.getElement().classList.remove('cell-edit-disable');
       }
 
       return !disableEditable;

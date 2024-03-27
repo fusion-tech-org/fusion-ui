@@ -74,6 +74,12 @@ const colDefs = [
     editor: 'multiSelect',
     hozAlign: 'center',
     formatter: 'tags',
+    formatterParams: {
+      colors: {
+        1: 'red',
+        2: 'blue',
+      },
+    },
     editorParams: {
       values: [
         { value: '1', label: 'John' },
@@ -97,7 +103,11 @@ const colDefs = [
     editorParams: {
       disabledRule: '[name] === `1`',
     },
-    formatter: 'required',
+    // formatter: 'required',
+    formatter: 'placeholder',
+    formatterParams: {
+      placeholder: '请输入',
+    },
   },
 ];
 

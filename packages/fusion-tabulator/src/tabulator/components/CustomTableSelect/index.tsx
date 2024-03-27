@@ -86,7 +86,6 @@ export const CustomTableSelect = (props) => {
     (e: KeyboardEvent) => {
       e.stopPropagation();
       let nextIndex = null;
-      console.log('nextIndex', memoAllData.total, cursor);
 
       if (!tabulatorRef.current || memoAllData.total === 0) return;
 
