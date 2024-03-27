@@ -622,13 +622,15 @@ body {
 }
 
 .tabulator-row .cell-edit-disable {
-    > div {
+    > div,
+    > span {
       opacity: 0;
     }
 }
 
 .tabulator-row .tabulator-editable {
-  > div {
+  > div,
+  > span {
     opacity: 1;
   }
 }
