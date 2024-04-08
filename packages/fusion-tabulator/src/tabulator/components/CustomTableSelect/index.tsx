@@ -3,7 +3,7 @@ import { Dropdown, Input, Message } from '@arco-design/web-react';
 import { Container, DroplistWrapper, InputWrapper } from './styles';
 import { IconPlus } from '@arco-design/web-react/icon';
 import { TableSelect } from './TableSelect';
-// import { useClickOutside } from 'hooks/useClickOutsite';
+import { useClickOutside } from 'hooks/useClickOutsite';
 import { useKeyPress } from 'hooks/useKeyPress';
 import { Filter, RowComponent, Tabulator } from 'tabulator-tables';
 import { debounce, map, isArray, isEmpty, isFunction } from 'lodash';
@@ -154,7 +154,7 @@ export const CustomTableSelect = (props) => {
   //   tabulatorRef.current.scrollToRow(uniqueKeys[cursor], 'center', false);
   // }, [cursor]);
 
-  // useClickOutside([dropdownRef, inputRef], hideDroplist);
+  useClickOutside([dropdownRef, inputRef], hideDroplist);
   useKeyPress(handleKeyPress);
 
   const handleInputFocus = () => {
@@ -229,14 +229,26 @@ export const CustomTableSelect = (props) => {
   const handleMouseLeaveDropdown = () => {
     setInZone(false);
 
-    if (document.activeElement !== inputRef.current) {
-      hideDroplist();
-    }
+    // if (document.activeElement !== inputRef.current) {
+    //   hideDroplist();
+    // }
 
     // if (!inputForced) {
     //   hideDroplist();
     // }
   };
+
+  const handleDebugDocClickEvent = useCallback(() => {
+    console.log('document clicked');
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('click', handleDebugDocClickEvent, false);
+
+    return () => {
+      document.removeEventListener('click', handleDebugDocClickEvent, false);
+    };
+  }, []);
 
   return (
     <Container>
@@ -244,6 +256,9 @@ export const CustomTableSelect = (props) => {
         popupVisible={popupVisible}
         trigger="focus"
         // onVisibleChange={handleVisibleChange}
+        triggerProps={{
+          blurToHide: false,
+        }}
         droplist={
           <DroplistWrapper
             ref={dropdownRef}

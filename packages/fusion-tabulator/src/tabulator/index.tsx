@@ -133,6 +133,16 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   };
 
   useEffect(() => {
+    responsiveTabulator();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    actionId,
+    JSON.stringify(columnDefs),
+    JSON.stringify(tableData),
+    enableIndexedDBQuery,
+  ]);
+
+  useEffect(() => {
     transformYInputElem();
   }, [tableMode, tableData?.length, extraInputCreated]);
 
@@ -163,16 +173,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     curAjax && tabulatorRef.setData(curAjax);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionId, !tabulatorRef, isRemote]);
-
-  useEffect(() => {
-    responsiveTabulator();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    actionId,
-    JSON.stringify(columnDefs),
-    JSON.stringify(tableData),
-    enableIndexedDBQuery,
-  ]);
 
   function handleSelectRowData(record) {
     const { id: _key, ...rest } = record || {};

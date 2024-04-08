@@ -160,6 +160,10 @@ body {
   margin-right: -1px;
 }
 
+.tabulator .tabulator-header .tabulator-col.tabulator-col-group {
+  border-right: 1px solid #aaa;
+}
+
 .tabulator .tabulator-header .tabulator-col .tabulator-header-filter {
   position: relative;
   box-sizing: border-box;

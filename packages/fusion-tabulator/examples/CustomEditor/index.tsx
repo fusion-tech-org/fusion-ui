@@ -71,7 +71,7 @@ const colDefs = [
   {
     title: '身高',
     field: 'height',
-    editor: 'multiSelect',
+    editor: 'select',
     hozAlign: 'center',
     formatter: 'tags',
     formatterParams: {
@@ -93,7 +93,10 @@ const colDefs = [
   {
     title: '年龄',
     field: 'age',
-    // editor: 'input',
+    editor: 'datePicker',
+    editorParams: {
+      format: 'YYYY-MM-DD',
+    },
   },
   {
     title: '性别',
@@ -115,7 +118,7 @@ const initData = (() => {
   return new Array(5).fill(0).map((_, i) => ({
     id: i + 1,
     name: `anyone_${i}`,
-    age: 12,
+    age: undefined,
     gender: '',
     height: '',
     site: 'sdfsdfsf',
@@ -693,27 +696,55 @@ const uniformProps = {
       {
         title: '姓名',
         field: 'name',
-        headerSort: false,
       },
       {
         title: '年龄',
         field: 'age',
         editor: true,
         hozAlign: 'right',
-        headerSort: false,
       },
       {
         title: '性别',
         field: 'gender',
         editor: true,
-        headerSort: false,
       },
       {
         title: '身高',
         field: 'height',
         editor: true,
-        headerSort: false,
         hozAlign: 'center',
+      },
+      {
+        title: '姓名_1',
+        field: 'name_1',
+      },
+      {
+        title: '姓名_2',
+        field: 'name_2',
+      },
+      {
+        title: '姓名_3',
+        field: 'name_3',
+      },
+      {
+        title: '姓名_4',
+        field: 'name_4',
+      },
+      {
+        title: '姓名_5',
+        field: 'name_5',
+      },
+      {
+        title: '姓名_6',
+        field: 'name_6',
+      },
+      {
+        title: '姓名_7',
+        field: 'name_7',
+      },
+      {
+        title: '姓名_8',
+        field: 'name_8',
       },
     ],
     // columns: [
@@ -973,6 +1004,8 @@ const uniformProps = {
   indexdbConfigs: {},
   commonOptions: {
     selectableRows: 'highlight', //make rows selectable
+    // layout: 'fitColumns',
+    // layout: 'fitDataTable',
     // selectable: true,
   },
 };
