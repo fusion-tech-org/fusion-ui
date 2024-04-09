@@ -109,6 +109,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     ) {
       const formatColumns = customEditorAndFormatterPipe(columnDefs);
       try {
+        console.log(
+          'setColumns -> isExtensible ->',
+          Object.isExtensible(formatColumns)
+        );
         tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
       } catch (error) {
         console.log('setColumns failed: ', error, formatColumns);
