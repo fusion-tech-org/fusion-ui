@@ -238,17 +238,12 @@ export const CustomTableSelect = (props) => {
     // }
   };
 
-  const handleDebugDocClickEvent = useCallback(() => {
-    console.log('document clicked');
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener('click', handleDebugDocClickEvent, false);
-
-    return () => {
-      document.removeEventListener('click', handleDebugDocClickEvent, false);
-    };
-  }, []);
+  const handleDroplistWrapperBlur = () => {
+    console.log(document.activeElement);
+    if (document.activeElement !== dropdownRef.current) {
+      hideDroplist();
+    }
+  };
 
   return (
     <Container>
@@ -263,6 +258,7 @@ export const CustomTableSelect = (props) => {
           <DroplistWrapper
             ref={dropdownRef}
             onMouseEnter={() => setInZone(true)}
+            onBlur={handleDroplistWrapperBlur}
             onMouseLeave={handleMouseLeaveDropdown}
           >
             <TableSelect onRef={handleTabulator} uniformProps={uniformProps} />

@@ -78,6 +78,7 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     index: uniqueKey,
     columnDefaults: {
       headerSort: false,
+      resizable: false,
     },
     // layout: 'fitColumns',
     layout: 'fitDataTable',

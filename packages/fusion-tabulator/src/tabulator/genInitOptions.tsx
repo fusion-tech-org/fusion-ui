@@ -99,6 +99,8 @@ export const genInitOptions = (
     columnDefaults: {
       // sorter: false,
       headerSort: false,
+      resizable: false,
+      headerFilter: false,
     },
     keybindings: {
       // "redo" : "ctrl + 82", //bind redo function to ctrl + r
@@ -133,7 +135,6 @@ const genGeneralOptions = (
     height: '100%',
     maxHeight: '100%',
     reactiveData: true,
-    // headerSort: false,
     tabEndNewRow: true, // create empty new row on tab
     locale: true,
     selectableRows: 'highlight', // false, true, integer, highlight(default)
@@ -208,7 +209,6 @@ export function customEditorAndFormatterPipe(
 ): ColumnDefinition[] {
   return map(tempColDefs, (item) => {
     const {
-      // headerSort = false,
       editableTitle = false,
       editable = false,
       editor,
@@ -224,7 +224,6 @@ export function customEditorAndFormatterPipe(
 
     const customColDefs: Record<string, any> = {
       editableTitle: formatEditableTitle,
-      // headerSort,
     };
 
     if (isCustomEditor) {
@@ -268,16 +267,11 @@ const genColumnDefsOptions = (
   return {
     autoColumns: true,
     autoColumnsDefinitions: function (definitions) {
-      // definitions.forEach((column) => {
-      //   column.headerSort = false;
-      // });
       //definitions - array of column definition objects
       if (appMode !== 'EDIT') return definitions;
 
       definitions.forEach((column) => {
         column.editableTitle = true;
-        // column.headerSort = false;
-        // column.headerFilter = true; // add header filter to every column
       });
 
       return definitions;

@@ -1,5 +1,5 @@
 import { CellComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
-import { isNumber, isString } from 'lodash';
+import { isNumber, isString, isUndefined } from 'lodash';
 
 import { DexieModule } from './custom-modules/DexieModule';
 // import { AdvertModule } from './custom-modules/AdvertModule';
@@ -36,9 +36,34 @@ Tabulator.extendModule('format', 'formatters', {
   },
   placeholder: function (cell: CellComponent, formatterParams, _onRendered) {
     const cellValue = cell.getValue();
-    const { placeholder, color = '#A9AEB8' } = formatterParams || {};
+    const {
+      placeholder,
+      color = '#A9AEB8',
+      enableLookup = false,
+    } = formatterParams || {};
 
-    if (cellValue) return cellValue;
+    if (cellValue) {
+      if (!enableLookup) {
+        return cellValue;
+      }
+
+      const cellColDef = cell.getColumn().getDefinition();
+      const { editorParams } = cellColDef;
+      const { values = [] } = (editorParams || {}) as Record<string, any>;
+      const convertedValues = {};
+
+      for (let i = 0; i < values.length; i++) {
+        const item = values[i];
+
+        const { label, value } = item || {};
+
+        if (!isUndefined(label)) {
+          item[label] = value;
+        }
+      }
+
+      return convertedValues[cellValue];
+    }
 
     const cellElmHasDisableClass = cell
       .getElement()
@@ -52,9 +77,30 @@ Tabulator.extendModule('format', 'formatters', {
   },
   required: function (cell: CellComponent, formatterParams, _onRendered) {
     const cellValue = cell.getValue();
-    const { color = '#CF9FFF' } = formatterParams || {};
+    const { color = '#CF9FFF', enableLookup = false } = formatterParams || {};
 
-    if (cellValue) return cellValue;
+    if (cellValue) {
+      if (!enableLookup) {
+        return cellValue;
+      }
+
+      const cellColDef = cell.getColumn().getDefinition();
+      const { editorParams } = cellColDef;
+      const { values = [] } = (editorParams || {}) as Record<string, any>;
+      const convertedValues = {};
+
+      for (let i = 0; i < values.length; i++) {
+        const item = values[i];
+
+        const { label, value } = item || {};
+
+        if (!isUndefined(label)) {
+          item[label] = value;
+        }
+      }
+
+      return convertedValues[cellValue];
+    }
 
     const cellElmHasDisableClass = cell
       .getElement()
