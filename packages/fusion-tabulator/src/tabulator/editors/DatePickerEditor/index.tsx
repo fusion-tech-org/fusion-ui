@@ -19,7 +19,7 @@ interface CustomDatePickerProps {
 
 type DateMode = 'date' | 'month' | 'year';
 
-const DEFAULT_FORMAT = 'YYYY-MM-DD hh:mm:ss';
+const DEFAULT_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 const CustomDatePicker: React.FC<CustomDatePickerProps> = (props) => {
   const { editorParams, onSelect, initValue, cancel } = props;
@@ -30,7 +30,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = (props) => {
   } = editorParams || {};
   // const datePickerRef = useRef<string>(initValue);
   const defaultValue =
-    initValue && dayjs(initValue).isValid()
+    initValue && dayjs(initValue, format).isValid()
       ? initValue
       : dayjs().format(format);
 

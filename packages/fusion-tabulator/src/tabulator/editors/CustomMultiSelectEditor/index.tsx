@@ -94,8 +94,6 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
         filterOption={(inputValue, option) =>
           option.props.value.toLowerCase().indexOf(inputValue.toLowerCase()) >=
             0 ||
-          option.props.label.toLowerCase().indexOf(inputValue.toLowerCase()) >=
-            0 ||
           option.props.children
             .toLowerCase()
             .indexOf(inputValue.toLowerCase()) >= 0

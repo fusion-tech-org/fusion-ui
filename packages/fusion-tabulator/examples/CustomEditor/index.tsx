@@ -73,12 +73,10 @@ const colDefs = [
     field: 'height',
     editor: 'select',
     hozAlign: 'center',
-    formatter: 'tags',
+    formatter: 'placeholder',
     formatterParams: {
-      colors: {
-        1: 'red',
-        2: 'blue',
-      },
+      placeholder: '请选择...',
+      enableLookup: true,
     },
     editorParams: {
       values: [
@@ -95,7 +93,7 @@ const colDefs = [
     field: 'age',
     editor: 'datePicker',
     editorParams: {
-      format: 'YYYY-MM-DD',
+      // format: 'YYYY-MM-DD',
     },
   },
   {
@@ -118,7 +116,7 @@ const initData = (() => {
   return new Array(5).fill(0).map((_, i) => ({
     id: i + 1,
     name: `anyone_${i}`,
-    age: undefined,
+    age: '12',
     gender: '',
     height: '',
     site: 'sdfsdfsf',
