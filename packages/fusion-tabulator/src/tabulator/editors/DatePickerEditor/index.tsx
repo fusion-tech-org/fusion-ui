@@ -30,7 +30,9 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = (props) => {
   } = editorParams || {};
   // const datePickerRef = useRef<string>(initValue);
   const defaultValue =
-    initValue && dayjs(initValue).isValid() ? initValue : undefined;
+    initValue && dayjs(initValue).isValid()
+      ? initValue
+      : dayjs().format(format);
 
   const forceInnerInput = () => {
     const innerInputEle: HTMLInputElement = document.querySelector(
@@ -74,6 +76,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = (props) => {
             defaultValue={defaultValue}
             onVisibleChange={handleVisibleChange}
             onSelect={onSelect}
+            allowClear
             triggerProps={{
               trigger: 'focus',
               blurToHide: false,

@@ -89,6 +89,17 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
         // onDeselect={handleDeselect}
         onBlur={handleBlur}
         trigger="focus"
+        allowClear
+        showSearch
+        filterOption={(inputValue, option) =>
+          option.props.value.toLowerCase().indexOf(inputValue.toLowerCase()) >=
+            0 ||
+          option.props.label.toLowerCase().indexOf(inputValue.toLowerCase()) >=
+            0 ||
+          option.props.children
+            .toLowerCase()
+            .indexOf(inputValue.toLowerCase()) >= 0
+        }
         onChange={handleChange}
         bordered={false}
         options={values}
