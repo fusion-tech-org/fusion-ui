@@ -161,7 +161,7 @@ body {
 }
 
 .tabulator .tabulator-header .tabulator-col.tabulator-col-group {
-  border-right: 1px solid #aaa;
+  border-right: 1px solid var(--color-neutral-3);
 }
 
 .tabulator .tabulator-header .tabulator-col .tabulator-header-filter {
