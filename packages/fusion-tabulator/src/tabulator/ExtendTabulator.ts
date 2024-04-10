@@ -57,8 +57,8 @@ Tabulator.extendModule('format', 'formatters', {
 
         const { label, value } = item || {};
 
-        if (!isUndefined(label)) {
-          convertedValues[label] = value;
+        if (!isUndefined(value)) {
+          convertedValues[value] = label;
         }
       }
 
@@ -94,8 +94,8 @@ Tabulator.extendModule('format', 'formatters', {
 
         const { label, value } = item || {};
 
-        if (!isUndefined(label)) {
-          item[label] = value;
+        if (!isUndefined(value)) {
+          convertedValues[value] = label;
         }
       }
 
