@@ -33,6 +33,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     commonOptions = {},
     enableIndexedDBQuery,
     isRemote = true,
+    enableColumnGroup = false,
   } = uniformProps;
   const commonOptionsRef = useRef(commonOptions);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -107,7 +108,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       isArray(columnDefs) &&
       JSON.stringify(curColumns) !== JSON.stringify(columnDefs)
     ) {
-      const formatColumns = customEditorAndFormatterPipe(columnDefs);
+      const formatColumns = customEditorAndFormatterPipe(
+        columnDefs,
+        appMode,
+        enableColumnGroup
+      );
       try {
         console.log(
           'setColumns -> isExtensible ->',

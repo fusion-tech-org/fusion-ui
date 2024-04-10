@@ -34,7 +34,8 @@ export const genInitOptions = (
     uniformProps,
   } = tabulatorProps;
   let { commonOptions = {} } = uniformProps || {};
-  const { headerVisible = true } = uniformProps || {};
+  const { headerVisible = true, enableColumnGroup = false } =
+    uniformProps || {};
 
   if (!isObject(commonOptions)) {
     commonOptions = {};
@@ -44,6 +45,7 @@ export const genInitOptions = (
     hidePagination = false,
     rowGroupFieldList = [],
     rowGroupHeaderFieldList = [],
+    tableLayout,
     ...availableCommonOptions
   } = commonOptions;
 
@@ -65,7 +67,11 @@ export const genInitOptions = (
       ? quickAddConfigs.data
       : tableData;
 
-  const columnDefsOptions = genColumnDefsOptions(formatColumnDefs, appMode);
+  const columnDefsOptions = genColumnDefsOptions(
+    formatColumnDefs,
+    appMode,
+    enableColumnGroup
+  );
   const ajaxOptions = genAjaxOptions({
     actionId,
     enableRemote,
@@ -94,6 +100,11 @@ export const genInitOptions = (
     indexdbConfigs,
     tableTypeFlag
   );
+  const defaultLayout =
+    tableTypeFlag === TableTypeFlag.customTableSelect
+      ? 'fitDataStretch'
+      : layout;
+  const formatLayout = tableLayout ? tableLayout : defaultLayout;
 
   return {
     columnDefaults: {
@@ -114,10 +125,7 @@ export const genInitOptions = (
     ...paginationOptions,
     ...rowGroupOptions,
     headerVisible,
-    layout:
-      tableTypeFlag === TableTypeFlag.customTableSelect
-        ? 'fitDataStretch'
-        : layout, // fit columns to width of table (optional)
+    layout: formatLayout, // fit columns to width of table (optional)
     // ...options // props.options are passed to Tabulator's options.
     ...availableCommonOptions,
     showInput: tableMode === 'editable' ? true : false,
@@ -205,9 +213,10 @@ function editCheck(editorParams: Record<string, any>) {
 
 export function customEditorAndFormatterPipe(
   tempColDefs: ColumnDefinition[],
-  appMode?: PlatformAppMode
+  appMode?: PlatformAppMode,
+  enableColumnGroup = false
 ): ColumnDefinition[] {
-  return map(tempColDefs, (item) => {
+  function handleNormalColDef(colDef: ColumnDefinition) {
     const {
       editableTitle = false,
       editable = false,
@@ -215,7 +224,7 @@ export function customEditorAndFormatterPipe(
       formatter,
       editorParams = {},
       ...rest
-    } = item;
+    } = colDef;
 
     const formatEditableTitle = appMode !== 'EDIT' ? false : editableTitle;
 
@@ -251,16 +260,38 @@ export function customEditorAndFormatterPipe(
       ...rest,
       ...customColDefs,
     };
-  });
+  }
+
+  if (enableColumnGroup) {
+    return map(tempColDefs, (item) => {
+      const { columns, ...restGroupColDefs } = item;
+
+      if (!isArray(columns)) {
+        return handleNormalColDef(restGroupColDefs);
+      }
+      // only thinking have two level column group
+      return {
+        ...restGroupColDefs,
+        columns: map(columns, handleNormalColDef),
+      };
+    });
+  }
+
+  return map(tempColDefs, handleNormalColDef);
 }
 
 const genColumnDefsOptions = (
   initColDefs: ColumnDefinition[],
-  appMode?: PlatformAppMode
+  appMode?: PlatformAppMode,
+  enableColumnGroup = false
 ): OptionsColumns => {
   if (isArray(initColDefs) && initColDefs.length > 0) {
     return {
-      columns: customEditorAndFormatterPipe(initColDefs, appMode),
+      columns: customEditorAndFormatterPipe(
+        initColDefs,
+        appMode,
+        enableColumnGroup
+      ),
     };
   }
 
