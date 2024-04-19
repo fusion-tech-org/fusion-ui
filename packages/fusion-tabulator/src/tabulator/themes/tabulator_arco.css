@@ -1640,7 +1640,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 
 .tabulator-row .tabulator-cell {
   /* default: 12px */
-  padding: 12px;
+  padding: 15px 12px;
   border-right: none;
 }
 
@@ -1749,14 +1749,34 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 
 
 /* custom class */
+.tabulator .tabulator-cell-edit-text {
+  position: absolute;
+  top: -8px;
+  right: 12px;
+  left: 12px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: text;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+  z-index: 1;
+  border-radius: 4px;
+}
+
+.tabulator .tabulator-cell-edit-text:hover {
+  border-color: rgb(var(--primary-6));
+}
+
 .tabulator .tabulator-cell-edit-style::after {
   content: '';
   position: absolute;
-  top: -4px;
+  top: -8px;
   right: 12px;
   left: 12px;
   height: 32px;
   background: #333;
   opacity: 0.05;
-  z-index: 0;
+  border-radius: 4px;
 }

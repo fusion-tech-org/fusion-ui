@@ -28,7 +28,7 @@ Tabulator.registerModule(DexieModule);
 function genEditStyle(cellValue) {
   return `
     <div style="position: relative;">
-      ${cellValue}
+      <div class="tabulator-cell-edit-text">${cellValue}</div>
       <div class="tabulator-cell-edit-style"></div>
     </div>
   `
