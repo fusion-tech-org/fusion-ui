@@ -12,7 +12,7 @@ body {
   position: relative;
   border: 1px solid #dee2e6;
   background-color: #fff;
-  font-size: 16px;
+  font-size: 14px;
   text-align: left;
   overflow: hidden;
   -webkit-transform: translateZ(0);
@@ -366,7 +366,7 @@ body {
 }
 
 .tabulator .tabulator-footer {
-  border-top: 1px solid #dee2e6;
+  /* border-top: 1px solid #dee2e6; */
   background-color: #fff;
   color: #555;
   font-weight: bold;
@@ -394,15 +394,17 @@ body {
   box-sizing: border-box;
   width: 100%;
   text-align: left;
-  background: #f3f3f3 !important;
-  border-bottom: 1px solid #dee2e6;
+  background: var(--color-neutral-2) !important;
+ 
+  /* border-bottom: 1px solid #dee2e6; */
   border-top: 1px solid #dee2e6;
   overflow: hidden;
 }
 
 .tabulator .tabulator-footer .tabulator-calcs-holder .tabulator-row {
   display: inline-block;
-  background: #f3f3f3 !important;
+  /* background: #f3f3f3 !important; */
+  background: var(--color-neutral-2) !important;
 }
 
 .tabulator .tabulator-footer .tabulator-calcs-holder .tabulator-row .tabulator-col-resize-handle {

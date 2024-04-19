@@ -25,6 +25,14 @@ Tabulator.registerModule(DexieModule);
  * extending modules
  */
 
+function genEditStyle(cellValue) {
+  return `
+    <div style="position: relative;">
+      ${cellValue}
+      <div class="after:content-[''] after:absolute after:top-[-4px] after:rounded after:right-3 after:left-3 after:h-8 after:bg-[#333] after:opacity-5 after:z-[0]"></div>
+    </div>
+  `
+}
 // extendiing formatter
 Tabulator.extendModule('format', 'formatters', {
   delRowIcon: function () {
@@ -40,11 +48,16 @@ Tabulator.extendModule('format', 'formatters', {
       placeholder,
       color = '#A9AEB8',
       enableLookup = false,
+      editStyle,
     } = formatterParams || {};
+
+    if (cellValue === 0) {
+      return editStyle ? genEditStyle(cellValue) : cellValue;
+    }
 
     if (cellValue) {
       if (!enableLookup) {
-        return cellValue;
+        return editStyle ? genEditStyle(cellValue) : cellValue;
       }
 
       const cellColDef = cell.getColumn().getDefinition();
@@ -62,7 +75,7 @@ Tabulator.extendModule('format', 'formatters', {
         }
       }
 
-      return convertedValues[cellValue];
+      return editStyle ? genEditStyle(convertedValues[cellValue]) : convertedValues[cellValue];
     }
 
     const cellElmHasDisableClass = cell
@@ -78,6 +91,10 @@ Tabulator.extendModule('format', 'formatters', {
   required: function (cell: CellComponent, formatterParams, _onRendered) {
     const cellValue = cell.getValue();
     const { color = '#CF9FFF', enableLookup = false } = formatterParams || {};
+
+    if (cellValue === 0) {
+      return cellValue;
+    }
 
     if (cellValue) {
       if (!enableLookup) {
@@ -144,9 +161,8 @@ Tabulator.extendModule('format', 'formatters', {
     toArr.forEach((tag, _index) => {
       const tagItemStr = `
           <div class="arco-space-item" style="margin-right: 6px;">
-            <div class="arco-tag arco-tag-${
-              colors[tag] || 'gray'
-            } arco-tag-checked arco-tag-size-${size}">
+            <div class="arco-tag arco-tag-${colors[tag] || 'gray'
+        } arco-tag-checked arco-tag-size-${size}">
               <span class="arco-tag-content">${tag}</span>
             </div>
           </div>

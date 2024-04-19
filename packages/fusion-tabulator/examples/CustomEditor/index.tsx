@@ -77,6 +77,7 @@ const colDefs = [
     formatterParams: {
       placeholder: '请选择...',
       enableLookup: true,
+      editStyle: true,
     },
     editorParams: {
       values: [

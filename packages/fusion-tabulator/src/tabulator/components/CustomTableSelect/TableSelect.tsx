@@ -89,6 +89,8 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     selectableRows: 1,
     selectableRowsRollingSelection: false,
     rowHeight: 32,
+    renderHorizontal: 'virtual',
+    renderVertical: 'virtual',
     keybindings: {
       navUp: false, // disable navUp keybinding
       navLeft: false,
