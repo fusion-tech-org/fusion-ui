@@ -1746,3 +1746,17 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 }
 
 /*# sourceMappingURL=tabulator_bootstrap5.css.map */
+
+
+/* custom class */
+.tabulator .tabulator-cell-edit-style::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: 12px;
+  left: 12px;
+  height: 32px;
+  background: #333;
+  opacity: 0.05;
+  z-index: 0;
+}

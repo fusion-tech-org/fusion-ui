@@ -29,7 +29,7 @@ function genEditStyle(cellValue) {
   return `
     <div style="position: relative;">
       ${cellValue}
-      <div class="after:content-[''] after:absolute after:top-[-4px] after:rounded after:right-3 after:left-3 after:h-8 after:bg-[#333] after:opacity-5 after:z-[0]"></div>
+      <div class="tabulator-cell-edit-style"></div>
     </div>
   `
 }
