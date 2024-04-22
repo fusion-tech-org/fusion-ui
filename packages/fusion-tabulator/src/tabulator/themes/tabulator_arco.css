@@ -105,6 +105,7 @@ body {
 .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
   box-sizing: border-box;
   width: 100%;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

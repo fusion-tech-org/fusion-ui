@@ -1,11 +1,4 @@
-import {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-  MouseEvent,
-} from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Dropdown, Input, Message } from '@arco-design/web-react';
 import { Container, DroplistWrapper, InputWrapper } from './styles';
 import { IconPlus } from '@arco-design/web-react/icon';
