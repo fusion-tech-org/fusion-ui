@@ -633,6 +633,14 @@ body {
     > span {
       opacity: 0;
     }
+
+    .tabulator-cell-edit-style {
+      display: none;
+    }
+
+    .tabulator-cell-edit-text {
+      border-color: transparent !important;
+    }
 }
 
 .tabulator-row .tabulator-editable {

@@ -46,6 +46,7 @@ export const genInitOptions = (
     rowGroupFieldList = [],
     rowGroupHeaderFieldList = [],
     tableLayout,
+    tableIndex,
     ...availableCommonOptions
   } = commonOptions;
 
@@ -105,6 +106,7 @@ export const genInitOptions = (
       ? 'fitDataStretch'
       : layout;
   const formatLayout = tableLayout ? tableLayout : defaultLayout;
+  const indexOptions = tableIndex ? { index: tableIndex } : {};
 
   return {
     columnDefaults: {
@@ -112,6 +114,7 @@ export const genInitOptions = (
       headerSort: false,
       resizable: false,
       headerFilter: false,
+      editableTitle: false,
     },
     keybindings: {
       // "redo" : "ctrl + 82", //bind redo function to ctrl + r
@@ -124,6 +127,7 @@ export const genInitOptions = (
     ...staticDataOptions,
     ...paginationOptions,
     ...rowGroupOptions,
+    ...indexOptions,
     headerVisible,
     layout: formatLayout, // fit columns to width of table (optional)
     // ...options // props.options are passed to Tabulator's options.
@@ -226,13 +230,13 @@ export function customEditorAndFormatterPipe(
       ...rest
     } = colDef;
 
-    const formatEditableTitle = appMode !== 'EDIT' ? false : editableTitle;
+    // const formatEditableTitle = appMode !== 'EDIT' ? false : editableTitle;
 
     const isCustomEditor =
       isString(editor) && checkIsCustomEditor(editor as any);
 
     const customColDefs: Record<string, any> = {
-      editableTitle: formatEditableTitle,
+      editableTitle,
     };
 
     if (isCustomEditor) {

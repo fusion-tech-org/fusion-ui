@@ -27,11 +27,11 @@ Tabulator.registerModule(DexieModule);
 
 function genEditStyle(cellValue) {
   return `
-    <div style="position: relative;">
+    <div style="position: relative; opacity: 1;">
       <div class="tabulator-cell-edit-text">${cellValue}</div>
       <div class="tabulator-cell-edit-style"></div>
     </div>
-  `
+  `;
 }
 // extendiing formatter
 Tabulator.extendModule('format', 'formatters', {
@@ -75,7 +75,9 @@ Tabulator.extendModule('format', 'formatters', {
         }
       }
 
-      return editStyle ? genEditStyle(convertedValues[cellValue]) : convertedValues[cellValue];
+      return editStyle
+        ? genEditStyle(convertedValues[cellValue])
+        : convertedValues[cellValue];
     }
 
     const cellElmHasDisableClass = cell
@@ -161,8 +163,9 @@ Tabulator.extendModule('format', 'formatters', {
     toArr.forEach((tag, _index) => {
       const tagItemStr = `
           <div class="arco-space-item" style="margin-right: 6px;">
-            <div class="arco-tag arco-tag-${colors[tag] || 'gray'
-        } arco-tag-checked arco-tag-size-${size}">
+            <div class="arco-tag arco-tag-${
+              colors[tag] || 'gray'
+            } arco-tag-checked arco-tag-size-${size}">
               <span class="arco-tag-content">${tag}</span>
             </div>
           </div>
