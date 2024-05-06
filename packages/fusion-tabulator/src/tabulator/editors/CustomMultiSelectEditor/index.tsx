@@ -1,11 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CellComponent } from 'tabulator-tables';
 // import { createRoot } from 'react-dom/client';
 import ReactDOM from 'react-dom';
 import { Select } from '@arco-design/web-react';
 
 import { MultiSelectContainer } from './styles';
-import { isString } from 'lodash';
+import { isString, isFunction } from 'lodash';
 
 interface MultiSelectProps {
   initValue?: string[];
@@ -14,16 +14,18 @@ interface MultiSelectProps {
   // success: (value: any) => void;
   onSelectItem: (item: any) => void;
   cancel: VoidFunction;
+  rowData?: Record<string, any>;
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = (props) => {
-  const { editorParams, onSelectItem, initValue = [] } = props;
+  const { editorParams, onSelectItem, initValue = [], rowData } = props;
   const {
     values = [],
     placeholder = '',
     maxTagCount = 4,
     mode,
   } = editorParams || {};
+  const finalValues = isFunction(values) ? values(rowData) : values;
   const selectedListRef = useRef<string[]>(initValue);
   const isMultiMode = mode === 'multiple';
 
@@ -100,7 +102,7 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
         }
         onChange={handleChange}
         bordered={false}
-        options={values}
+        options={finalValues}
       />
     </MultiSelectContainer>
   );
@@ -114,6 +116,8 @@ export default function CustomMultiSelectEditor(
   editorParams: Record<string, any>
 ) {
   const curValue = cell.getValue();
+  const rowData = cell.getRow().getData();
+
   const { mode } = editorParams || {};
   const convert2SelectDefaultValue =
     isString(curValue) && !!curValue ? curValue.split(',') : undefined;
@@ -139,6 +143,7 @@ export default function CustomMultiSelectEditor(
       onRendered={onRendered}
       onSelectItem={handleSelectItem}
       cancel={cancel}
+      rowData={rowData}
       editorParams={editorParams}
     />,
     container
