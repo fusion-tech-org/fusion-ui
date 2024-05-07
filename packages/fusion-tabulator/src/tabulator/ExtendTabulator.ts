@@ -1,5 +1,5 @@
 import { CellComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
-import { isNumber, isString, isUndefined } from 'lodash';
+import { isFunction, isNumber, isString, isUndefined } from 'lodash';
 
 import { DexieModule } from './custom-modules/DexieModule';
 // import { AdvertModule } from './custom-modules/AdvertModule';
@@ -63,10 +63,19 @@ Tabulator.extendModule('format', 'formatters', {
       const cellColDef = cell.getColumn().getDefinition();
       const { editorParams } = cellColDef;
       const { values = [] } = (editorParams || {}) as Record<string, any>;
+
+      let processingValues = values;
+
+      if (isFunction(values)) {
+        const rowData = cell.getRow().getData();
+
+        processingValues = values(rowData);
+      }
+
       const convertedValues = {};
 
-      for (let i = 0; i < values.length; i++) {
-        const item = values[i];
+      for (let i = 0; i < processingValues.length; i++) {
+        const item = processingValues[i];
 
         const { label, value } = item || {};
 
