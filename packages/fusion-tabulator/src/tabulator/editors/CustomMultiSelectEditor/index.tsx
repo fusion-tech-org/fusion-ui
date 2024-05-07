@@ -24,6 +24,7 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
     placeholder = '',
     maxTagCount = 4,
     mode,
+    allowClear = false,
   } = editorParams || {};
   const finalValues = isFunction(values) ? values(rowData) : values;
   const selectedListRef = useRef<string[]>(initValue);
@@ -91,7 +92,7 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
         // onDeselect={handleDeselect}
         onBlur={handleBlur}
         trigger="focus"
-        allowClear
+        allowClear={allowClear}
         showSearch
         filterOption={(inputValue, option) =>
           option.props.value.toLowerCase().indexOf(inputValue.toLowerCase()) >=
