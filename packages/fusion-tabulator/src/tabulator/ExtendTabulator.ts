@@ -65,13 +65,14 @@ Tabulator.extendModule('format', 'formatters', {
       const { values = [] } = (editorParams || {}) as Record<string, any>;
 
       let processingValues = values;
+      console.log('processingValues start -> ', processingValues);
 
       if (isFunction(values)) {
         const rowData = cell.getRow().getData();
 
         processingValues = values(rowData);
       }
-
+      console.log('processingValues end -> ', processingValues);
       const convertedValues = {};
 
       for (let i = 0; i < processingValues.length; i++) {
@@ -83,6 +84,8 @@ Tabulator.extendModule('format', 'formatters', {
           convertedValues[value] = label;
         }
       }
+
+      console.log('convertedValues', convertedValues);
 
       return editStyle
         ? genEditStyle(convertedValues[cellValue])
