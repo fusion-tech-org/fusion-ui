@@ -19,6 +19,7 @@ import { PlatformAppMode, TableTypeFlag } from 'src/interface';
 import { convertExpressionByRule, simpleExecExpression } from './utils';
 import { CUSTOM_EDITOR_MAP, checkIsCustomEditor } from './editors';
 import { ROW_HEIGHT } from './constants';
+import _ from 'lodash';
 
 export const genInitOptions = (
   tabulatorProps: ReactTabulatorProps
@@ -47,8 +48,12 @@ export const genInitOptions = (
     rowGroupHeaderFieldList = [],
     tableLayout,
     tableIndex,
+    selectable = 'highlight',
     ...availableCommonOptions
   } = commonOptions;
+  const selectableRows = _.isNumber(_.toNumber(selectable))
+    ? _.toNumber(selectable)
+    : selectable;
 
   const {
     enableIndexedDBQuery = false,
@@ -57,7 +62,7 @@ export const genInitOptions = (
     tableTypeFlag,
     remoteAjax,
   } = uniformProps || {};
-  const generalOptions = genGeneralOptions(tableMode);
+  const generalOptions = genGeneralOptions(tableMode, selectableRows);
 
   const formatColumnDefs =
     tableTypeFlag === TableTypeFlag.customTableSelect
@@ -137,7 +142,8 @@ export const genInitOptions = (
 };
 
 const genGeneralOptions = (
-  tableMode: TableMode
+  tableMode: TableMode,
+  selectableRows: boolean | number | 'highlight'
 ): Options & {
   selectableRows?: boolean | number | 'highlight';
   selectableRowsRollingSelection?: boolean;
@@ -149,7 +155,7 @@ const genGeneralOptions = (
     reactiveData: true,
     tabEndNewRow: true, // create empty new row on tab
     locale: true,
-    selectableRows: 'highlight', // false, true, integer, highlight(default)
+    selectableRows: selectableRows || 'highlight', // false, true, integer, highlight(default)
     // selectableRollingSelection: false, // disable rolling selection
     selectableRowsRollingSelection: false, //disable rolling selection
     renderHorizontal: 'virtual',
