@@ -160,6 +160,8 @@ const genGeneralOptions = (
     selectableRowsRollingSelection: false, //disable rolling selection
     renderHorizontal: 'virtual',
     renderVertical: 'virtual',
+    dataTree: true,
+    dataTreeStartExpanded: true,
     // langs: {
     //   zh: zhCNLang,
     // },
