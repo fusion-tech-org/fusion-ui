@@ -37,7 +37,8 @@ export const Container = styled.div<{
 }>`
   position: relative;
   width: 100%;
-  height: 100%;
+  overflow-y: auto;
+  /* height: 100%; */
   /* padding-right: ${({ appMode }) => (appMode === 'EDIT' ? '40px' : 0)}; */
   background-color: #fff;
 `;
