@@ -249,7 +249,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     <div
       style={{
         position: 'relative',
-        height: '100%',
+        // height: '100%',
+        flex: 1,
       }}
     >
       <TabulatorContainer
