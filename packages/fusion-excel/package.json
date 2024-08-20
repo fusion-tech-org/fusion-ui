@@ -16,8 +16,9 @@
   "sideEffects": false,
   "scripts": {
     "dev": "vite",
+    "build:vite": "vite build",
     "build": "tsup",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 30",
+    "lint": "eslint . --ext ts,tsx,js,jsx --report-unused-disable-directives --max-warnings 30",
     "preview": "vite preview",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },

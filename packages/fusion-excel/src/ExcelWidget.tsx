@@ -1,10 +1,9 @@
-import ParseFileWorker from './parseFile.worker?worker';
-
-import type { ExcelWidgetProps } from './interface';
-import { UniverSheetAdapter } from './UniverSheetAdapter';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { isValidURL } from './utils';
 import { IWorkbookData } from '@univerjs/core';
+
+import { UniverSheetAdapter } from './UniverSheetAdapter';
+import { isValidURL } from './utils';
+import type { ExcelWidgetProps } from './interface';
 
 export const ExcelWidget: React.FC<ExcelWidgetProps> = (props) => {
   const workerRef = useRef<Worker | null>(null);
@@ -39,7 +38,12 @@ export const ExcelWidget: React.FC<ExcelWidgetProps> = (props) => {
     )
       return;
 
-    workerRef.current = new ParseFileWorker();
+    const workerUrl = new URL('./parseFile.worker.js', import.meta.url);
+    const ParseFileWorker = new Worker(workerUrl, { type: 'module' });
+
+    workerRef.current = ParseFileWorker;
+
+    if (!workerRef.current) return;
 
     workerRef.current.onmessage = function (event) {
       // `event.data` is an array of rows
