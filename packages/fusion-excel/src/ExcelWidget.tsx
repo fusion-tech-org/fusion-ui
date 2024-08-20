@@ -14,7 +14,7 @@ export const ExcelWidget: React.FC<ExcelWidgetProps> = (props) => {
     data,
     readonly,
   } = props;
-  console.log(data, readonly);
+  console.log('excel widget', data, props);
   const [univerData, setUniverData] = useState<IWorkbookData | object>({});
 
   const renderExcel = () => {
