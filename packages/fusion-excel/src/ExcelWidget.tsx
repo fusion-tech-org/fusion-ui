@@ -45,6 +45,7 @@ export const ExcelWidget: React.FC<ExcelWidgetProps> = (props) => {
 
     workerRef.current = ParseFileWorker;
 
+    console.log('workerRef.current', workerRef.current);
     if (!workerRef.current) return;
     // workerRef.current = new ParseFileWorker();
 
@@ -52,6 +53,7 @@ export const ExcelWidget: React.FC<ExcelWidgetProps> = (props) => {
       // `event.data` is an array of rows
       // each row being an array of cells.
       // console.log(event.data);
+      console.log('excel onMessage', event.data);
       const { data: parsedData } = event.data || {};
 
       // univerDatRef.current = parsedData;
