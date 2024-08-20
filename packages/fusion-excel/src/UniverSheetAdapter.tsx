@@ -10,6 +10,7 @@ import {
   Univer,
   UniverInstanceType,
   IWorkbookData,
+  UnitModel,
 } from '@univerjs/core';
 import { defaultTheme } from '@univerjs/design';
 import { UniverDocsPlugin } from '@univerjs/docs';
@@ -24,7 +25,7 @@ import { UniverUIPlugin } from '@univerjs/ui';
 import { UniverSheetsPlugin } from '@univerjs/sheets';
 import { UniverSheetsFormulaPlugin } from '@univerjs/sheets-formula';
 import { UniverSheetsUIPlugin } from '@univerjs/sheets-ui';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import DesignZhCN from '@univerjs/design/locale/zh-CN';
 import UIZhCN from '@univerjs/ui/locale/zh-CN';
@@ -32,17 +33,28 @@ import SheetsZhCN from '@univerjs/sheets/locale/zh-CN';
 import SheetsUIZhCN from '@univerjs/sheets-ui/locale/zh-CN';
 import SheetsFormulaZhCN from '@univerjs/sheets-formula/locale/zh-CN';
 
-export const UniverSheetAdapter = () => {
-  const [loading, setLoading] = useState(false);
-  const [loadingTips, setLoadingTips] = useState('数据正在请求中');
-  let univer: Univer | null = null;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let univerAPI: FUniver | null = null;
+interface UniverSheetAdapterProps {
+  data: IWorkbookData;
+  readonly?: boolean;
+}
+
+export const UniverSheetAdapter: React.FC<UniverSheetAdapterProps> = (
+  props
+) => {
+  const { data, readonly = false } = props;
+
+  const [loading] = useState(false);
+  // const [loadingTips, setLoadingTips] = useState('数据正在请求中');
+
+  const univerRef = useRef<Univer | null>(null);
+  const workbookRef = useRef<UnitModel | null>(null);
+  const univerAPIRef = useRef<FUniver | null>(null);
+  const containerRef = useRef(null);
 
   const initUniver = () => {
-    if (univer) return;
+    if (univerRef.current) return;
 
-    univer = new Univer({
+    const univer = new Univer({
       theme: defaultTheme,
       locale: LocaleType.ZH_CN,
 
@@ -56,6 +68,8 @@ export const UniverSheetAdapter = () => {
         ),
       },
     });
+
+    univerRef.current = univer;
 
     univer.registerPlugin(UniverRenderEnginePlugin);
     univer.registerPlugin(UniverFormulaEnginePlugin);
@@ -72,39 +86,80 @@ export const UniverSheetAdapter = () => {
     univer.registerPlugin(UniverSheetsUIPlugin);
     univer.registerPlugin(UniverSheetsFormulaPlugin);
 
-    univerAPI = FUniver.newAPI(univer);
-    univer.createUnit(UniverInstanceType.UNIVER_SHEET, {});
+    univerAPIRef.current = FUniver.newAPI(univer);
+    workbookRef.current = univer.createUnit(
+      UniverInstanceType.UNIVER_SHEET,
+      {}
+    );
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /**
+   * Destroy univer instance and workbook instance
+   */
+  const destroyUniver = () => {
+    // univerRef.current?.dispose();
+    univerRef.current = null;
+    workbookRef.current = null;
+  };
+
   const loadData = async () => {
-    if (!univer) return;
+    if (!univerAPIRef.current || !univerRef.current) return;
 
-    try {
-      const data: IWorkbookData = {
-        id: '1',
-        name: 'file',
-        appVersion: '1.0',
-        locale: LocaleType.ZH_CN,
-        sheetOrder: [],
-        styles: {},
-        sheets: {},
-      };
-      const workbook = univer.createUnit(UniverInstanceType.UNIVER_SHEET, data);
+    const unitId = workbookRef.current?.getUnitId();
 
-      console.log(data, workbook);
-    } catch (e) {
-      console.error(e);
+    if (unitId) {
+      univerAPIRef.current.disposeUnit(unitId);
+      workbookRef.current = null;
     }
+
+    workbookRef.current = univerRef.current.createUnit(
+      UniverInstanceType.UNIVER_SHEET,
+      data
+    );
+
+    // const activeWorkbook = univerAPIRef.current.getActiveWorkbook();
+
+    // if (activeWorkbook) {
+    //   const sheets = activeWorkbook.getSnapshot().sheets;
+    //   const sheetIds = Object.keys(sheets);
+
+    //   for (let i = 0; i < sheetIds.length; i++) {
+    //     const sheetId = sheetIds[i];
+
+    //     await univerAPIRef.current.executeCommand(
+    //       'sheet.command.remove-sheet',
+    //       { subUnitId: sheetId }
+    //     );
+    //   }
+    // }
   };
 
   useEffect(() => {
+    // 1. init
     initUniver();
+
+    return () => {
+      // destroy when unmount
+      destroyUniver();
+    };
   }, []);
+
+  useEffect(() => {
+    if (!data || !Object.keys(data).length) return;
+
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  useEffect(() => {
+    if (univerAPIRef.current) {
+      univerAPIRef.current.getActiveWorkbook()?.setEditable(!readonly);
+    }
+  }, [readonly]);
 
   return (
     <div className="w-full h-full relative">
-      <div id="univer_app" className="w-full h-full"></div>
+      <div id="univer_app" ref={containerRef} className="w-full h-full"></div>
       {loading && (
         <div className="absoult top-0 bottom-0 right-0 left-0">
           <Spin

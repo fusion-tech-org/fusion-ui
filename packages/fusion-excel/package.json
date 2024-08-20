@@ -2,13 +2,38 @@
   "name": "fusion-excel",
   "private": false,
   "version": "0.1.0",
+  "author": {
+    "email": "cogito.league@gmail.com",
+    "name": "fujia"
+  },
+  "description": "One awesome React Component for Excel and build with univerjs",
   "type": "module",
+  "main": "lib/index.min.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**"
+  ],
+  "sideEffects": false,
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "build": "tsup",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 30",
+    "preview": "vite preview",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "fusion",
+    "fusion-excel",
+    "react",
+    "vite",
+    "univer",
+    "Excel",
+    "react-component",
+    "React Component"
+  ],
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
     "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
@@ -42,6 +67,17 @@
     "@univerjs/sheets": "^0.2.8",
     "@univerjs/sheets-formula": "^0.2.8",
     "@univerjs/sheets-ui": "^0.2.8",
-    "@univerjs/ui": "^0.2.8"
-  }
+    "@univerjs/ui": "^0.2.8",
+    "read-excel-file": "^5.8.5"
+  },
+  "homepage": "https://github.com/fusion-tech-org/fusion-ui",
+  "bugs": {
+    "url": "https://github.com/fusion-tech-org/fusion-ui/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fusion-tech-org/fusion-ui",
+    "directory": "https://github.com/fusion-tech-org/fusion-ui/tree/main/packages/fusion-excel"
+  },
+  "license": "MIT"
 }

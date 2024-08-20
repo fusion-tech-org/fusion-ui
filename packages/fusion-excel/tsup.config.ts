@@ -24,5 +24,8 @@ export default defineConfig({
   format: 'esm',
   dts: true,
   publicDir: 'public',
-  metafile: false,
+  metafile: false, // Optional: Clean the output directory before building
+  esbuildOptions(options) {
+    options.drop = ['console']; // This removes all console.* calls
+  },
 });
