@@ -37,7 +37,7 @@ function App() {
         <FusionExcel
           enableRemoteUrl={excelParams.enableRemoteUrl}
           fileUrl={excelParams.fileUrl}
-          readonly
+          readonly={false}
         />
       </div>
     </div>

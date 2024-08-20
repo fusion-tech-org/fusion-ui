@@ -23,7 +23,7 @@ export default defineConfig({
   platform: 'browser',
   format: 'esm',
   dts: true,
-  // publicDir: 'public',
+  publicDir: 'public',
   metafile: false, // Optional: Clean the output directory before building
   esbuildOptions(options) {
     options.drop = ['console']; // This removes all console.* calls
