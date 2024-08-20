@@ -26,7 +26,7 @@ export default defineConfig({
   publicDir: 'public',
   metafile: false, // Optional: Clean the output directory before building
   esbuildOptions(options) {
-    options.drop = ['console']; // This removes all console.* calls
+    // options.drop = ['console']; // This removes all console.* calls
     options.loader = {
       ...options.loader,
       '.worker': 'file', // Treat .worker files as files (this can vary based on how your setup works)
