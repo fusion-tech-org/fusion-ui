@@ -25,7 +25,7 @@ import { UniverUIPlugin } from '@univerjs/ui';
 import { UniverSheetsPlugin } from '@univerjs/sheets';
 import { UniverSheetsFormulaPlugin } from '@univerjs/sheets-formula';
 import { UniverSheetsUIPlugin } from '@univerjs/sheets-ui';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 import DesignZhCN from '@univerjs/design/locale/zh-CN';
 import UIZhCN from '@univerjs/ui/locale/zh-CN';
@@ -36,14 +36,15 @@ import SheetsFormulaZhCN from '@univerjs/sheets-formula/locale/zh-CN';
 interface UniverSheetAdapterProps {
   data: IWorkbookData;
   readonly?: boolean;
+  loading?: boolean;
 }
 
 export const UniverSheetAdapter: React.FC<UniverSheetAdapterProps> = (
   props
 ) => {
-  const { data, readonly = false } = props;
-
-  const [loading] = useState(false);
+  const { data, readonly = false, loading } = props;
+  console.log('loading', loading);
+  // const [loading] = useState(false);
   // const [loadingTips, setLoadingTips] = useState('数据正在请求中');
 
   const univerRef = useRef<Univer | null>(null);
@@ -161,12 +162,15 @@ export const UniverSheetAdapter: React.FC<UniverSheetAdapterProps> = (
     <div className="w-full h-full relative">
       <div id="univer_app" ref={containerRef} className="w-full h-full"></div>
       {loading && (
-        <div className="absoult top-0 bottom-0 right-0 left-0">
-          <Spin
-            tip="This may take a while..."
-            loading={loading}
-            className="w-full h-full"
-          />
+        <div
+          className="absolute top-0 bottom-0 right-0 left-0 z-10"
+          style={{
+            background: 'rgba(0, 0, 0, 0.02)',
+          }}
+        >
+          <div className="w-full h-full flex justify-center items-center">
+            <Spin tip="文件加载和数据解析中..." loading={loading} size={48} />
+          </div>
         </div>
       )}
     </div>

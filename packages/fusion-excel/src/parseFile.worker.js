@@ -39,7 +39,6 @@ async function processFileViaRemoteUrl(url, adapter) {
       };
     })
     .then(async ({ sheets, file }) => {
-      console.log('sheets', sheets, file);
       const results = [];
 
       for (let i = 0; i < sheets.length; i++) {
