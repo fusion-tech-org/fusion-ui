@@ -2,8 +2,6 @@ import readXlsxFile, { readSheetNames } from 'read-excel-file/web-worker';
 
 self.onmessage = function (event) {
   const { fileUrl, enableRemoteUrl, adapter } = event.data || {};
-  // eslint-disable-next-line no-debugger
-  debugger;
   console.log('worker onmessage', event);
   if (fileUrl && enableRemoteUrl) {
     processFileViaRemoteUrl(fileUrl, adapter);
