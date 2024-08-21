@@ -8,3 +8,9 @@ export interface ExcelWidgetProps {
   readonly?: boolean;
   data?: IWorkbookData['sheets'];
 }
+
+export interface ParseFileParams {
+  fileUrl: string;
+  enableRemoteUrl?: boolean;
+  adapter?: 'univer';
+}

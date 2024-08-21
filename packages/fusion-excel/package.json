@@ -69,6 +69,7 @@
     "@univerjs/sheets-formula": "^0.2.8",
     "@univerjs/sheets-ui": "^0.2.8",
     "@univerjs/ui": "^0.2.8",
+    "comlink": "^4.4.1",
     "read-excel-file": "^5.8.5"
   },
   "homepage": "https://github.com/fusion-tech-org/fusion-ui",

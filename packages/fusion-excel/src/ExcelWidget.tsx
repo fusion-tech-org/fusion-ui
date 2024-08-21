@@ -2,9 +2,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { IWorkbookData } from '@univerjs/core';
 
 // import ParseFileWorker from './parseFile.worker?worker';
+
 import { UniverSheetAdapter } from './UniverSheetAdapter';
 import { isValidURL } from './utils';
 import type { ExcelWidgetProps } from './interface';
+import parseExcelFile from './parseExcelFile';
 
 export const ExcelWidget: React.FC<ExcelWidgetProps> = (props) => {
   const workerRef = useRef<Worker | null>(null);
@@ -17,6 +19,20 @@ export const ExcelWidget: React.FC<ExcelWidgetProps> = (props) => {
   } = props;
   console.log('excel widget', data, props);
   const [univerData, setUniverData] = useState<IWorkbookData | object>({});
+
+  const getData = async () => {
+    if (!enableRemoteUrl || !isValidURL(fileUrl)) return;
+
+    const data = await parseExcelFile({
+      enableRemoteUrl,
+      fileUrl,
+    });
+
+    console.log(data);
+  };
+  useEffect(() => {
+    getData();
+  }, [fileUrl, enableRemoteUrl]);
 
   const renderExcel = () => {
     const excelMapViaAdapter = {

@@ -1,4 +1,4 @@
-declare module '*.worker.js' {
+declare module '*.worker.ts' {
   const WorkerFactory: {
     new (): Worker;
   };

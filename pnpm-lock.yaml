@@ -320,6 +320,9 @@ importers:
       '@univerjs/ui':
         specifier: ^0.2.8
         version: 0.2.8(@univerjs/core@0.2.8)(@univerjs/design@0.2.8)(@univerjs/engine-formula@0.2.8)(@univerjs/engine-render@0.2.8)(clsx@2.0.0)(react-dom@18.3.1)(react@18.3.1)(rxjs@7.8.1)(typescript@5.5.4)
+      comlink:
+        specifier: ^4.4.1
+        version: 4.4.1
       read-excel-file:
         specifier: ^5.8.5
         version: 5.8.5
@@ -9445,6 +9448,10 @@ packages:
     dependencies:
       delayed-stream: 1.0.0
     dev: true
+
+  /comlink@4.4.1:
+    resolution: {integrity: sha512-+1dlx0aY5Jo1vHy/tSsIGpSkN4tS9rZSW8FIhG0JH/crs9wwweswIo/POr451r7bZww3hFbPAKnTpimzL/mm4Q==}
+    dev: false
 
   /commander@10.0.1:
     resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
