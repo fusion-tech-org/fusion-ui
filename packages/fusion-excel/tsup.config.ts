@@ -29,8 +29,8 @@ export default defineConfig({
     // options.drop = ['console']; // This removes all console.* calls
     options.loader = {
       ...options.loader,
-      // '.worker': 'file', // Treat .worker files as files (this can vary based on how your setup works)
-      '.worker': 'base64', // Treat .worker files as files (this can vary based on how your setup works)
+      '.worker': 'file', // Treat .worker files as files (this can vary based on how your setup works)
+      // '.worker': 'base64', // Treat .worker files as files (this can vary based on how your setup works)
     };
   },
 });

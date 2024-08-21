@@ -1,7 +1,9 @@
-import readXlsxFile, { readSheetNames } from 'read-excel-file/web-worker'
+import readXlsxFile, { readSheetNames } from 'read-excel-file/web-worker';
 
-onmessage = function (event) {
+self.onmessage = function (event) {
   const { fileUrl, enableRemoteUrl, adapter } = event.data || {};
+  // eslint-disable-next-line no-debugger
+  debugger;
   console.log('worker onmessage', event);
   if (fileUrl && enableRemoteUrl) {
     processFileViaRemoteUrl(fileUrl, adapter);
@@ -11,32 +13,32 @@ onmessage = function (event) {
   //   // each row being an array of cells.
   //   postMessage(rows)
   // })
-}
+};
 
 async function processFileViaRemoteUrl(url, adapter) {
   postMessage({
     type: 'PARSE_EXCEL',
     step: 1,
-    message: 'start-fetch'
+    message: 'start-fetch',
   });
   fetch(url, {
     headers: {
       mode: 'no-cors',
-    }
+    },
   })
-    .then(response => response.blob())
-    .then(async blob => {
+    .then((response) => response.blob())
+    .then(async (blob) => {
       postMessage({
         type: 'PARSE_EXCEL',
         step: 2,
-        message: 'start-parse'
+        message: 'start-parse',
       });
       const sheets = await readSheetNames(blob);
 
       return {
         sheets,
         file: blob,
-      }
+      };
     })
     .then(async ({ sheets, file }) => {
       console.log('sheets', sheets, file);
@@ -52,8 +54,7 @@ async function processFileViaRemoteUrl(url, adapter) {
         results.push({
           sheet: sheetName,
           rows,
-        })
-
+        });
       }
 
       return {
@@ -61,10 +62,10 @@ async function processFileViaRemoteUrl(url, adapter) {
         results,
       };
     })
-    .then(data => {
+    .then((data) => {
       console.log('format data');
       const adapterMapFormatter = {
-        univer: formatDataForUniver
+        univer: formatDataForUniver,
       };
 
       return adapterMapFormatter[adapter](data);
@@ -78,14 +79,15 @@ async function processFileViaRemoteUrl(url, adapter) {
         step: 3,
         data: result,
       });
-    }).catch(err => {
+    })
+    .catch((err) => {
       console.error(err);
       postMessage({
         type: 'PARSE_EXCEL',
         code: 1,
-        message: err?.message
+        message: err?.message,
       });
-    })
+    });
 }
 
 function formatDataForUniver(data) {
@@ -104,7 +106,7 @@ function formatDataForUniver(data) {
       cellData,
       // rowCount: rows.length + 5,
       columnCount,
-    }
+    };
   }
 
   return {
@@ -113,7 +115,7 @@ function formatDataForUniver(data) {
     sheetOrder: sheets,
     appVersion: '1.0.0',
     sheets: formatSheets,
-  }
+  };
 }
 
 function rows2CellData(rows) {
@@ -134,9 +136,8 @@ function rows2CellData(rows) {
 
       cellData[`${i}`][`${j}`] = {
         s: '',
-        v: curCell
-      }
-
+        v: curCell,
+      };
     }
   }
 
