@@ -111,6 +111,9 @@ importers:
 
   apps/web:
     dependencies:
+      fusion-excel:
+        specifier: workspace:^
+        version: link:../../packages/fusion-excel
       fusion-ui:
         specifier: workspace:*
         version: link:../../packages/fusion-ui

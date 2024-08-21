@@ -2,7 +2,7 @@ import readXlsxFile, { readSheetNames } from 'read-excel-file/web-worker'
 
 onmessage = function (event) {
   const { fileUrl, enableRemoteUrl, adapter } = event.data || {};
-
+  console.log('worker onmessage', event);
   if (fileUrl && enableRemoteUrl) {
     processFileViaRemoteUrl(fileUrl, adapter);
   }

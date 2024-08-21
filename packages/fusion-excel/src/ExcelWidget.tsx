@@ -61,7 +61,7 @@ export const ExcelWidget: React.FC<ExcelWidgetProps> = (props) => {
     };
 
     workerRef.current.onerror = function (event) {
-      console.error(event.message);
+      console.error(event);
     };
 
     workerRef.current.postMessage({
