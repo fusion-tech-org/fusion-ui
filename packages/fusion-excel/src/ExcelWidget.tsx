@@ -55,7 +55,7 @@ export const ExcelWidget: React.FC<ExcelWidgetProps> = (props) => {
     )
       return;
 
-    const workerUrl = new URL('./parseFile.worker.js', import.meta.url);
+    const workerUrl = new URL('./parseFile.worker', import.meta.url);
 
     const ParseFileWorker = new Worker(workerUrl, {
       type: 'module',
