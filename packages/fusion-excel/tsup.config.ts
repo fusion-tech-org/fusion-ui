@@ -30,6 +30,7 @@ export default defineConfig({
     options.loader = {
       ...options.loader,
       '.worker.js': 'file', // Treat .worker files as files (this can vary based on how your setup works)
+      '.worker.ts': 'file', // Treat .worker files as files (this can vary based on how your setup works)
     };
   },
 });
