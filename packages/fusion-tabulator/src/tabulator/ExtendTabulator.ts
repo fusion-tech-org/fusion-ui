@@ -56,7 +56,7 @@ Tabulator.extendModule('format', 'formatters', {
     const { linkColumn } = formatterParams || {};
 
     if (!Array.isArray(cellValue) || cellValue.length === 0) {
-      return cellValue;
+      return '';
     }
 
     function genCheckboxList() {
@@ -87,6 +87,8 @@ Tabulator.extendModule('format', 'formatters', {
           </label>
         `;
       });
+
+      return htmlStr;
     }
 
     const innerHTML = genCheckboxList();
