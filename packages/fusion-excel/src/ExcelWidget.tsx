@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { IWorkbookData } from '@univerjs/core';
 
 // import ParseFileWorker from './parseFile.worker?worker';
@@ -7,16 +7,19 @@ import { UniverSheetAdapter } from './UniverSheetAdapter';
 import { adapterMapFormatter, isValidURL } from './utils';
 import type { ExcelWidgetProps } from './interface';
 import readXlsxFile, { readSheetNames } from 'read-excel-file/web-worker';
+import { workerScripts } from './constants';
 // import parseExcelFile from './parseExcelFile';
+// import workerScript from './parseFile.worker.js?raw';
 
 export const ExcelWidget: React.FC<ExcelWidgetProps> = (props) => {
-  // const workerRef = useRef<Worker | null>(null);
+  const workerRef = useRef<Worker | null>(null);
   const {
     adapter = 'univer',
     enableRemoteUrl,
     fileUrl,
     data,
     readonly,
+    appModel,
   } = props;
   console.log('excel widget', data, props);
   const [loading, setLoading] = useState(false);
@@ -33,6 +36,46 @@ export const ExcelWidget: React.FC<ExcelWidgetProps> = (props) => {
 
   //   console.log(data);
   // };
+
+  const genWorker = useCallback(() => {
+    const blob = new Blob([workerScripts], {
+      type: 'application/javascript',
+    });
+
+    const blobURL = URL.createObjectURL(blob);
+
+    const worker = new Worker(blobURL);
+    workerRef.current = worker;
+
+    workerRef.current.onmessage = function (event) {
+      // `event.data` is an array of rows
+      // each row being an array of cells.
+      const { data: parsedData } = event.data || {};
+
+      // univerDatRef.current = parsedData;
+      // setUniverData(parsedData);
+      console.log('parsedData', parsedData);
+
+      // close web worker
+      workerRef.current.terminate();
+      workerRef.current = null;
+    };
+
+    workerRef.current.onerror = function (event) {
+      console.error(event);
+    };
+
+    workerRef.current.postMessage({
+      enableRemoteUrl,
+      fileUrl,
+      adapter,
+    });
+  }, [enableRemoteUrl, fileUrl, adapter]);
+
+  useEffect(() => {
+    genWorker();
+  }, [genWorker]);
+
   const queryDataSync = useCallback(
     async (fileUrl: string, enableRemoteUrl: boolean) => {
       if (!enableRemoteUrl || !isValidURL(fileUrl)) return;

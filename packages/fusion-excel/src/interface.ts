@@ -7,6 +7,7 @@ export interface ExcelWidgetProps {
   fileUrl?: string;
   readonly?: boolean;
   data?: IWorkbookData['sheets'];
+  appModel?: 'EDIT' | 'PUBLISHED' | 'INSTALL';
 }
 
 export interface ParseFileParams {

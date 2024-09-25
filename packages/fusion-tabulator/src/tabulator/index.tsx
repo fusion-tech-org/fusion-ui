@@ -31,7 +31,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
     headerVisible = true,
     commonOptions = {},
-    enableIndexedDBQuery,
+    // enableIndexedDBQuery,
     isRemote = true,
     enableColumnGroup = false,
   } = uniformProps;
@@ -77,13 +77,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   );
 
   const responsiveTabulator = () => {
-    if (
-      isEmpty(tableData) &&
-      !actionId &&
-      isEmpty(columnDefs) &&
-      !enableIndexedDBQuery
-    )
-      return;
+    if (isEmpty(tableData) && !actionId && isEmpty(columnDefs)) return;
 
     if (!tabulatorRef) {
       initTable();
@@ -148,7 +142,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     actionId,
     JSON.stringify(columnDefs),
     JSON.stringify(tableData),
-    enableIndexedDBQuery,
+    // enableIndexedDBQuery,
   ]);
 
   useEffect(() => {
@@ -221,12 +215,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainId, tableMode, JSON.stringify(props), tabulatorRef]);
 
-  if (
-    isEmpty(tableData) &&
-    !actionId &&
-    isEmpty(columnDefs) &&
-    !enableIndexedDBQuery
-  ) {
+  if (isEmpty(tableData) && !actionId && isEmpty(columnDefs)) {
     return (
       <div
         style={{
