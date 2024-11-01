@@ -29,6 +29,7 @@ export const TableContainer = styled.div`
   flex: 1;
   width: 100%;
   height: 100%;
+  display: flex;
 `;
 
 export const Container = styled.div<{
