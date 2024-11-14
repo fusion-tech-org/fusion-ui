@@ -67,6 +67,7 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     columns = [],
     isRemoteQuery,
     uniqueKey = 'id',
+    subTableLayout = 'fitDataStretch',
   } = quickAddConfigs || {};
   const { dropdownIndexedDBTableName } = indexdbConfigs || {};
 
@@ -83,7 +84,7 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     // layout: 'fitColumns',
     // layout: 'fitDataTable',
     // layout: 'fitData',
-    layout: 'fitDataStretch',
+    layout: subTableLayout,
     height: '320px',
     // selectable: 1,
     selectableRows: 1,
