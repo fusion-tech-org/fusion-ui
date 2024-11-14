@@ -24,7 +24,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     onUpdateWidgetMetaProperty,
     // onUpdateWidgetProperty,
     onCustomSelectDropdownItem,
-    actionId,
+    // actionId,
     tableMode = 'normal',
     uniformProps = {},
   } = props;
@@ -32,7 +32,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     headerVisible = true,
     commonOptions = {},
     // enableIndexedDBQuery,
-    isRemote = true,
+    // isRemote = true,
     enableColumnGroup = false,
   } = uniformProps;
   const commonOptionsRef = useRef(commonOptions);
@@ -77,7 +77,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   );
 
   const responsiveTabulator = () => {
-    if (isEmpty(tableData) && !actionId && isEmpty(columnDefs)) return;
+    // if (isEmpty(tableData) && !actionId && isEmpty(columnDefs)) return;
+    if (isEmpty(tableData) && isEmpty(columnDefs)) return;
 
     if (!tabulatorRef) {
       initTable();
@@ -139,7 +140,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     responsiveTabulator();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    actionId,
+    // actionId,
     JSON.stringify(columnDefs),
     JSON.stringify(tableData),
     // enableIndexedDBQuery,
@@ -168,14 +169,14 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     initTable();
   }, [JSON.stringify(commonOptions)]);
 
-  useEffect(() => {
-    if (!tabulatorRef || !actionId || !isRemote) return;
+  // useEffect(() => {
+  //   if (!tabulatorRef || !actionId || !isRemote) return;
 
-    const curAjax = tabulatorRef.getAjaxUrl?.();
-    console.log('curAjax', curAjax);
-    curAjax && tabulatorRef.setData(curAjax);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actionId, !tabulatorRef, isRemote]);
+  //   const curAjax = tabulatorRef.getAjaxUrl?.();
+  //   console.log('curAjax', curAjax);
+  //   curAjax && tabulatorRef.setData(curAjax);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [actionId, !tabulatorRef, isRemote]);
 
   function handleSelectRowData(record) {
     const { id: _key, ...rest } = record || {};
@@ -215,7 +216,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainId, tableMode, JSON.stringify(props), tabulatorRef]);
 
-  if (isEmpty(tableData) && !actionId && isEmpty(columnDefs)) {
+  // if (isEmpty(tableData) && !actionId && isEmpty(columnDefs)) {
+  if (isEmpty(tableData) && isEmpty(columnDefs)) {
     return (
       <div
         style={{
