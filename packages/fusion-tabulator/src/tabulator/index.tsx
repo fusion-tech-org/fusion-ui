@@ -38,6 +38,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const commonOptionsRef = useRef(commonOptions);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
+  const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
   const [mainId] = useState(tabulatorId);
   const [extraInputCreated, setExtraInputCreated] = useState(false);
@@ -65,7 +66,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         : len * ROW_HEIGHT + 1;
 
       if (offsetHeight + EXTRA_INPUT_HEIGHT > tablePosition.height) {
-        offsetHeight = tablePosition.height - ROW_HEIGHT + 2;
+        offsetHeight = tablePosition.height - ROW_HEIGHT + 10;
         inputWrapRef.current.style.right = '14px';
       } else {
         inputWrapRef.current.style.right = '0px';
@@ -109,10 +110,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         enableColumnGroup
       );
       try {
-        console.log(
-          'setColumns -> isExtensible ->',
-          Object.isExtensible(formatColumns)
-        );
         tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
       } catch (error) {
         console.log('setColumns failed: ', error, formatColumns);
@@ -157,17 +154,23 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   }, [tabulatorRef]);
 
   useEffect(() => {
+    if (!modeRef.current) {
+      modeRef.current = tableMode;
+    }
     if (
       !tabulatorRef ||
       JSON.stringify(commonOptions) ===
-        JSON.stringify(JSON.stringify(commonOptionsRef.current))
+        JSON.stringify(JSON.stringify(commonOptionsRef.current)) ||
+      modeRef.current === tableMode
     ) {
       return;
     }
-    commonOptionsRef.current = commonOptions;
 
     initTable();
-  }, [JSON.stringify(commonOptions)]);
+
+    commonOptionsRef.current = commonOptions;
+    modeRef.current = tableMode;
+  }, [JSON.stringify(commonOptions), tableMode]);
 
   // useEffect(() => {
   //   if (!tabulatorRef || !actionId || !isRemote) return;
@@ -177,6 +180,14 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   //   curAjax && tabulatorRef.setData(curAjax);
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [actionId, !tabulatorRef, isRemote]);
+
+  useEffect(() => {
+    return () => {
+      commonOptionsRef.current = null;
+      inputWrapRef.current = null;
+      modeRef.current = null;
+    };
+  }, []);
 
   function handleSelectRowData(record) {
     const { id: _key, ...rest } = record || {};
