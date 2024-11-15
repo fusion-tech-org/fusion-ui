@@ -40,7 +40,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
   const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
-  const [mainId] = useState(tabulatorId);
+  const [mainId, setMainId] = useState(tabulatorId);
   const [extraInputCreated, setExtraInputCreated] = useState(false);
   const { tablePosition, tabulatorRef, initTable } = useTabulator({
     ref: wrapperRef,
@@ -135,13 +135,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   useEffect(() => {
     responsiveTabulator();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    // actionId,
-    JSON.stringify(columnDefs),
-    JSON.stringify(tableData),
-    // enableIndexedDBQuery,
-  ]);
+  }, [JSON.stringify(columnDefs, null, 2), JSON.stringify(tableData, null, 2)]);
 
   useEffect(() => {
     transformYInputElem();
@@ -154,40 +148,35 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   }, [tabulatorRef]);
 
   useEffect(() => {
-    if (!modeRef.current) {
-      modeRef.current = tableMode;
-    }
     if (
       !tabulatorRef ||
       JSON.stringify(commonOptions) ===
-        JSON.stringify(JSON.stringify(commonOptionsRef.current)) ||
-      modeRef.current === tableMode
+        JSON.stringify(JSON.stringify(commonOptionsRef.current))
     ) {
       return;
     }
 
-    initTable();
-
     commonOptionsRef.current = commonOptions;
-    modeRef.current = tableMode;
-  }, [JSON.stringify(commonOptions), tableMode]);
-
-  // useEffect(() => {
-  //   if (!tabulatorRef || !actionId || !isRemote) return;
-
-  //   const curAjax = tabulatorRef.getAjaxUrl?.();
-  //   console.log('curAjax', curAjax);
-  //   curAjax && tabulatorRef.setData(curAjax);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [actionId, !tabulatorRef, isRemote]);
+  }, [JSON.stringify(commonOptions, null, 2)]);
 
   useEffect(() => {
+    if (!tableMode) {
+      modeRef.current = tableMode;
+    }
+
+    if (tableMode === modeRef.current) return;
+    modeRef.current = tableMode;
+    const newId = genTabulatorUUID();
+
+    setMainId(newId);
+
     return () => {
-      commonOptionsRef.current = null;
-      inputWrapRef.current = null;
       modeRef.current = null;
+      commonOptionsRef.current = null;
+      wrapperRef.current = null;
+      inputWrapRef.current = null;
     };
-  }, []);
+  }, [tableMode]);
 
   function handleSelectRowData(record) {
     const { id: _key, ...rest } = record || {};
@@ -211,7 +200,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   const renderExtraInput = useCallback(() => {
     const holdEle = document.getElementById(`extra-input-markup-${mainId}`);
-    console.log('tableMode', tableMode, 'mainId', mainId, '!holdEle', !holdEle);
+
     if (tableMode !== 'editable' || !holdEle) return null;
 
     return createPortal(
