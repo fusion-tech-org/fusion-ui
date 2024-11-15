@@ -40,7 +40,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
   const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
-  const [mainId, setMainId] = useState(tabulatorId);
+  const [mainId] = useState(tabulatorId);
   const [extraInputCreated, setExtraInputCreated] = useState(false);
   const { tablePosition, tabulatorRef, initTable } = useTabulator({
     ref: wrapperRef,
