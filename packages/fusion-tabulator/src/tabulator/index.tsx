@@ -40,7 +40,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
   const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
-  const [mainId] = useState(tabulatorId);
+  const [mainId, setMainId] = useState(tabulatorId);
   const [extraInputCreated, setExtraInputCreated] = useState(false);
   const { tablePosition, tabulatorRef, initTable } = useTabulator({
     ref: wrapperRef,
@@ -66,7 +66,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         : len * ROW_HEIGHT + 1;
 
       if (offsetHeight + EXTRA_INPUT_HEIGHT > tablePosition.height) {
-        offsetHeight = tablePosition.height - ROW_HEIGHT + 10;
+        offsetHeight = tablePosition.height - ROW_HEIGHT + 12;
         inputWrapRef.current.style.right = '14px';
       } else {
         inputWrapRef.current.style.right = '0px';
@@ -211,7 +211,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   const renderExtraInput = useCallback(() => {
     const holdEle = document.getElementById(`extra-input-markup-${mainId}`);
-
+    console.log('tableMode', tableMode, 'mainId', mainId, '!holdEle', !holdEle);
     if (tableMode !== 'editable' || !holdEle) return null;
 
     return createPortal(
