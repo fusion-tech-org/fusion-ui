@@ -1,6 +1,6 @@
-import { FC, useRef } from 'react';
+import { FC } from 'react';
 
-import { Container, Main, TableContainer } from 'styles/global-styles';
+import { Container, TableContainer } from 'styles/global-styles';
 import type { FusionTabulatorProps, RenderCompByTypeProps } from './interface';
 import { TabulatorReact } from './tabulator/index';
 import type { ReactTabulatorProps } from './tabulator/interface';
