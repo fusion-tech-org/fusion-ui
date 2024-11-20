@@ -83,24 +83,20 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
   } = props;
   console.log('Tabulator props -> ', props);
 
-  const refMain = useRef(null);
-
   return (
     <Container
       widget-id={widgetId}
       id={`${TABULATOR_PREFIX}_${widgetId}`}
       appMode={appMode}
     >
-      <Main ref={refMain}>
-        <TableContainer>
-          {renderCompByTableType(tableType, {
-            onUpdateWidgetMetaProperty,
-            tableMode,
-            appMode,
-            ...restProps,
-          })}
-        </TableContainer>
-      </Main>
+      <TableContainer>
+        {renderCompByTableType(tableType, {
+          onUpdateWidgetMetaProperty,
+          tableMode,
+          appMode,
+          ...restProps,
+        })}
+      </TableContainer>
     </Container>
   );
 };

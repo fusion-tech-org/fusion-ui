@@ -40,6 +40,8 @@ export const Container = styled.div<{
   width: 100%;
   flex: 1;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   /* height: 100%; */
   /* padding-right: ${({ appMode }) => (appMode === 'EDIT' ? '40px' : 0)}; */
   background-color: #fff;
