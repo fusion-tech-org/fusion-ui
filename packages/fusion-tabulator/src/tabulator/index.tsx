@@ -10,7 +10,6 @@ import { ExternalInputContainer, TabulatorContainer } from './styles';
 import { CustomTableSelect } from './components/CustomTableSelect';
 import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
-// import dbDexie from './utils/dbDexie';
 import { EXTRA_INPUT_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { customEditorAndFormatterPipe } from './genInitOptions';
 import { RowComponent } from 'tabulator-tables';
@@ -24,15 +23,12 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     onUpdateWidgetMetaProperty,
     // onUpdateWidgetProperty,
     onCustomSelectDropdownItem,
-    // actionId,
     tableMode = 'normal',
     uniformProps = {},
   } = props;
   const {
     headerVisible = true,
     commonOptions = {},
-    // enableIndexedDBQuery,
-    // isRemote = true,
     enableColumnGroup = false,
   } = uniformProps;
   const commonOptionsRef = useRef(commonOptions);
@@ -216,7 +212,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainId, tableMode, JSON.stringify(props), tabulatorRef]);
 
-  // if (isEmpty(tableData) && !actionId && isEmpty(columnDefs)) {
   if (isEmpty(tableData) && isEmpty(columnDefs)) {
     return (
       <div
@@ -237,13 +232,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   }
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        // height: '100%',
-        flex: 1,
-      }}
-    >
+    <div className={tableMode === 'editable' ? 'h-full' : 'flex-1'}>
       <TabulatorContainer
         tableMode={tableMode}
         ref={wrapperRef}

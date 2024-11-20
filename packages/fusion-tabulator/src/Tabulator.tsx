@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Container, TableContainer } from 'styles/global-styles';
+import { TableContainer } from 'styles/global-styles';
 import type { FusionTabulatorProps, RenderCompByTypeProps } from './interface';
 import { TabulatorReact } from './tabulator/index';
 import type { ReactTabulatorProps } from './tabulator/interface';
@@ -84,20 +84,18 @@ export const Tabulator: FC<FusionTabulatorProps> = (props) => {
   console.log('Tabulator props -> ', props);
 
   return (
-    <Container
+    <TableContainer
       widget-id={widgetId}
       id={`${TABULATOR_PREFIX}_${widgetId}`}
-      appMode={appMode}
+      tableMode={tableMode}
     >
-      <TableContainer>
-        {renderCompByTableType(tableType, {
-          onUpdateWidgetMetaProperty,
-          tableMode,
-          appMode,
-          ...restProps,
-        })}
-      </TableContainer>
-    </Container>
+      {renderCompByTableType(tableType, {
+        onUpdateWidgetMetaProperty,
+        tableMode,
+        appMode,
+        ...restProps,
+      })}
+    </TableContainer>
   );
 };
 
