@@ -1,13 +1,11 @@
 import { TabulatorFull as Tabulator, Options } from 'tabulator-tables';
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import ReactDOM from 'react-dom';
 
 import ExtendTabulator from '../../ExtendTabulator';
 import { DroplistWrapper } from './styles';
 import { genTabulatorUUID } from 'utils/index';
-import Dexie from 'dexie';
-import dbDexie from 'src/tabulator/utils/dbDexie';
 import { isArray } from 'lodash';
 
 interface TableSelectProps {
@@ -56,7 +54,6 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
 };
 
 function genInitOptions(uniformProps: Record<string, any>): Options & {
-  dexie?: Dexie;
   tableName?: string;
 } {
   const { quickAddConfigs, enableIndexedDBQuery, indexdbConfigs } =
@@ -113,7 +110,6 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     }
 
     return {
-      dexie: dbDexie.getDexie(),
       tableName: dropdownIndexedDBTableName,
       ...colDefs,
       ...commonOptions,

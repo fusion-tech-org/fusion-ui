@@ -1,10 +1,6 @@
 import { CellComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
 import { isFunction, isNumber, isString, isUndefined } from 'lodash';
 
-// import { DexieModule } from './custom-modules/DexieModule';
-// import { AdvertModule } from './custom-modules/AdvertModule';
-// import { ExternalInputModule } from './custom-modules/ExternalInputModule';
-
 import zhCNLang from 'langs/zh-cn.json';
 import { Message } from '@arco-design/web-react';
 import { convertExpressionByRule, simpleExecExpression } from './utils';
@@ -206,21 +202,8 @@ Tabulator.extendModule('format', 'formatters', {
       separator = ',',
       size = 'default', // 'small' | 'default' | 'medium' | 'large'
       colors = {},
-      colorList = [],
+      // colorList = [],
     } = formatterParams || {};
-    // arco-tag-red
-    // arco-tag-orangered
-    // arco-tag-orange
-    // arco-tag-gold
-    // arco-tag-lime
-    // arco-tag-green
-    // arco-tag-cyan
-    // arco-tag-blue
-    // arco-tag-arcoblue
-    // arco-tag-purple
-    // arco-tag-pinkpurple
-    // arco-tag-magenta
-    // arco-tag-gray
 
     if (!isString(cellValue) || !cellValue) return '';
 
@@ -247,13 +230,6 @@ Tabulator.extendModule('format', 'formatters', {
       </div>
     `;
   },
-  // tickbox: function (_cell: CellComponent, _formatterParams, _onRendered) {
-  //   // cell.getColumn().getDefinition().cellClick = function (e, cell) {
-  //   //   // e.stopPropagation();
-  //   //   cell.getRow().toggleSelect();
-  //   // };
-  //   return `<input type="checkbox" aria-label="Select Row" data-action="tickbox">`;
-  // },
 });
 
 // extending accessors
@@ -262,13 +238,6 @@ Tabulator.extendModule('accessor', 'accessors', {
     return Math.floor(value); //return the new value for the cell data.
   },
 });
-
-// extending requests
-// Tabulator.extendModule("ajax", "defaultConfig", {
-//   type: "POST",
-//   contentType : "application/json; charset=utf-8",
-
-// });
 
 // extending Column Calculation
 

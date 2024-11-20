@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { CellComponent } from 'tabulator-tables';
-// import { createRoot } from 'react-dom/client';
 import ReactDOM from 'react-dom';
 import { Select } from '@arco-design/web-react';
 

@@ -3,11 +3,9 @@ import { Dropdown, Input, Message } from '@arco-design/web-react';
 import { Container, DroplistWrapper, InputWrapper } from './styles';
 import { IconPlus } from '@arco-design/web-react/icon';
 import { TableSelect } from './TableSelect';
-// import { useClickOutside } from 'hooks/useClickOutsite';
 import { useKeyPress } from 'hooks/useKeyPress';
 import { Filter, RowComponent, Tabulator } from 'tabulator-tables';
 import { debounce, map, isArray, isEmpty, isFunction } from 'lodash';
-// import { ROW_HEIGHT } from 'src/tabulator/constants';
 
 const DEFAULT_EXTRA_INPUT_PLACEHOLD = '请输入...';
 
@@ -15,9 +13,7 @@ export const CustomTableSelect = (props) => {
   const { onSelectRowData, uniformProps, onCreated, onExtraInputValueChanged } =
     props;
   const [popupVisible, setPopupVisble] = useState(false);
-  // const [inputForced, setInputForce] = useState(false);
   const [cursor, setCursor] = useState<number>(-1);
-  // const [tableData, setTableData] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [inZone, setInZone] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -154,13 +150,10 @@ export const CustomTableSelect = (props) => {
   //   tabulatorRef.current.scrollToRow(uniqueKeys[cursor], 'center', false);
   // }, [cursor]);
 
-  // useClickOutside([dropdownRef, inputRef], hideDroplist);
   useKeyPress(handleKeyPress);
 
   const handleInputFocus = () => {
     const { data, columns } = quickAddConfigs || {};
-
-    // setInputForce(true);
 
     if (isEmpty(data) && isEmpty(columns) && !enableIndexedDBQuery) {
       Message.info('请配置下拉项数据');
@@ -213,14 +206,11 @@ export const CustomTableSelect = (props) => {
   const handleTabulator = (ref) => {
     tabulatorRef.current = ref;
 
-    // tabulatorRef.current.on('rowSelected', handleSelectedRow);
     tabulatorRef.current.on('rowClick', handleSelectedRow);
     tabulatorRef.current.on('dataFiltered', handelDataFiltered);
-    // tabulatorRef.current.on('rowDblClick', handleSelectedRow);
   };
 
   const handleInputBlur = () => {
-    // setInputForce(false);
     if (inZone || cursor >= 0) return;
 
     hideDroplist();
@@ -239,7 +229,6 @@ export const CustomTableSelect = (props) => {
       <Dropdown
         popupVisible={popupVisible}
         trigger="focus"
-        // onVisibleChange={handleVisibleChange}
         triggerProps={{
           blurToHide: false,
         }}
