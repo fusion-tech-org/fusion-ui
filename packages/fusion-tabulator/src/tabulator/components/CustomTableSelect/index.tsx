@@ -166,6 +166,11 @@ export const CustomTableSelect = (props) => {
 
   const handleSelectedRow = (_e, row: RowComponent) => {
     const rowData = row.getData();
+
+    if (tabulatorRef.current) {
+      tabulatorRef.current.deselectRow();
+    }
+
     onSelectRowData?.(rowData);
 
     hideDroplist();

@@ -37,7 +37,6 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
     return () => {
       instanceRef.current?.destroy();
       instanceRef.current = null;
-      console.log('unmounted');
     };
   }, []);
 
@@ -67,7 +66,6 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     uniqueKey = 'id',
     subTableLayout = 'fitDataStretch',
   } = quickAddConfigs || {};
-  const { dropdownIndexedDBTableName } = indexdbConfigs || {};
 
   // generates initial options
   const commonOptions: Options & {
@@ -86,6 +84,7 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     height: '320px',
     // selectable: 1,
     selectableRows: 1,
+    selectable: 'highlight',
     selectableRowsRollingSelection: false,
     rowHeight: 32,
     renderHorizontal: 'virtual',
@@ -97,25 +96,6 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
       navDown: false,
     },
   };
-
-  if (enableIndexedDBQuery) {
-    const colDefs: {
-      columns?: any[];
-      autoColumns?: true;
-    } = {};
-
-    if (isArray(columns) && columns.length > 0) {
-      colDefs.columns = columns;
-    } else {
-      colDefs.autoColumns = true;
-    }
-
-    return {
-      tableName: dropdownIndexedDBTableName,
-      ...colDefs,
-      ...commonOptions,
-    };
-  }
 
   return {
     data: isArray(data) ? data : [],
