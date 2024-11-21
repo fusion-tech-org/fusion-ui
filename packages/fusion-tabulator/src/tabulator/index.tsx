@@ -12,7 +12,6 @@ import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
 import { EXTRA_INPUT_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { customEditorAndFormatterPipe } from './genInitOptions';
-import { RowComponent } from 'tabulator-tables';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
