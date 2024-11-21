@@ -187,7 +187,7 @@ export const CustomTableSelect = (props) => {
       type: 'like',
       value,
     }));
-    console.log('buildFilters', buildFilters);
+
     tabulatorRef.current.setFilter([buildFilters]);
   }, 300);
 
@@ -229,6 +229,7 @@ export const CustomTableSelect = (props) => {
       <Dropdown
         popupVisible={popupVisible}
         trigger="focus"
+        unmountOnExit={false}
         triggerProps={{
           blurToHide: false,
         }}

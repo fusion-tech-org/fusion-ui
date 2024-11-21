@@ -114,18 +114,19 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   };
 
   const handleAddExtraEvents = () => {
-    tabulatorRef.on('rowDeleted', (row: RowComponent) => {
-      const curTableData = row.getTable().getData('visible');
+    // tabulatorRef.on('rowDeleted', (row: RowComponent) => {
+    //   const curTableData = row.getTable().getData('visible');
 
-      transformYInputElem(curTableData);
-    });
+    //   transformYInputElem(curTableData);
+    // });
 
     tabulatorRef.on('dataChanged', (data) => {
-      const visibleDataLen = tabulatorRef.getData('visible').length;
-
-      if (data.length === visibleDataLen + 1) {
-        transformYInputElem(data);
-      }
+      // const visibleDataLen = tabulatorRef.getData('visible').length;
+      // console.log('dataChanged: ', data.length, visibleDataLen);
+      // if (data.length === visibleDataLen + 1) {
+      //   transformYInputElem(data);
+      // }
+      transformYInputElem(data);
     });
   };
 

@@ -36,6 +36,8 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
 
     return () => {
       instanceRef.current?.destroy();
+      instanceRef.current = null;
+      console.log('unmounted');
     };
   }, []);
 
@@ -62,7 +64,6 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
   const {
     data = [],
     columns = [],
-    isRemoteQuery,
     uniqueKey = 'id',
     subTableLayout = 'fitDataStretch',
   } = quickAddConfigs || {};
@@ -112,14 +113,6 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     return {
       tableName: dropdownIndexedDBTableName,
       ...colDefs,
-      ...commonOptions,
-    };
-  }
-
-  if (isRemoteQuery) {
-    return {
-      data: [],
-      columns: [],
       ...commonOptions,
     };
   }
