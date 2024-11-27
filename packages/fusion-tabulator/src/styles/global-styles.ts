@@ -43,7 +43,8 @@ export const Container = styled.div<{
 }>`
   position: relative;
   width: 100%;
-  ${(props) => (props.tableMode === 'normal' ? 'flex: 1;' : 'height: 100%;')}
+  ${(props) =>
+    props.tableMode === 'normal' ? 'height: 100%;flex: 1;' : 'height: 100%;'}
   overflow-y: auto;
   display: flex;
   flex-direction: column;
