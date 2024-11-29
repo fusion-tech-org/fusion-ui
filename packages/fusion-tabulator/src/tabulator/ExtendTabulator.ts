@@ -22,30 +22,30 @@ import { convertExpressionByRule, simpleExecExpression } from './utils';
  */
 
 function genEditStyle(cellValue) {
-      // 创建外层div
-    const outerDiv = document.createElement('div');
-    outerDiv.style.position = 'relative';
-    outerDiv.style.opacity = '1';
+  // 创建外层div
+  const outerDiv = document.createElement('div');
+  outerDiv.style.position = 'relative';
+  outerDiv.style.opacity = '1';
 
-    // 创建第一个子div，并设置class和内容
-    const textDiv = document.createElement('div');
-    textDiv.className = 'tabulator-cell-edit-text';
-    textDiv.textContent = cellValue; // 将cellValue插入到div中
+  // 创建第一个子div，并设置class和内容
+  const textDiv = document.createElement('div');
+  textDiv.className = 'tabulator-cell-edit-text';
+  textDiv.textContent = cellValue; // 将cellValue插入到div中
 
-    // 创建第二个子div，并设置class
-    const styleDiv = document.createElement('div');
-    styleDiv.className = 'tabulator-cell-edit-style';
+  // 创建第二个子div，并设置class
+  const styleDiv = document.createElement('div');
+  styleDiv.className = 'tabulator-cell-edit-style';
 
-    // 将子div添加到外层div中
-    outerDiv.appendChild(textDiv);
-    outerDiv.appendChild(styleDiv);
+  // 将子div添加到外层div中
+  outerDiv.appendChild(textDiv);
+  outerDiv.appendChild(styleDiv);
 
-    // 将外层div添加到页面中的某个元素内，例如body
-    document.body.appendChild(outerDiv);
-    return outerDiv;
+  // 将外层div添加到页面中的某个元素内，例如body
+  document.body.appendChild(outerDiv);
+  return outerDiv;
 }
 
-function createText(content:string) {
+function createText(content: string) {
   const el = document.createDocumentFragment();
   el.textContent = content;
   return el;
@@ -53,22 +53,20 @@ function createText(content:string) {
 
 const span = (() => {
   const span = document.createElement('span');
-span.className = 'tabulator-row-del-icon';
-span.style.cursor = 'pointer';
-span.style.color = '#666';
-// 将svg添加到span中
-span.innerHTML = ` <svg data-action="del-row-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 48 48" aria-hidden="true" focusable="false" stroke-linecap="butt" stroke-linejoin="miter" class="arco-icon arco-icon-close-circle" style="font-size: 24px;"><path d="m17.643 17.643 6.364 6.364m0 0 6.364 6.364m-6.364-6.364 6.364-6.364m-6.364 6.364-6.364 6.364M42 24c0 9.941-8.059 18-18 18S6 33.941 6 24 14.059 6 24 6s18 8.059 18 18Z"></path>       </svg>`;
-return span;
+  span.className = 'tabulator-row-del-icon';
+  span.style.cursor = 'pointer';
+  span.style.color = '#666';
+  // 将svg添加到span中
+  span.innerHTML = `<svg data-action="del-row-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 48 48" aria-hidden="true" focusable="false" stroke-linecap="butt" stroke-linejoin="miter" class="arco-icon arco-icon-close-circle" style="font-size: 24px;"><path d="m17.643 17.643 6.364 6.364m0 0 6.364 6.364m-6.364-6.364 6.364-6.364m-6.364 6.364-6.364 6.364M42 24c0 9.941-8.059 18-18 18S6 33.941 6 24 14.059 6 24 6s18 8.059 18 18Z"></path></svg>`;
+  return span;
 })()
 
 const arcoCheckboxMaskIcon = (() => {
-const span = document.createElement('div');
-span.className = 'arco-checkbox-mask';
-// 将svg添加到span中
-span.innerHTML = `
-                <svg class="arco-checkbox-mask-icon" aria-hidden="true" focusable="false" viewBox="0 0 1024 1024" width="200" height="200" fill="currentColor"><path d="M877.44815445 206.10060629a64.72691371 64.72691371 0 0 0-95.14856334 4.01306852L380.73381888 685.46812814 235.22771741 533.48933518a64.72691371 64.72691371 0 0 0-92.43003222-1.03563036l-45.82665557 45.82665443a64.72691371 64.72691371 0 0 0-0.90617629 90.61767965l239.61903446 250.10479331a64.72691371 64.72691371 0 0 0 71.19960405 15.14609778 64.33855261 64.33855261 0 0 0 35.08198741-21.23042702l36.24707186-42.71976334 40.5190474-40.77795556-3.36579926-3.49525333 411.40426297-486.74638962a64.72691371 64.72691371 0 0 0-3.88361443-87.64024149l-45.3088404-45.43829334z" p-id="840"></path></svg>
-              `;
-return span;
+  const span = document.createElement('div');
+  span.className = 'arco-checkbox-mask';
+  // 将svg添加到span中
+  span.innerHTML = `<svg class="arco-checkbox-mask-icon" aria-hidden="true" focusable="false" viewBox="0 0 1024 1024" width="200" height="200" fill="currentColor"><path d="M877.44815445 206.10060629a64.72691371 64.72691371 0 0 0-95.14856334 4.01306852L380.73381888 685.46812814 235.22771741 533.48933518a64.72691371 64.72691371 0 0 0-92.43003222-1.03563036l-45.82665557 45.82665443a64.72691371 64.72691371 0 0 0-0.90617629 90.61767965l239.61903446 250.10479331a64.72691371 64.72691371 0 0 0 71.19960405 15.14609778 64.33855261 64.33855261 0 0 0 35.08198741-21.23042702l36.24707186-42.71976334 40.5190474-40.77795556-3.36579926-3.49525333 411.40426297-486.74638962a64.72691371 64.72691371 0 0 0-3.88361443-87.64024149l-45.3088404-45.43829334z" p-id="840"></path></svg>`;
+  return span;
 })()
 
 /**
@@ -83,9 +81,9 @@ Tabulator.extendModule('format', 'formatters', {
   checkbox: function (cell: CellComponent, formatterParams, _onRendered) {
     const cellValue:
       | Array<{
-          label: string;
-          value: any;
-        }>
+        label: string;
+        value: any;
+      }>
       | undefined = cell.getValue();
     const { linkColumn } = formatterParams || {};
 
@@ -93,17 +91,17 @@ Tabulator.extendModule('format', 'formatters', {
       return '';
     }
 
-  function genCheckboxList() {
-    const formatCellValue = cellValue.filter(
+    function genCheckboxList() {
+      const formatCellValue = cellValue.filter(
         ({ label, value }) => label && value
-    );
-    const curRowData = cell.getData();
-    const mapValues = curRowData[linkColumn] || [];
-    // 创建外层容器
-    const checkboxGroup = document.createElement('span');
-    checkboxGroup.className = 'arco-checkbox-group arco-checkbox-group-direction-horizontal flex flex-wrap';
+      );
+      const curRowData = cell.getData();
+      const mapValues = curRowData[linkColumn] || [];
+      // 创建外层容器
+      const checkboxGroup = document.createElement('span');
+      checkboxGroup.className = 'arco-checkbox-group arco-checkbox-group-direction-horizontal flex flex-wrap';
 
-    formatCellValue.forEach(({ label, value }) => {
+      formatCellValue.forEach(({ label, value }) => {
         const arcoCheckboxMaskIconSvg = arcoCheckboxMaskIcon.cloneNode();
         // 创建 label 元素
         const labelElement = document.createElement('label');
@@ -133,12 +131,12 @@ Tabulator.extendModule('format', 'formatters', {
 
         // 将 label 添加到外层容器中
         checkboxGroup.appendChild(labelElement);
-    });
+      });
 
-    return checkboxGroup;
-  }
-  const checkboxListElement = genCheckboxList();
-  return checkboxListElement;
+      return checkboxGroup;
+    }
+    const checkboxListElement = genCheckboxList();
+    return checkboxListElement;
   },
   placeholder: function (cell: CellComponent, formatterParams, _onRendered) {
     const cellValue = cell.getValue();
@@ -274,21 +272,21 @@ Tabulator.extendModule('format', 'formatters', {
     container.className = 'arco-space arco-space-horizontal arco-space-align-center';
 
     toArr.forEach(tag => {
-        const tagItem = document.createElement('div');
-        tagItem.className = 'arco-space-item';
-        tagItem.style.marginRight = '6px';
+      const tagItem = document.createElement('div');
+      tagItem.className = 'arco-space-item';
+      tagItem.style.marginRight = '6px';
 
-        const tagDiv = document.createElement('div');
-        tagDiv.className = `arco-tag arco-tag-${colors[tag] || 'gray'} arco-tag-checked arco-tag-size-${size}`;
+      const tagDiv = document.createElement('div');
+      tagDiv.className = `arco-tag arco-tag-${colors[tag] || 'gray'} arco-tag-checked arco-tag-size-${size}`;
 
-        const tagContent = document.createElement('span');
-        tagContent.className = 'arco-tag-content';
-        tagContent.textContent = tag; // 设置标签文本
+      const tagContent = document.createElement('span');
+      tagContent.className = 'arco-tag-content';
+      tagContent.textContent = tag; // 设置标签文本
 
-        // 构建 DOM 结构
-        tagDiv.appendChild(tagContent);
-        tagItem.appendChild(tagDiv);
-        container.appendChild(tagItem);
+      // 构建 DOM 结构
+      tagDiv.appendChild(tagContent);
+      tagItem.appendChild(tagDiv);
+      container.appendChild(tagItem);
     });
 
     return container; // 返回构建的 DOM 元素
@@ -297,14 +295,14 @@ Tabulator.extendModule('format', 'formatters', {
     const cellValue = cell.getValue();
     return createText(cellValue);
   },
-  lookup: function(cell, formatterParams, onRendered) {
-  var value = cell.getValue();
-  if (typeof formatterParams[value] === "undefined") {
-    console.warn("Missing display value for " + value);
-    return  createText(value);
+  lookup: function (cell, formatterParams, onRendered) {
+    const value = cell.getValue();
+    if (typeof formatterParams[value] === "undefined") {
+      console.warn("Missing display value for " + value);
+      return createText(value);
+    }
+    return createText(formatterParams[value]);
   }
-  return createText(formatterParams[value]);
-}
   // tickbox: function (_cell: CellComponent, _formatterParams, _onRendered) {
   //   // cell.getColumn().getDefinition().cellClick = function (e, cell) {
   //   //   // e.stopPropagation();
