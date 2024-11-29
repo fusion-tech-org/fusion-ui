@@ -39,6 +39,8 @@ export function convertExpressionByRule(
   isMathCalc = false,
   defaultValue = {}
 ) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const convertedRule: string = expression.replace(/\[(.*?)\]/g, (match) => {
     const field = match.replace(/(\[|\])/g, '');
 

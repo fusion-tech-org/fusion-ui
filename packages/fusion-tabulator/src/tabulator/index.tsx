@@ -10,10 +10,8 @@ import { ExternalInputContainer, TabulatorContainer } from './styles';
 import { CustomTableSelect } from './components/CustomTableSelect';
 import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
-// import dbDexie from './utils/dbDexie';
 import { EXTRA_INPUT_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { customEditorAndFormatterPipe } from './genInitOptions';
-import { RowComponent } from 'tabulator-tables';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
@@ -24,22 +22,20 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     onUpdateWidgetMetaProperty,
     // onUpdateWidgetProperty,
     onCustomSelectDropdownItem,
-    actionId,
     tableMode = 'normal',
     uniformProps = {},
   } = props;
   const {
     headerVisible = true,
     commonOptions = {},
-    enableIndexedDBQuery,
-    isRemote = true,
     enableColumnGroup = false,
   } = uniformProps;
   const commonOptionsRef = useRef(commonOptions);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
+  const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
-  const [mainId] = useState(tabulatorId);
+  const [mainId, setMainId] = useState(tabulatorId);
   const [extraInputCreated, setExtraInputCreated] = useState(false);
   const { tablePosition, tabulatorRef, initTable } = useTabulator({
     ref: wrapperRef,
@@ -65,7 +61,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         : len * ROW_HEIGHT + 1;
 
       if (offsetHeight + EXTRA_INPUT_HEIGHT > tablePosition.height) {
-        offsetHeight = tablePosition.height - ROW_HEIGHT + 2;
+        offsetHeight = tablePosition.height - ROW_HEIGHT + 12;
         inputWrapRef.current.style.right = '14px';
       } else {
         inputWrapRef.current.style.right = '0px';
@@ -77,13 +73,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   );
 
   const responsiveTabulator = () => {
-    if (
-      isEmpty(tableData) &&
-      !actionId &&
-      isEmpty(columnDefs) &&
-      !enableIndexedDBQuery
-    )
-      return;
+    // if (isEmpty(tableData) && !actionId && isEmpty(columnDefs)) return;
+    if (isEmpty(tableData) && isEmpty(columnDefs)) return;
 
     if (!tabulatorRef) {
       initTable();
@@ -114,10 +105,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         enableColumnGroup
       );
       try {
-        console.log(
-          'setColumns -> isExtensible ->',
-          Object.isExtensible(formatColumns)
-        );
         tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
       } catch (error) {
         console.log('setColumns failed: ', error, formatColumns);
@@ -126,30 +113,14 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   };
 
   const handleAddExtraEvents = () => {
-    tabulatorRef.on('rowDeleted', (row: RowComponent) => {
-      const curTableData = row.getTable().getData('visible');
-
-      transformYInputElem(curTableData);
-    });
-
     tabulatorRef.on('dataChanged', (data) => {
-      const visibleDataLen = tabulatorRef.getData('visible').length;
-
-      if (data.length === visibleDataLen + 1) {
-        transformYInputElem(data);
-      }
+      transformYInputElem(data);
     });
   };
 
   useEffect(() => {
     responsiveTabulator();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    actionId,
-    JSON.stringify(columnDefs),
-    JSON.stringify(tableData),
-    enableIndexedDBQuery,
-  ]);
+  }, [JSON.stringify(columnDefs, null, 2), JSON.stringify(tableData, null, 2)]);
 
   useEffect(() => {
     transformYInputElem();
@@ -169,19 +140,28 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     ) {
       return;
     }
-    commonOptionsRef.current = commonOptions;
 
-    initTable();
-  }, [JSON.stringify(commonOptions)]);
+    commonOptionsRef.current = commonOptions;
+  }, [JSON.stringify(commonOptions, null, 2)]);
 
   useEffect(() => {
-    if (!tabulatorRef || !actionId || !isRemote) return;
+    if (!tableMode) {
+      modeRef.current = tableMode;
+    }
 
-    const curAjax = tabulatorRef.getAjaxUrl?.();
-    console.log('curAjax', curAjax);
-    curAjax && tabulatorRef.setData(curAjax);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actionId, !tabulatorRef, isRemote]);
+    if (tableMode === modeRef.current) return;
+    modeRef.current = tableMode;
+    const newId = genTabulatorUUID();
+
+    setMainId(newId);
+
+    return () => {
+      modeRef.current = null;
+      commonOptionsRef.current = null;
+      wrapperRef.current = null;
+      inputWrapRef.current = null;
+    };
+  }, [tableMode]);
 
   function handleSelectRowData(record) {
     const { id: _key, ...rest } = record || {};
@@ -221,12 +201,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainId, tableMode, JSON.stringify(props), tabulatorRef]);
 
-  if (
-    isEmpty(tableData) &&
-    !actionId &&
-    isEmpty(columnDefs) &&
-    !enableIndexedDBQuery
-  ) {
+  if (isEmpty(tableData) && isEmpty(columnDefs)) {
     return (
       <div
         style={{
@@ -246,13 +221,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   }
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        // height: '100%',
-        flex: 1,
-      }}
-    >
+    <div className={tableMode === 'editable' ? 'h-full' : 'flex-1'}>
       <TabulatorContainer
         tableMode={tableMode}
         ref={wrapperRef}
