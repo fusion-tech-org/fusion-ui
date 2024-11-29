@@ -35,6 +35,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
   const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
+  const recordColumns = useRef<ReactTabulatorProps["columns"]>();
+  const recordData= useRef<ReactTabulatorProps["data"]>();
   const [mainId, setMainId] = useState(tabulatorId);
   const [extraInputCreated, setExtraInputCreated] = useState(false);
   const { tablePosition, tabulatorRef, initTable } = useTabulator({
@@ -80,24 +82,12 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       initTable();
       return;
     }
-
-    const curColumns = tabulatorRef.getColumnDefinitions();
-    const curData = tabulatorRef.getData();
-
-    if (
-      !isUndefined(tableData) &&
-      JSON.stringify(curData) !== JSON.stringify(tableData)
-    ) {
-      console.log('replace data: ', tableData);
-      tabulatorRef.replaceData(tableData);
-
-      return;
-    }
-
+    // console.log(diff(columnDefs, recordColumns.current ),columnDefs,recordColumns.current,"diff1")
+    tabulatorRef.element.classList.add("hidden")
     if (
       !isUndefined(columnDefs) &&
       isArray(columnDefs) &&
-      JSON.stringify(curColumns) !== JSON.stringify(columnDefs)
+      JSON.stringify(recordColumns.current) !== JSON.stringify(columnDefs)
     ) {
       const formatColumns = customEditorAndFormatterPipe(
         columnDefs,
@@ -106,10 +96,28 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       );
       try {
         tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
+        recordColumns.current = columnDefs;
+        tabulatorRef.replaceData(tableData);
+        recordData.current = tableData;
       } catch (error) {
         console.log('setColumns failed: ', error, formatColumns);
       }
+    }else{
+      if (
+      !isUndefined(tableData) &&
+      JSON.stringify(recordData.current) !== JSON.stringify(tableData)
+      ) {
+        // tabulatorRef.blockRedraw();
+        // Promise.all([tabulatorRef.updateOrAddData(tableData), tabulatorRef.deleteRow(recordData.current.slice(tableData.length).map((v) => v[props.indexField]))]).then(() => {
+        //     tabulatorRef.restoreRedraw();
+        // })
+        tabulatorRef.replaceData(tableData);
+        recordData.current = tableData;
+      }
     }
+    requestAnimationFrame(() => {
+      tabulatorRef.element.classList.remove("hidden")
+    })
   };
 
   const handleAddExtraEvents = () => {

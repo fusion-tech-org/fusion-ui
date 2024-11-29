@@ -30,6 +30,7 @@ export default defineConfig({
   build: {
     outDir: 'lib',
     sourcemap: true,
+     minify: false, // 禁用压缩
     lib: {
       // Could also be a dictionary or array of multiple entry points
       entry: resolve(__dirname, 'src/index.tsx'),
@@ -42,6 +43,12 @@ export default defineConfig({
       external: ['react', 'react-dom'],
       output: {
         // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name.endsWith('.css')) {
+            return 'lib/index.css'; // 将 CSS 输出到 style/index.css
+          }
+          return assetInfo.name; // 其他文件保持原名
+        },
       },
     },
   },
