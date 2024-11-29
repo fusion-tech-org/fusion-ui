@@ -15,7 +15,7 @@ export const DroplistWrapper = styled.div`
   max-width: 720px;
   border: 1px solid #f5f5f5;
   border-radius: 12px;
-  /* overflow: hidden; */
+
   &::after {
     content: '';
     position: absolute;
@@ -27,7 +27,3 @@ export const DroplistWrapper = styled.div`
   }
   /* pointer-events: none; */
 `;
-
-// export const IconWrapper = styled.div`
-//   margin-right: 10px;
-// `;

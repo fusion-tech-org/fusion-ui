@@ -1,5 +1,3 @@
-import { VirtuosoHandle } from 'react-virtuoso';
-
 export type Mode = 'simple' | 'list' | 'groupList' | 'table' | 'grid';
 
 export interface AutoCompleteProps {

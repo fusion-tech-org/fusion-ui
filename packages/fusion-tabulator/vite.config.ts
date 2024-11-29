@@ -28,7 +28,7 @@ export default defineConfig({
     cors: true,
   },
   build: {
-    outDir: '/Users/xiongyangyang/app/lowcode-console/fs-console/src/fusion-tabulator',
+    outDir: 'lib',
     sourcemap: true,
      minify: false, // 禁用压缩
     lib: {

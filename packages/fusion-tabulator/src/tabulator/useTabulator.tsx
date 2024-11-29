@@ -3,9 +3,7 @@ import * as ReactDOM from 'react-dom';
 import {
   EventCallBackMethods,
   TabulatorFull as Tabulator,
-  // EventCallBackMethods,
 } from 'tabulator-tables';
-// import { forIn } from 'lodash';
 
 import ExtendTabulator from './ExtendTabulator';
 import { useIntersectionObserver } from 'hooks/useIntersectionObserver';
@@ -20,11 +18,6 @@ export const useTabulator = ({
 }: {
   ref: React.RefObject<HTMLElement>;
   props: any;
-  // eventCallback?: (
-  //   eventName: string,
-  //   data?: Record<string, any>,
-  //   tableTypeFlag?: string
-  // ) => void;
 }) => {
   const {
     eventMaps = {},
@@ -37,16 +30,8 @@ export const useTabulator = ({
   const instanceRef = useRef<Tabulator>();
   const [rectBound] = useIntersectionObserver(ref);
 
-  // const handleTableEvents = (eventName: string, data?: Record<string, any>, tableTypeFlag?: string) => {
-  //   console.log('handleTableEvents', eventName, data, tableTypeFlag);
-  //   eventCallback?.(eventName, data, tableTypeFlag);
-
-  //   // onEvents?.(eventName, data);
-  // }
-
   const initTabulator = (callback?: VoidFunction) => {
     if (instanceRef.current) {
-      // debugger;
       instanceRef.current.destroy();
       instanceRef.current = null;
     }

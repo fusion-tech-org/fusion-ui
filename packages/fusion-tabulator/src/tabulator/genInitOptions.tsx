@@ -227,7 +227,7 @@ function editCheck(editorParams: Record<string, any>) {
 
 export function customEditorAndFormatterPipe(
   tempColDefs: ColumnDefinition[],
-  appMode?: PlatformAppMode,
+  _appMode?: PlatformAppMode,
   enableColumnGroup = false
 ): ColumnDefinition[] {
   function handleNormalColDef(colDef: ColumnDefinition) {
@@ -408,70 +408,11 @@ export const genAjaxOptions = ({
       }; //return the tableData property of a response json object
     },
   };
-  // return {
-  //   ajaxURL: '/api/v1/actions/execute',
-  //   // ajaxURL: 'https://staging.fusiontech.cn/api/v1/actions/execute',
-  //   ajaxConfig: {
-  //     method: 'POST',
-  //     // mode: 'cors', //set request mode to cors
-  //     // credentials: 'same-origin', //send cookies with the request from the matching origin
-  //     headers: {
-  //       Accept: 'application/json', //tell the server we need JSON back
-  //       // 'X-Requested-With': 'XMLHttpRequest', //fix to help some frameworks respond correctly to request
-  //       // 'Content-type': 'application/json; charset=utf-8', //set the character encoding of the request
-  //       // 'Access-Control-Allow-Origin': '*', //the URL origin of the site making the request
-  //       // 'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, HEAD, OPTIONS',
-  //       // Cookie: 'SESSION=0209b4c2-4e3a-4a21-b696-9329b3800427', //set specific content type
-  //     },
-  //   },
-  //   ajaxParams: () => {
-  //     const executeActionRequest = {
-  //       actionId,
-  //       viewMode: false,
-  //       enablePage: true,
-  //       size: 10,
-  //       page: 1,
-  //       where: {
-  //         ...formatParams,
-  //       },
-  //       dateBetween: {},
-  //     };
-
-  //     return { executeActionDTO: JSON.stringify(executeActionRequest) };
-  //   },
-  //   ajaxResponse: function (_url, _params, response) {
-  //     //url - the URL of the request
-  //     //params - the parameters passed with the request
-  //     //response - the JSON object returned in the body of the response.
-  //     const { data, responseMeta, size, total } = response;
-  //     const { status, success } = responseMeta || {};
-
-  //     if (status !== 200 && !success) {
-  //       Message.error('数据加载异常，请稍后重试！');
-  //     }
-  //     // return response.data.tags;
-  //     const { body = [] } = data || {};
-  //     const lastPage = Math.max(Math.ceil(Number(total) / Number(size)), 1);
-  //     console.log(
-  //       'ajaxResponse',
-  //       response,
-  //       'lastPage: ',
-  //       lastPage,
-  //       typeof total,
-  //       typeof size
-  //     );
-  //     return {
-  //       data: body,
-  //       last_page: lastPage,
-  //     }; //return the tableData property of a response json object
-  //   },
-  // };
 };
 
 const genStaticDataOptions = ({
   tableData,
   enableIndexedDBQuery,
-  columnDefs,
 }: {
   tableData: Record<string, unknown>[];
   enableIndexedDBQuery: boolean;
@@ -479,19 +420,6 @@ const genStaticDataOptions = ({
   tableMode?: TableMode;
 }): OptionsData => {
   if (!isArray(tableData) || enableIndexedDBQuery) {
-    console.log('genStaticDataOptions columnDefs:', columnDefs);
-    // const initEditData = {};
-
-    // forEach(columnDefs, (item) => {
-    //   initEditData[item.field] = '';
-    // });
-    // return {
-    //   data: [{
-    //     id: 1,
-    //     ...initEditData
-    //   }],
-
-    // };
     return {};
   }
 

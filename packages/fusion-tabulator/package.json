@@ -1,7 +1,7 @@
 {
   "name": "fusion-tabulator",
   "private": false,
-  "version": "0.6.1",
+  "version": "0.7.5",
   "description": "The Awesome table build with tabulator-tables",
   "type": "module",
   "main": "lib/index.min.js",
@@ -17,15 +17,9 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {
-    "@tanstack/react-virtual": "^3.1.3",
-    "es6-promise": "^4.2.8",
     "luxon": "^3.4.4",
     "microdiff": "^1.4.0",
-    "react-grid-layout": "^1.4.4",
-    "react-tag-autocomplete": "^7.1.0",
-    "react-virtuoso": "^4.7.2",
-    "tabulator-tables": "6.2.5",
-    "tsup": "^8.0.2"
+    "tabulator-tables": "6.3.0"
   },
   "license": "MIT",
   "peerDependencies": {
@@ -63,9 +57,12 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.1",
+    "react-virtuoso": "^4.7.2",
     "recoil": "^0.7.7",
+    "rollup-plugin-visualizer": "^5.12.0",
     "styled-components": "^6.1.1",
     "terser": "^5.28.1",
+    "tsup": "^8.3.5",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
   },

@@ -1,13 +1,11 @@
 import { TabulatorFull as Tabulator, Options } from 'tabulator-tables';
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import ReactDOM from 'react-dom';
 
 import ExtendTabulator from '../../ExtendTabulator';
 import { DroplistWrapper } from './styles';
 import { genTabulatorUUID } from 'utils/index';
-import Dexie from 'dexie';
-import dbDexie from 'src/tabulator/utils/dbDexie';
 import { isArray } from 'lodash';
 
 interface TableSelectProps {
@@ -38,6 +36,7 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
 
     return () => {
       instanceRef.current?.destroy();
+      instanceRef.current = null;
     };
   }, []);
 
@@ -56,7 +55,6 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
 };
 
 function genInitOptions(uniformProps: Record<string, any>): Options & {
-  dexie?: Dexie;
   tableName?: string;
 } {
   const { quickAddConfigs, enableIndexedDBQuery, indexdbConfigs } =
@@ -65,10 +63,9 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
   const {
     data = [],
     columns = [],
-    isRemoteQuery,
     uniqueKey = 'id',
+    subTableLayout = 'fitDataStretch',
   } = quickAddConfigs || {};
-  const { dropdownIndexedDBTableName } = indexdbConfigs || {};
 
   // generates initial options
   const commonOptions: Options & {
@@ -83,10 +80,11 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     // layout: 'fitColumns',
     // layout: 'fitDataTable',
     // layout: 'fitData',
-    layout: 'fitDataStretch',
+    layout: subTableLayout,
     height: '320px',
     // selectable: 1,
     selectableRows: 1,
+    selectable: 'highlight',
     selectableRowsRollingSelection: false,
     rowHeight: 32,
     renderHorizontal: 'virtual',
@@ -98,34 +96,6 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
       navDown: false,
     },
   };
-
-  if (enableIndexedDBQuery) {
-    const colDefs: {
-      columns?: any[];
-      autoColumns?: true;
-    } = {};
-
-    if (isArray(columns) && columns.length > 0) {
-      colDefs.columns = columns;
-    } else {
-      colDefs.autoColumns = true;
-    }
-
-    return {
-      dexie: dbDexie.getDexie(),
-      tableName: dropdownIndexedDBTableName,
-      ...colDefs,
-      ...commonOptions,
-    };
-  }
-
-  if (isRemoteQuery) {
-    return {
-      data: [],
-      columns: [],
-      ...commonOptions,
-    };
-  }
 
   return {
     data: isArray(data) ? data : [],
