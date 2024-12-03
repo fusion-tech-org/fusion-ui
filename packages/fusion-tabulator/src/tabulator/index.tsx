@@ -82,11 +82,12 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     }
 
     const curColumns = tabulatorRef.getColumnDefinitions();
-    // const curData = tabulatorRef.getData();
+    const curData = tabulatorRef.getData();
 
     if (
-      isArray(tableData)
-      // &&JSON.stringify(curData) !== JSON.stringify(tableData)
+      isArray(tableData) &&
+      (JSON.stringify(curData) !== JSON.stringify(tableData) ||
+        tableData.length === 0)
     ) {
       console.log('replace data: ', tableData);
       tabulatorRef.replaceData(tableData);
