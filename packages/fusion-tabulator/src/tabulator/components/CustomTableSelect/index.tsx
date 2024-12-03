@@ -78,7 +78,7 @@ export const CustomTableSelect = (props) => {
 
   const uniqueKeys = useMemo(() => {
     return map(memoAllData.data, (item) => item[uniqueKey]).filter(Boolean);
-  }, [memoAllData.total]);
+  }, [memoAllData.data]);
 
   useEffect(() => {
     onCreated();

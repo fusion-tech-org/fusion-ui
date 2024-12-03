@@ -85,6 +85,7 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     selectableRows: 1,
     selectable: 'highlight',
     selectableRowsRollingSelection: false,
+    selectableRangeRows: false,
     rowHeight: 32,
     renderHorizontal: 'virtual',
     renderVertical: 'virtual',
