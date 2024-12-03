@@ -72,13 +72,16 @@ export const CustomTableSelect = (props) => {
     return {
       total,
       data: filteredData.length > 0 ? filteredData : curTableData,
+      uniqueKeys: map(memoAllData.data, (item) => item[uniqueKey]).filter(
+        Boolean
+      ),
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data?.length, tabulatorRef.current, filteredData]);
+  }, [data?.length, tabulatorRef.current, filteredData, uniqueKey]);
 
-  const uniqueKeys = useMemo(() => {
-    return map(memoAllData.data, (item) => item[uniqueKey]).filter(Boolean);
-  }, [memoAllData.data]);
+  // const uniqueKeys = useMemo(() => {
+  //   return map(memoAllData.data, (item) => item[uniqueKey]).filter(Boolean);
+  // }, [memoAllData.data]);
 
   useEffect(() => {
     onCreated();
@@ -92,7 +95,7 @@ export const CustomTableSelect = (props) => {
     (e: KeyboardEvent) => {
       e.stopPropagation();
       let nextIndex = null;
-
+      const uniqueKeys = memoAllData.uniqueKeys || [];
       if (!tabulatorRef.current || memoAllData.total === 0) {
         setCursor(-1);
         return;
@@ -118,7 +121,7 @@ export const CustomTableSelect = (props) => {
           Message.info('请正确设置唯一的表格索引字段');
           return;
         }
-
+        tabulatorRef.current.deselectRow();
         tabulatorRef.current.selectRow(uniqueKeys[nextIndex]);
 
         if (memoAllData.total > 7) {
@@ -143,7 +146,7 @@ export const CustomTableSelect = (props) => {
         hideDroplist();
       }
     },
-    [cursor, memoAllData.total, setCursor, tabulatorRef.current, filteredData]
+    [cursor, memoAllData, setCursor, tabulatorRef.current, filteredData]
   );
 
   useKeyPress(handleKeyPress);
@@ -180,7 +183,8 @@ export const CustomTableSelect = (props) => {
       if (cursor !== 0) {
         setCursor(0);
 
-        uniqueKeys[0] && tabulatorRef.current?.selectRow(uniqueKeys[0]);
+        memoAllData.uniqueKeys[0] &&
+          tabulatorRef.current?.selectRow(memoAllData.uniqueKeys[0]);
       }
     }
 
