@@ -194,15 +194,17 @@ export const CustomTableSelect = (props) => {
 
   const handelDataFiltered = (_filters: Filter[], rows: RowComponent[]) => {
     const rowData = rows.map((row) => row.getData());
+    const firstItemKey = rowData[0][uniqueKey];
 
     setFilteredData(rowData);
+
+    console.log('searchText', 'searchText', firstItemKey, rowData, uniqueKey);
 
     if (!searchText) {
       setCursor(-1);
       tabulatorRef.current.deselectRow();
     } else {
       setCursor(0);
-      const firstItemKey = rowData[0][uniqueKey];
 
       if (firstItemKey) {
         tabulatorRef.current?.deselectRow();
