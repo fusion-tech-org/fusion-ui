@@ -62,19 +62,17 @@ export const CustomTableSelect = (props) => {
       return {
         total: 0,
         data: [],
+        uniqueKeys: [],
       };
 
     const curTableData = tabulatorRef.current.getData();
 
-    const total =
-      filteredData.length > 0 ? filteredData.length : curTableData.length;
+    const finalData = filteredData.length > 0 ? filteredData : curTableData;
 
     return {
-      total,
-      data: filteredData.length > 0 ? filteredData : curTableData,
-      uniqueKeys: map(memoAllData.data, (item) => item[uniqueKey]).filter(
-        Boolean
-      ),
+      total: finalData.length,
+      data: finalData,
+      uniqueKeys: map(finalData, (item) => item[uniqueKey]).filter(Boolean),
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.length, tabulatorRef.current, filteredData, uniqueKey]);
