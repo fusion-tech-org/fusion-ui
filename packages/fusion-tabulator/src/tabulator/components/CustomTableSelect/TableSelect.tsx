@@ -57,8 +57,7 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
 function genInitOptions(uniformProps: Record<string, any>): Options & {
   tableName?: string;
 } {
-  const { quickAddConfigs, enableIndexedDBQuery, indexdbConfigs } =
-    uniformProps;
+  const { quickAddConfigs } = uniformProps;
 
   const {
     data = [],

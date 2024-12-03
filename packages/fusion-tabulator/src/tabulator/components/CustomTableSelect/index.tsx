@@ -21,24 +21,25 @@ export const CustomTableSelect = (props) => {
   const tabulatorRef = useRef<Tabulator>(null);
   const [filteredData, setFilteredData] = useState([]);
 
-  const {
-    quickAddConfigs,
-    extraInputPlaceholder = DEFAULT_EXTRA_INPUT_PLACEHOLD,
-  } = uniformProps || {};
+  const { quickAddConfigs } = uniformProps || {};
 
   const {
     filters = [],
     uniqueKey = 'id',
-    enableIndexedDBQuery = false,
     data,
+    disableQuickInput = false,
+    quickDropdownPlaceholder = DEFAULT_EXTRA_INPUT_PLACEHOLD,
   } = quickAddConfigs || {};
 
   const hideDroplist = () => {
     setPopupVisble(false);
-    tabulatorRef.current = null;
     setCursor(-1);
     setSearchText('');
     inputRef.current?.blur();
+
+    if (tabulatorRef.current) {
+      tabulatorRef.current.deselectRow();
+    }
   };
 
   const memoAllData = useMemo(() => {
@@ -72,10 +73,14 @@ export const CustomTableSelect = (props) => {
       data: filteredData.length > 0 ? filteredData : curTableData,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enableIndexedDBQuery, data?.length, tabulatorRef.current, filteredData]);
+  }, [data?.length, tabulatorRef.current, filteredData]);
 
   useEffect(() => {
     onCreated();
+
+    return () => {
+      tabulatorRef.current = null;
+    };
   }, []);
 
   const handleKeyPress = useCallback(
@@ -83,7 +88,10 @@ export const CustomTableSelect = (props) => {
       e.stopPropagation();
       let nextIndex = null;
 
-      if (!tabulatorRef.current || memoAllData.total === 0) return;
+      if (!tabulatorRef.current || memoAllData.total === 0) {
+        setCursor(-1);
+        return;
+      }
 
       if (e.key === 'ArrowDown') {
         nextIndex = Math.min(memoAllData.total - 1, cursor + 1);
@@ -111,7 +119,6 @@ export const CustomTableSelect = (props) => {
           return;
         }
 
-        tabulatorRef.current.deselectRow();
         tabulatorRef.current.selectRow(uniqueKeys[nextIndex]);
 
         if (memoAllData.total > 7) {
@@ -139,23 +146,12 @@ export const CustomTableSelect = (props) => {
     [cursor, memoAllData.total, setCursor, tabulatorRef.current, filteredData]
   );
 
-  // bad implemention
-  // useEffect(() => {
-  //   if (!tabulatorRef.current) return;
-
-  //   const uniqueKeys = map(memoAllData.data, uniqueKey);
-
-  //   tabulatorRef.current.deselectRow();
-  //   tabulatorRef.current.selectRow(uniqueKeys[cursor]);
-  //   tabulatorRef.current.scrollToRow(uniqueKeys[cursor], 'center', false);
-  // }, [cursor]);
-
   useKeyPress(handleKeyPress);
 
   const handleInputFocus = () => {
     const { data, columns } = quickAddConfigs || {};
 
-    if (isEmpty(data) && isEmpty(columns) && !enableIndexedDBQuery) {
+    if (isEmpty(data) && isEmpty(columns)) {
       Message.info('请配置下拉项数据');
 
       return;
@@ -177,7 +173,12 @@ export const CustomTableSelect = (props) => {
   };
 
   const debouncedOnChange = debounce((value) => {
-    setCursor(-1);
+    if (!value) {
+      setCursor(-1);
+    } else {
+      setCursor(0);
+    }
+
     if (isFunction(onExtraInputValueChanged)) {
       onExtraInputValueChanged(value);
       return;
@@ -254,11 +255,12 @@ export const CustomTableSelect = (props) => {
             ref={(ref) => (inputRef.current = ref?.dom)}
             height={36}
             onChange={handleValueChange}
+            disabled={disableQuickInput}
             onBlur={handleInputBlur}
             prefix={<IconPlus />}
             allowClear
             value={searchText}
-            placeholder={extraInputPlaceholder}
+            placeholder={quickDropdownPlaceholder}
           />
         </InputWrapper>
       </Dropdown>
