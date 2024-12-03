@@ -175,15 +175,21 @@ export const CustomTableSelect = (props) => {
   };
 
   const debouncedOnChange = debounce((value) => {
+    console.log(`{
+      uniqueKey: ${uniqueKey},
+      memoAllData:  ${memoAllData},
+      cursor: ${cursor}
+      }`);
     if (!value) {
       setCursor(-1);
       tabulatorRef.current.deselectRow();
     } else {
-      if (cursor !== 0) {
-        setCursor(0);
+      setCursor(0);
+      const firstItemKey = filteredData[0][uniqueKey];
 
-        memoAllData.uniqueKeys[0] &&
-          tabulatorRef.current?.selectRow(memoAllData.uniqueKeys[0]);
+      if (firstItemKey) {
+        tabulatorRef.current?.deselectRow();
+        tabulatorRef.current?.selectRow(firstItemKey);
       }
     }
 
