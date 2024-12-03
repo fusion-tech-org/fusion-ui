@@ -168,6 +168,11 @@ export const CustomTableSelect = (props) => {
   };
 
   const debouncedOnChange = debounce((value) => {
+    if (!value) {
+      setCursor(-1);
+      tabulatorRef.current?.deselectRow();
+    }
+
     if (isFunction(onExtraInputValueChanged)) {
       onExtraInputValueChanged(value);
       return;
@@ -198,18 +203,13 @@ export const CustomTableSelect = (props) => {
 
     setFilteredData(rowData);
 
-    console.log('searchText', 'searchText', firstItemKey, rowData, uniqueKey);
+    console.log('searchText', searchText, firstItemKey);
 
-    if (!searchText) {
-      setCursor(-1);
+    setCursor(0);
+
+    if (firstItemKey) {
       tabulatorRef.current.deselectRow();
-    } else {
-      setCursor(0);
-
-      if (firstItemKey) {
-        tabulatorRef.current?.deselectRow();
-        tabulatorRef.current?.selectRow(firstItemKey);
-      }
+      tabulatorRef.current.selectRow(firstItemKey);
     }
   };
 
