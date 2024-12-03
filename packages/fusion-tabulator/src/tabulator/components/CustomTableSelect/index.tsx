@@ -102,17 +102,10 @@ export const CustomTableSelect = (props) => {
 
       if (e.key === 'ArrowDown') {
         nextIndex = Math.min(memoAllData.total - 1, cursor + 1);
-        // setCursor((prev) => (prev + 1) % memoAllData.total);
-        // tabulatorRef.current.selectRow([1]);
       }
 
       if (e.key === 'ArrowUp') {
         nextIndex = Math.max(0, cursor - 1);
-        // setCursor((prev) => {
-        //   if (prev - 1 <= 0) return 0;
-
-        //   return (prev - 1) % memoAllData.total;
-        // });
       }
 
       if (nextIndex !== null && tabulatorRef.current) {
@@ -175,24 +168,6 @@ export const CustomTableSelect = (props) => {
   };
 
   const debouncedOnChange = debounce((value) => {
-    console.log(`{
-      uniqueKey: ${uniqueKey},
-      memoAllData:  ${memoAllData},
-      cursor: ${cursor}
-      }`);
-    if (!value) {
-      setCursor(-1);
-      tabulatorRef.current.deselectRow();
-    } else {
-      setCursor(0);
-      const firstItemKey = filteredData[0][uniqueKey];
-
-      if (firstItemKey) {
-        tabulatorRef.current?.deselectRow();
-        tabulatorRef.current?.selectRow(firstItemKey);
-      }
-    }
-
     if (isFunction(onExtraInputValueChanged)) {
       onExtraInputValueChanged(value);
       return;
@@ -221,6 +196,19 @@ export const CustomTableSelect = (props) => {
     const rowData = rows.map((row) => row.getData());
 
     setFilteredData(rowData);
+
+    if (!searchText) {
+      setCursor(-1);
+      tabulatorRef.current.deselectRow();
+    } else {
+      setCursor(0);
+      const firstItemKey = rowData[0][uniqueKey];
+
+      if (firstItemKey) {
+        tabulatorRef.current?.deselectRow();
+        tabulatorRef.current?.selectRow(firstItemKey);
+      }
+    }
   };
 
   const handleTabulator = (ref) => {
