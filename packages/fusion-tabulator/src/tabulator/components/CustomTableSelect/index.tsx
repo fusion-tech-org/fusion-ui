@@ -44,20 +44,6 @@ export const CustomTableSelect = (props) => {
   };
 
   const memoAllData = useMemo(() => {
-    if (filteredData.length > 0) {
-      return {
-        total: filteredData.length,
-        data: filteredData,
-      };
-    }
-
-    if (isArray(data) && data.length > 0) {
-      return {
-        total: data.length,
-        data,
-      };
-    }
-
     if (!tabulatorRef.current || isEmpty(data))
       return {
         total: 0,
@@ -66,20 +52,34 @@ export const CustomTableSelect = (props) => {
       };
 
     const curTableData = tabulatorRef.current.getData();
-
     const finalData = filteredData.length > 0 ? filteredData : curTableData;
+    const uniqueKeys = map(finalData, (item) => item[uniqueKey]).filter(
+      Boolean
+    );
+
+    if (filteredData.length > 0) {
+      return {
+        total: filteredData.length,
+        data: filteredData,
+        uniqueKeys,
+      };
+    }
+
+    if (isArray(data) && data.length > 0) {
+      return {
+        total: data.length,
+        data,
+        uniqueKeys,
+      };
+    }
 
     return {
       total: finalData.length,
       data: finalData,
-      uniqueKeys: map(finalData, (item) => item[uniqueKey]).filter(Boolean),
+      uniqueKeys,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.length, tabulatorRef.current, filteredData, uniqueKey]);
-
-  // const uniqueKeys = useMemo(() => {
-  //   return map(memoAllData.data, (item) => item[uniqueKey]).filter(Boolean);
-  // }, [memoAllData.data]);
 
   useEffect(() => {
     onCreated();
@@ -93,6 +93,7 @@ export const CustomTableSelect = (props) => {
     (e: KeyboardEvent) => {
       e.stopPropagation();
       let nextIndex = null;
+
       const uniqueKeys = memoAllData.uniqueKeys || [];
       if (!tabulatorRef.current || memoAllData.total === 0) {
         setCursor(-1);
