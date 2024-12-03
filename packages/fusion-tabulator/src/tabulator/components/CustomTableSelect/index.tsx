@@ -39,6 +39,7 @@ export const CustomTableSelect = (props) => {
 
     if (tabulatorRef.current) {
       tabulatorRef.current.deselectRow();
+      tabulatorRef.current.clearFilter(true);
     }
   };
 
@@ -75,6 +76,10 @@ export const CustomTableSelect = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.length, tabulatorRef.current, filteredData]);
 
+  const uniqueKeys = useMemo(() => {
+    return map(memoAllData.data, (item) => item[uniqueKey]).filter(Boolean);
+  }, [memoAllData.total]);
+
   useEffect(() => {
     onCreated();
 
@@ -109,11 +114,6 @@ export const CustomTableSelect = (props) => {
       }
 
       if (nextIndex !== null && tabulatorRef.current) {
-        const uniqueKeys = map(
-          memoAllData.data,
-          (item) => item[uniqueKey]
-        ).filter(Boolean);
-
         if (uniqueKeys.length === 0) {
           Message.info('请正确设置唯一的表格索引字段');
           return;
@@ -175,8 +175,13 @@ export const CustomTableSelect = (props) => {
   const debouncedOnChange = debounce((value) => {
     if (!value) {
       setCursor(-1);
+      tabulatorRef.current.deselectRow();
     } else {
-      setCursor(0);
+      if (cursor !== 0) {
+        setCursor(0);
+
+        uniqueKeys[0] && tabulatorRef.current?.selectRow(uniqueKeys[0]);
+      }
     }
 
     if (isFunction(onExtraInputValueChanged)) {
