@@ -33,6 +33,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const commonOptionsRef = useRef(commonOptions);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
+  const extraInputWrapRef = useRef<HTMLDivElement | null>(null);
   const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
   const [mainId, setMainId] = useState(tabulatorId);
@@ -155,6 +156,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       commonOptionsRef.current = null;
       wrapperRef.current = null;
       inputWrapRef.current = null;
+      extraInputWrapRef.current = null;
     };
   }, [tableMode]);
 
@@ -179,9 +181,9 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   };
 
   const renderExtraInput = useCallback(() => {
-    const holdEle = document.getElementById(`extra-input-markup-${mainId}`);
-
-    if (tableMode !== 'editable' || !holdEle) return null;
+    // const holdEle = document.getElementById(`extra-input-markup-${mainId}`);
+    console.log('!extraInputWrapRef.current', !extraInputWrapRef.current);
+    if (tableMode !== 'editable' || !extraInputWrapRef.current) return null;
 
     return createPortal(
       <ExternalInputContainer ref={inputWrapRef}>
@@ -191,10 +193,16 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
           onCreated={handleExtraInputCreated}
         />
       </ExternalInputContainer>,
-      holdEle
+      extraInputWrapRef.current
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mainId, tableMode, JSON.stringify(props), tabulatorRef]);
+  }, [
+    mainId,
+    tableMode,
+    JSON.stringify(props),
+    tabulatorRef,
+    extraInputWrapRef.current,
+  ]);
 
   if (isEmpty(tableData) && isEmpty(columnDefs)) {
     return (
@@ -229,7 +237,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       />
       <div
         id={`extra-input-markup-${mainId}`}
-        className={tableMode === 'editable' ? '' : 'hidden'}
+        ref={extraInputWrapRef}
+        className={tableMode === 'editable' ? 'block' : 'hidden'}
       />
       {renderExtraInput()}
     </div>
