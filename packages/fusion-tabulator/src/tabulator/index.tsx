@@ -168,10 +168,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     const holdEle = document.getElementById(`table-container-${mainId}`);
     console.log('!holdEle', !holdEle);
 
-    if (!holdEle) {
+    if (holdEle && tabulatorRef) {
       setExtraInputContainer(holdEle);
     }
-  }, []);
+  }, [tabulatorRef]);
 
   function handleSelectRowData(record) {
     const { id: _key, ...rest } = record || {};
@@ -235,6 +235,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       </div>
     );
   }
+
+  console.log(
+    `tableMode === 'editable' && extraInputContainer !== null`,
+    tableMode === 'editable' && extraInputContainer !== null
+  );
 
   return (
     <div
