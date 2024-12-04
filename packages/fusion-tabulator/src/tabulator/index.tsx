@@ -165,13 +165,14 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   }, [tableMode]);
 
   useEffect(() => {
+    console.log('mainId', mainId);
     const holdEle = document.getElementById(`table-container-${mainId}`);
     console.log('!holdEle', !holdEle);
 
     if (holdEle && tabulatorRef) {
       setExtraInputContainer(holdEle);
     }
-  }, [tabulatorRef]);
+  }, [tabulatorRef, mainId]);
 
   function handleSelectRowData(record) {
     const { id: _key, ...rest } = record || {};
