@@ -1,7 +1,7 @@
 {
   "name": "fusion-tabulator",
   "private": false,
-  "version": "0.7.21",
+  "version": "0.7.22",
   "description": "The Awesome table build with tabulator-tables",
   "type": "module",
   "main": "lib/index.min.js",

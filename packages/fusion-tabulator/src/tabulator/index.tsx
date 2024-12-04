@@ -182,9 +182,9 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   };
 
   const renderExtraInput = () => {
-    // const holdEle = document.getElementById(`extra-input-markup-${mainId}`);
-    console.log('!extraInputWrapRef.current', !extraInputWrapRef.current);
-    if (tableMode !== 'editable' || !extraInputWrapRef.current) return null;
+    const holdEle = document.getElementById(`table-container-${mainId}`);
+    console.log('!holdEle', !holdEle);
+    if (tableMode !== 'editable' || !holdEle) return null;
 
     return createPortal(
       <ExternalInputContainer ref={inputWrapRef}>
@@ -194,7 +194,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
           onCreated={handleExtraInputCreated}
         />
       </ExternalInputContainer>,
-      extraInputWrapRef.current
+      holdEle
     );
   };
 
@@ -218,7 +218,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   }
 
   return (
-    <div className={tableMode === 'editable' ? 'h-full' : 'flex-1'}>
+    <div
+      id={`table-container-${mainId}`}
+      className={tableMode === 'editable' ? 'h-full' : 'flex-1'}
+    >
       <TabulatorContainer
         tableMode={tableMode}
         ref={wrapperRef}
@@ -229,11 +232,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         data-instance={mainId}
         className={classNames}
       />
-      <div
+      {/* <div
         id={`extra-input-markup-${mainId}`}
         ref={extraInputWrapRef}
         className={tableMode === 'editable' ? 'block' : 'hidden'}
-      />
+      /> */}
       {renderExtraInput()}
     </div>
   );
