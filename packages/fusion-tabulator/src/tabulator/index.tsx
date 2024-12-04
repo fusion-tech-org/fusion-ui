@@ -75,6 +75,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     [tablePosition.height, tableMode, tableData?.length, headerVisible]
   );
 
+  const holdEle = document.getElementById(`table-container-${mainId}`);
+
   const responsiveTabulator = () => {
     if (isEmpty(tableData) && isEmpty(columnDefs)) return;
 
@@ -166,13 +168,12 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   useEffect(() => {
     console.log('mainId', mainId);
-    const holdEle = document.getElementById(`table-container-${mainId}`);
     console.log('!holdEle', !holdEle);
 
     if (holdEle && tabulatorRef) {
       setExtraInputContainer(holdEle);
     }
-  }, [tabulatorRef, mainId]);
+  }, [tabulatorRef, mainId, holdEle]);
 
   function handleSelectRowData(record) {
     const { id: _key, ...rest } = record || {};
