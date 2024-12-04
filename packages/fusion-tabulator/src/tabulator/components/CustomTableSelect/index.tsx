@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { Dropdown, Input, Message } from '@arco-design/web-react';
-import { Container, DroplistWrapper, InputWrapper } from './styles';
 import { IconPlus } from '@arco-design/web-react/icon';
-import { TableSelect } from './TableSelect';
-import { useKeyPress } from 'hooks/useKeyPress';
 import { Filter, RowComponent, Tabulator } from 'tabulator-tables';
 import { debounce, map, isArray, isEmpty, isFunction } from 'lodash';
+
+import { DroplistWrapper, InputWrapper } from './styles';
+import { TableSelect } from './TableSelect';
+import { useKeyPress } from 'hooks/useKeyPress';
 
 const DEFAULT_EXTRA_INPUT_PLACEHOLD = '请输入...';
 
@@ -83,7 +84,7 @@ export const CustomTableSelect = (props) => {
 
   useEffect(() => {
     onCreated();
-
+    console.log('extra input rendered');
     return () => {
       tabulatorRef.current = null;
       dropdownRef.current = null;
@@ -221,7 +222,8 @@ export const CustomTableSelect = (props) => {
   };
 
   const handleInputBlur = () => {
-    if (inZone || cursor >= 0) return;
+    // if (inZone || cursor >= 0) return;
+    if (inZone) return;
 
     hideDroplist();
   };
@@ -235,39 +237,37 @@ export const CustomTableSelect = (props) => {
   };
 
   return (
-    <Container>
-      <Dropdown
-        popupVisible={popupVisible}
-        trigger="focus"
-        unmountOnExit={false}
-        triggerProps={{
-          blurToHide: false,
-        }}
-        droplist={
-          <DroplistWrapper
-            ref={dropdownRef}
-            onMouseEnter={() => setInZone(true)}
-            onMouseLeave={handleMouseLeaveDropdown}
-          >
-            <TableSelect onRef={handleTabulator} uniformProps={uniformProps} />
-          </DroplistWrapper>
-        }
-      >
-        <InputWrapper>
-          <Input
-            onFocus={handleInputFocus}
-            ref={(ref) => (inputRef.current = ref?.dom)}
-            height={36}
-            onChange={handleValueChange}
-            disabled={disableQuickInput}
-            onBlur={handleInputBlur}
-            prefix={<IconPlus />}
-            allowClear
-            value={searchText}
-            placeholder={quickDropdownPlaceholder}
-          />
-        </InputWrapper>
-      </Dropdown>
-    </Container>
+    <Dropdown
+      popupVisible={popupVisible}
+      trigger="focus"
+      unmountOnExit={false}
+      triggerProps={{
+        blurToHide: false,
+      }}
+      droplist={
+        <DroplistWrapper
+          ref={dropdownRef}
+          onMouseEnter={() => setInZone(true)}
+          onMouseLeave={handleMouseLeaveDropdown}
+        >
+          <TableSelect onRef={handleTabulator} uniformProps={uniformProps} />
+        </DroplistWrapper>
+      }
+    >
+      <InputWrapper>
+        <Input
+          onFocus={handleInputFocus}
+          ref={(ref) => (inputRef.current = ref?.dom)}
+          height={36}
+          onChange={handleValueChange}
+          disabled={disableQuickInput}
+          onBlur={handleInputBlur}
+          prefix={<IconPlus />}
+          allowClear
+          value={searchText}
+          placeholder={quickDropdownPlaceholder}
+        />
+      </InputWrapper>
+    </Dropdown>
   );
 };

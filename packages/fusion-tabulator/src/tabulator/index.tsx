@@ -36,7 +36,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const extraInputWrapRef = useRef<HTMLDivElement | null>(null);
   const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
-  const [mainId, setMainId] = useState(tabulatorId);
+  const [mainId] = useState(tabulatorId);
   const [extraInputCreated, setExtraInputCreated] = useState(false);
   const { tablePosition, tabulatorRef, initTable } = useTabulator({
     ref: wrapperRef,
@@ -146,10 +146,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     }
 
     if (tableMode === modeRef.current) return;
-    modeRef.current = tableMode;
-    const newId = genTabulatorUUID();
 
-    setMainId(newId);
+    modeRef.current = tableMode;
+    // const newId = genTabulatorUUID();
+
+    // setMainId(newId);
 
     return () => {
       modeRef.current = null;
@@ -204,6 +205,15 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     extraInputWrapRef.current,
   ]);
 
+  useEffect(() => {
+    console.log('!extraInputWrapRef.current', !extraInputWrapRef.current);
+  }, [extraInputWrapRef.current]);
+
+  const testCallBack = useCallback(() => {
+    console.log('testCallBack', !testCallBack);
+    return null;
+  }, [extraInputWrapRef.current]);
+
   if (isEmpty(tableData) && isEmpty(columnDefs)) {
     return (
       <div
@@ -241,6 +251,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         className={tableMode === 'editable' ? 'block' : 'hidden'}
       />
       {renderExtraInput()}
+      {testCallBack()}
     </div>
   );
 };
