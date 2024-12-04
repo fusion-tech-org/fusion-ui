@@ -34,7 +34,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
   // const extraInputWrapRef = useRef<HTMLDivElement | null>(null);
-  const [extraInputContainer, setExtraInputContainer] = useState(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  // const [extraInputContainer, setExtraInputContainer] = useState(null);
   const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
   const [mainId] = useState(tabulatorId);
@@ -74,7 +75,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     [tablePosition.height, tableMode, tableData?.length, headerVisible]
   );
 
-  const holdEle = document.getElementById(`table-container-${mainId}`);
+  // const holdEle = document.getElementById(`table-container-${mainId}`);
 
   const responsiveTabulator = () => {
     if (isEmpty(tableData) && isEmpty(columnDefs)) return;
@@ -115,11 +116,17 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     tabulatorRef.on('dataChanged', (data) => {
       transformYInputElem(data);
     });
+
+    tabulatorRef.on('dataProcessed', (data) => {
+      if (data.length === 0) {
+        transformYInputElem(data);
+      }
+    });
   };
 
   useEffect(() => {
     responsiveTabulator();
-  }, [JSON.stringify(columnDefs, null, 2), tableData]);
+  }, [JSON.stringify(columnDefs, null, 2), JSON.stringify(tableData, null, 2)]);
 
   useEffect(() => {
     transformYInputElem();
@@ -162,12 +169,21 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       inputWrapRef.current = null;
     };
   }, [tableMode]);
+  // console.log(
+  //   '!containerRef.current',
+  //   !containerRef.current,
+  //   '!holdEle',
+  //   !holdEle
+  // );
+  // useEffect(() => {
+  //   if (containerRef.current && tabulatorRef) {
+  //     setExtraInputContainer(containerRef.current);
+  //   }
 
-  useEffect(() => {
-    if (holdEle && tabulatorRef) {
-      setExtraInputContainer(holdEle);
-    }
-  }, [tabulatorRef, mainId, holdEle]);
+  //   return () => {
+  //     containerRef.current = null;
+  //   };
+  // }, [tabulatorRef, mainId, containerRef.current]);
 
   function handleSelectRowData(record) {
     const { id: _key, ...rest } = record || {};
@@ -211,6 +227,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   return (
     <div
       id={`table-container-${mainId}`}
+      ref={containerRef}
       className={tableMode === 'editable' ? 'h-full' : 'flex-1'}
     >
       <TabulatorContainer
@@ -224,7 +241,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         className={classNames}
       />
       {tableMode === 'editable' &&
-        extraInputContainer !== null &&
+        containerRef.current !== null &&
         createPortal(
           <ExternalInputContainer ref={inputWrapRef} key={mainId}>
             <CustomTableSelect
@@ -233,7 +250,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
               onCreated={handleExtraInputCreated}
             />
           </ExternalInputContainer>,
-          extraInputContainer
+          containerRef.current
         )}
     </div>
   );

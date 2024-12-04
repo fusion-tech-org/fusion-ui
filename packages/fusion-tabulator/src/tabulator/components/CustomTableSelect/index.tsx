@@ -84,7 +84,7 @@ export const CustomTableSelect = (props) => {
 
   useEffect(() => {
     onCreated();
-    console.log('extra input rendered');
+
     return () => {
       tabulatorRef.current = null;
       dropdownRef.current = null;
