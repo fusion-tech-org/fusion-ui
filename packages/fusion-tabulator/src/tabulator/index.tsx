@@ -181,7 +181,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     setExtraInputCreated(true);
   };
 
-  const renderExtraInput = useCallback(() => {
+  const renderExtraInput = () => {
     // const holdEle = document.getElementById(`extra-input-markup-${mainId}`);
     console.log('!extraInputWrapRef.current', !extraInputWrapRef.current);
     if (tableMode !== 'editable' || !extraInputWrapRef.current) return null;
@@ -196,23 +196,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       </ExternalInputContainer>,
       extraInputWrapRef.current
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    mainId,
-    tableMode,
-    JSON.stringify(props),
-    tabulatorRef,
-    extraInputWrapRef.current,
-  ]);
-
-  useEffect(() => {
-    console.log('!extraInputWrapRef.current', !extraInputWrapRef.current);
-  }, [extraInputWrapRef.current]);
-
-  const testCallBack = useCallback(() => {
-    console.log('testCallBack', !testCallBack);
-    return null;
-  }, [extraInputWrapRef.current]);
+  };
 
   if (isEmpty(tableData) && isEmpty(columnDefs)) {
     return (
@@ -251,7 +235,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         className={tableMode === 'editable' ? 'block' : 'hidden'}
       />
       {renderExtraInput()}
-      {testCallBack()}
     </div>
   );
 };
