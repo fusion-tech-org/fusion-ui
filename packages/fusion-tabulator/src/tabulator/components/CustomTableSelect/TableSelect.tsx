@@ -37,6 +37,7 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
     return () => {
       instanceRef.current?.destroy();
       instanceRef.current = null;
+      wrapperRef.current = null;
     };
   }, []);
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { isArray, isEmpty, isUndefined } from 'lodash';
+import { isArray, isEmpty } from 'lodash';
 import { Empty } from '@arco-design/web-react';
 import { createPortal } from 'react-dom';
 
@@ -73,7 +73,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   );
 
   const responsiveTabulator = () => {
-    // if (isEmpty(tableData) && !actionId && isEmpty(columnDefs)) return;
     if (isEmpty(tableData) && isEmpty(columnDefs)) return;
 
     if (!tabulatorRef) {
@@ -82,21 +81,16 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     }
 
     const curColumns = tabulatorRef.getColumnDefinitions();
-    const curData = tabulatorRef.getData();
+    // const curData = tabulatorRef.getData();
 
-    if (
-      isArray(tableData) &&
-      (JSON.stringify(curData) !== JSON.stringify(tableData) ||
-        tableData.length === 0)
-    ) {
+    if (isArray(tableData)) {
       console.log('replace data: ', tableData);
       tabulatorRef.replaceData(tableData);
 
-      return;
+      // return;
     }
 
     if (
-      !isUndefined(columnDefs) &&
       isArray(columnDefs) &&
       JSON.stringify(curColumns) !== JSON.stringify(columnDefs)
     ) {
@@ -233,7 +227,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         data-instance={mainId}
         className={classNames}
       />
-      {tableMode === 'editable' && <div id={`extra-input-markup-${mainId}`} />}
+      <div
+        id={`extra-input-markup-${mainId}`}
+        className={tableMode === 'editable' ? '' : 'hidden'}
+      />
       {renderExtraInput()}
     </div>
   );

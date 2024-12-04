@@ -86,6 +86,8 @@ export const CustomTableSelect = (props) => {
 
     return () => {
       tabulatorRef.current = null;
+      dropdownRef.current = null;
+      inputRef.current = null;
     };
   }, []);
 
@@ -202,8 +204,6 @@ export const CustomTableSelect = (props) => {
     const firstItemKey = rowData[0][uniqueKey];
 
     setFilteredData(rowData);
-
-    console.log('searchText', searchText, firstItemKey);
 
     setCursor(0);
 
