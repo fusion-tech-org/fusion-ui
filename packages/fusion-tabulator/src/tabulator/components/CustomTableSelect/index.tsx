@@ -254,7 +254,11 @@ export const CustomTableSelect = (props) => {
           onMouseEnter={() => setInZone(true)}
           onMouseLeave={handleMouseLeaveDropdown}
         >
-          <TableSelect onRef={handleTabulator} uniformProps={uniformProps} />
+          <TableSelect
+            onRef={handleTabulator}
+            uniformProps={uniformProps}
+            onExtraInputValueChanged={onExtraInputValueChanged}
+          />
         </DroplistWrapper>
       }
     >

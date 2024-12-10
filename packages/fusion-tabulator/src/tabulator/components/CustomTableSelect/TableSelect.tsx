@@ -6,18 +6,21 @@ import ReactDOM from 'react-dom';
 import ExtendTabulator from '../../ExtendTabulator';
 import { DroplistWrapper } from './styles';
 import { genTabulatorUUID } from 'utils/index';
-import { isArray } from 'lodash';
+import { isArray, isFunction } from 'lodash';
 
 interface TableSelectProps {
   onRef?: (ref: Tabulator) => void;
   uniformProps: Record<string, any>;
+  onExtraInputValueChanged?: CallableFunction;
 }
 
 export const TableSelect: FC<TableSelectProps> = (props) => {
-  const { onRef, uniformProps } = props;
+  const { onRef, uniformProps, onExtraInputValueChanged } = props;
   const [mainId] = useState(genTabulatorUUID());
   const instanceRef = useRef<Tabulator>();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const { quickAddConfigs } = uniformProps;
+  const { data: tableData } = quickAddConfigs || {};
 
   const initTabulator = () => {
     // mounted DOM element
@@ -29,6 +32,14 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
 
     onRef?.(instanceRef.current);
   };
+
+  useEffect(() => {
+    if (!instanceRef.current || !isFunction(onExtraInputValueChanged)) return;
+
+    if (isArray(tableData)) {
+      instanceRef.current.replaceData(tableData);
+    }
+  }, [tableData, instanceRef, onExtraInputValueChanged]);
 
   // reset table column definitions
   useEffect(() => {
