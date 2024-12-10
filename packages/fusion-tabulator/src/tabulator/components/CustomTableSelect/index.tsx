@@ -42,6 +42,10 @@ export const CustomTableSelect = (props) => {
       tabulatorRef.current.deselectRow();
       tabulatorRef.current.clearFilter(true);
     }
+
+    if (isFunction(onExtraInputValueChanged)) {
+      onExtraInputValueChanged();
+    }
   };
 
   const memoAllData = useMemo(() => {
