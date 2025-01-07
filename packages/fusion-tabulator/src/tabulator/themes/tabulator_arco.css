@@ -284,10 +284,14 @@ body {
 
 .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-left {
   border-right: 2px solid #dee2e6;
+
+  background-color: #f2f3f5;
 }
 
 .tabulator .tabulator-header .tabulator-frozen.tabulator-frozen-right {
   border-left: 2px solid #dee2e6;
+  /* for frozen column */
+  background-color: #f2f3f5;
 }
 
 .tabulator .tabulator-header .tabulator-calcs-holder {
