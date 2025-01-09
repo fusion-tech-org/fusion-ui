@@ -12,6 +12,7 @@ import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
 import { EXTRA_INPUT_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { customEditorAndFormatterPipe } from './genInitOptions';
+import diff from 'microdiff';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
@@ -89,16 +90,24 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // const curData = tabulatorRef.getData();
 
     if (isArray(tableData)) {
-      console.log('replace data: ', tableData);
-      tabulatorRef.replaceData(tableData);
+      const currentTableData = tabulatorRef.getData('all');
+      // edge case 1
+      if (tableData.length === 0 && currentTableData.length === 0) {
+        tabulatorRef.replaceData(tableData);
+        return;
+      }
+      // firstly, compare two data length
+      if (currentTableData.length !== tableData.length) {
+        tabulatorRef.replaceData(tableData);
+        return;
+      }
 
-      // return;
+      if (diff(tableData, currentTableData).length > 0) {
+        tabulatorRef.replaceData(tableData);
+      }
     }
 
-    if (
-      isArray(columnDefs) &&
-      JSON.stringify(curColumns) !== JSON.stringify(columnDefs)
-    ) {
+    if (isArray(columnDefs) && diff(curColumns, columnDefs).length > 0) {
       const formatColumns = customEditorAndFormatterPipe(
         columnDefs,
         appMode,

@@ -2,6 +2,7 @@ import { TabulatorFull as Tabulator, Options } from 'tabulator-tables';
 import { FC, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import ReactDOM from 'react-dom';
+import diff from 'microdiff';
 
 import ExtendTabulator from '../../ExtendTabulator';
 import { DroplistWrapper } from './styles';
@@ -37,7 +38,21 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
     if (!instanceRef.current || !isFunction(onExtraInputValueChanged)) return;
 
     if (isArray(tableData)) {
-      instanceRef.current.replaceData(tableData);
+      const currentTableData = instanceRef.current.getData('all');
+      // edge case 1
+      if (tableData.length === 0 && currentTableData.length === 0) {
+        instanceRef.current.replaceData(tableData);
+        return;
+      }
+      // firstly, compare two data length
+      if (currentTableData.length !== tableData.length) {
+        instanceRef.current.replaceData(tableData);
+        return;
+      }
+
+      if (diff(tableData, currentTableData).length > 0) {
+        instanceRef.current.replaceData(tableData);
+      }
     }
   }, [tableData, instanceRef, onExtraInputValueChanged]);
 
