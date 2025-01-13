@@ -91,6 +91,12 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
     if (isArray(tableData)) {
       const currentTableData = tabulatorRef.getData('all');
+      console.log(
+        'currentTableData',
+        currentTableData,
+        tableData,
+        diff(tableData, currentTableData)
+      );
       // edge case 1
       if (tableData.length === 0 && currentTableData.length === 0) {
         tabulatorRef.replaceData(tableData);
