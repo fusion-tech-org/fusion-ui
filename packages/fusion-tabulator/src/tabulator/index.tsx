@@ -36,7 +36,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
   // const extraInputWrapRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const prevColumnDefRef = useRef<any[]>([]);
+  const prevColumnDefRef = useRef<any[]>(columnDefs);
   // const [extraInputContainer, setExtraInputContainer] = useState(null);
   const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
@@ -107,7 +107,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         tabulatorRef.replaceData(tableData);
       }
     }
-
+    console.log(
+      '^_^ :',
+      columnDefs,
+      diff(prevColumnDefRef.current, columnDefs)
+    );
     if (isArray(columnDefs)) {
       if (diff(prevColumnDefRef.current, columnDefs).length > 0) {
         const formatColumns = customEditorAndFormatterPipe(
