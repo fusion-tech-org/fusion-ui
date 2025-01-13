@@ -44,6 +44,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
   // const extraInputWrapRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const prevColumnDefRef = useRef<any[]>([]);
   // const [extraInputContainer, setExtraInputContainer] = useState(null);
   const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
@@ -203,6 +204,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       commonOptionsRef.current = null;
       wrapperRef.current = null;
       inputWrapRef.current = null;
+      prevColumnDefRef.current = [];
     };
   }, [tableMode]);
   // console.log(
