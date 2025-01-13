@@ -86,17 +86,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       return;
     }
 
-    const curColumns = tabulatorRef.getColumnDefinitions();
     // const curData = tabulatorRef.getData();
 
     if (isArray(tableData)) {
       const currentTableData = tabulatorRef.getData('all');
-      console.log(
-        'currentTableData',
-        currentTableData,
-        tableData,
-        diff(tableData, currentTableData)
-      );
+
       // edge case 1
       if (tableData.length === 0 && currentTableData.length === 0) {
         tabulatorRef.replaceData(tableData);
@@ -113,16 +107,25 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       }
     }
 
-    if (isArray(columnDefs) && diff(curColumns, columnDefs).length > 0) {
-      const formatColumns = customEditorAndFormatterPipe(
+    if (isArray(columnDefs)) {
+      const curColumns = tabulatorRef.getColumnDefinitions();
+      console.log(
+        '---->',
+        curColumns,
         columnDefs,
-        appMode,
-        enableColumnGroup
+        diff(curColumns, columnDefs)
       );
-      try {
-        tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
-      } catch (error) {
-        console.log('setColumns failed: ', error, formatColumns);
+      if (diff(curColumns, columnDefs).length > 0) {
+        const formatColumns = customEditorAndFormatterPipe(
+          columnDefs,
+          appMode,
+          enableColumnGroup
+        );
+        try {
+          tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
+        } catch (error) {
+          console.log('setColumns failed: ', error, formatColumns);
+        }
       }
     }
   };
