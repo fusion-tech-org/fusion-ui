@@ -8,7 +8,8 @@
   "types": "lib/index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite build",
+    "build-watch": "vite build --watch",
     "dev:stup": "npm run build -- --watch",
     "build": "tsup",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 30",
@@ -16,6 +17,7 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
   },
   "dependencies": {
+    "fast-deep-equal": "^3.1.3",
     "luxon": "^3.4.4",
     "microdiff": "^1.4.0",
     "tabulator-tables": "6.3.0"
