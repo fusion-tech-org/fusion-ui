@@ -44,6 +44,7 @@ body {
   /* font-weight: bold; */
   white-space: nowrap;
   overflow: hidden;
+  user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;
@@ -69,11 +70,17 @@ body {
   box-sizing: border-box;
   flex-direction: column;
   justify-content: flex-start;
-  border-right: 1px solid #aaa;
+  border-right: 1px solid #dee2e6;
   background: #fff;
   text-align: left;
   vertical-align: bottom;
   overflow: hidden;
+  background-color: transparent;
+}
+
+.tabulator .tabulator-header .tabulator-col:last-child {
+  border-right: none;
+
 }
 
 .tabulator .tabulator-header .tabulator-col.tabulator-moving {
@@ -624,12 +631,16 @@ body {
   display: inline-block;
   position: relative;
   box-sizing: border-box;
-  padding: 4px;
+  padding: 15px 12px;
   border-right: 1px solid #dee2e6;
   vertical-align: middle;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.tabulator-row .tabulator-cell:last-child {
+  border-right: none;
 }
 
 .tabulator-row .cell-edit-disable {
@@ -1274,11 +1285,6 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
   color: inherit;
 }
 
-.tabulator .tabulator-header .tabulator-col {
-  border-right: none;
-  background-color: transparent;
-}
-
 .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
   padding: 12px;
 }
@@ -1649,12 +1655,6 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 .tabulator-row {
   min-height: 40px;
   border-bottom: 1px solid #dee2e6;
-}
-
-.tabulator-row .tabulator-cell {
-  /* default: 12px */
-  padding: 15px 12px;
-  border-right: none;
 }
 
 .tabulator-row .tabulator-cell:last-of-type {
