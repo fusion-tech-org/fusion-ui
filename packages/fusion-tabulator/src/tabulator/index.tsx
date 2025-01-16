@@ -34,11 +34,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     tableMode = 'normal',
     uniformProps = {},
   } = props;
-  const {
-    headerVisible = true,
-    commonOptions = {},
-    enableColumnGroup = false,
-  } = uniformProps;
+  const { headerVisible = true, commonOptions = {} } = uniformProps;
   const commonOptionsRef = useRef(commonOptions);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
