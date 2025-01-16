@@ -2,7 +2,7 @@ import { TabulatorFull as Tabulator, Options } from 'tabulator-tables';
 import { FC, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import ReactDOM from 'react-dom';
-import diff from 'microdiff';
+import equal from 'fast-deep-equal';
 
 import ExtendTabulator from '../../ExtendTabulator';
 import { DroplistWrapper } from './styles';
@@ -50,7 +50,7 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
         return;
       }
 
-      if (diff(tableData, currentTableData).length > 0) {
+      if (equal(tableData, currentTableData)) {
         instanceRef.current.replaceData(tableData);
       }
     }
