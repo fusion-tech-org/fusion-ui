@@ -639,9 +639,9 @@ body {
   text-overflow: ellipsis;
 }
 
-.tabulator-row .tabulator-cell:last-child {
+/* .tabulator-row .tabulator-cell:last-child {
   border-right: none;
-}
+} */
 
 .tabulator-row .cell-edit-disable {
     > div,
@@ -1657,9 +1657,9 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
   border-bottom: 1px solid #dee2e6;
 }
 
-.tabulator-row .tabulator-cell:last-of-type {
+/* .tabulator-row .tabulator-cell:last-of-type {
   border-right: none;
-}
+} */
 
 .tabulator-row .tabulator-cell .tabulator-data-tree-control {
   border: 1px solid #ccc;
