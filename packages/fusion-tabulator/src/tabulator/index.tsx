@@ -129,10 +129,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       isArray(columnDefs) &&
       !equal(recordColumns.current, columnDefs)
     ) {
-      const formatColumns = customEditorAndFormatterPipe(
-        columnDefs,
-        diff(curColumns, columnDefs)
-      );
+      const formatColumns = customEditorAndFormatterPipe(columnDefs);
       try {
         tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
         recordColumns.current = columnDefs;
@@ -195,9 +192,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     if (tableMode === modeRef.current) return;
 
     modeRef.current = tableMode;
-    // const newId = genTabulatorUUID();
-
-    // setMainId(newId);
 
     return () => {
       modeRef.current = null;
@@ -207,21 +201,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       prevColumnDefRef.current = [];
     };
   }, [tableMode]);
-  // console.log(
-  //   '!containerRef.current',
-  //   !containerRef.current,
-  //   '!holdEle',
-  //   !holdEle
-  // );
-  // useEffect(() => {
-  //   if (containerRef.current && tabulatorRef) {
-  //     setExtraInputContainer(containerRef.current);
-  //   }
-
-  //   return () => {
-  //     containerRef.current = null;
-  //   };
-  // }, [tabulatorRef, mainId, containerRef.current]);
 
   function handleSelectRowData(record) {
     const { id: _key, ...rest } = record || {};
