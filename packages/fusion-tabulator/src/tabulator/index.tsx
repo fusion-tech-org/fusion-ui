@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { isArray, isEmpty, isUndefined } from 'lodash';
+import { isArray, isEmpty,isUndefined } from 'lodash';
 import { Empty } from '@arco-design/web-react';
 import { createPortal } from 'react-dom';
 
@@ -10,10 +10,19 @@ import { ExternalInputContainer, TabulatorContainer } from './styles';
 import { CustomTableSelect } from './components/CustomTableSelect';
 import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
-// import dbDexie from './utils/dbDexie';
 import { EXTRA_INPUT_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from './constants';
 import { customEditorAndFormatterPipe } from './genInitOptions';
-import { RowComponent } from 'tabulator-tables';
+/**
+ *?
+ * microdiff、JSON.stringify、equal 三者是不同的
+ * equal:发现有一个叶子结点不一样就会立即返回false
+ * microdiff、JSON.stringify 是全量的，会便利所有的叶子结点，前者需要构建Differ(对象序列化)，后者需要字符串序列化
+ * 执行效率⏱️：equal >  JSON.stringify > microdiff
+ * **/
+// import diff from 'microdiff'; 
+import equal from 'fast-deep-equal';
+
+
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
@@ -24,20 +33,21 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     onUpdateWidgetMetaProperty,
     // onUpdateWidgetProperty,
     onCustomSelectDropdownItem,
-    actionId,
     tableMode = 'normal',
     uniformProps = {},
   } = props;
   const {
     headerVisible = true,
     commonOptions = {},
-    enableIndexedDBQuery,
-    isRemote = true,
     enableColumnGroup = false,
   } = uniformProps;
   const commonOptionsRef = useRef(commonOptions);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
+  // const extraInputWrapRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  // const [extraInputContainer, setExtraInputContainer] = useState(null);
+  const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
   const [mainId] = useState(tabulatorId);
 
@@ -68,7 +78,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         : len * ROW_HEIGHT + 1;
 
       if (offsetHeight + EXTRA_INPUT_HEIGHT > tablePosition.height) {
-        offsetHeight = tablePosition.height - ROW_HEIGHT + 2;
+        offsetHeight = tablePosition.height - ROW_HEIGHT + 12;
         inputWrapRef.current.style.right = '14px';
       } else {
         inputWrapRef.current.style.right = '0px';
@@ -79,25 +89,45 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     [tablePosition.height, tableMode, tableData?.length, headerVisible]
   );
 
+  // const holdEle = document.getElementById(`table-container-${mainId}`);
+
   const responsiveTabulator = () => {
-    if (
-      isEmpty(tableData) &&
-      !actionId &&
-      isEmpty(columnDefs) &&
-      !enableIndexedDBQuery
-    )
-      return;
+    if (isEmpty(tableData) && isEmpty(columnDefs)) return;
 
     if (!tabulatorRef) {
       initTable();
       return;
     }
-    // console.log(diff(columnDefs, recordColumns.current ),columnDefs,recordColumns.current,"diff1")
+
+    //! 避免tabulator的重绘,重要！！！
     tabulatorRef.element.classList.add("hidden")
+      requestAnimationFrame(() => {
+      tabulatorRef.element.classList.remove("hidden")
+    })
+    // const curData = tabulatorRef.getData();
+
+    if (isArray(tableData)) {
+      const currentTableData = tabulatorRef.getData('all');
+      // edge case 1
+      if (tableData.length === 0 && currentTableData.length === 0) {
+        tabulatorRef.replaceData(tableData);
+        return;
+      }
+      // firstly, compare two data length
+      if (currentTableData.length !== tableData.length) {
+        tabulatorRef.replaceData(tableData);
+        return;
+      }
+
+      if (!equal(tableData, currentTableData)) {
+        tabulatorRef.replaceData(tableData);
+      }
+    }
+
     if (
       !isUndefined(columnDefs) &&
       isArray(columnDefs) &&
-      JSON.stringify(recordColumns.current) !== JSON.stringify(columnDefs)
+      !equal(recordColumns.current,columnDefs)
     ) {
       const formatColumns = customEditorAndFormatterPipe(
         columnDefs,
@@ -105,10 +135,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         enableColumnGroup
       );
       try {
-        console.log(
-          'setColumns -> isExtensible ->',
-          Object.isExtensible(formatColumns)
-        );
         tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
         recordColumns.current = columnDefs;
         tabulatorRef.replaceData(tableData);
@@ -118,8 +144,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       }
     }else{
       if (
-      !isUndefined(tableData) &&
-      JSON.stringify(recordData.current) !== JSON.stringify(tableData)
+        !isUndefined(tableData) &&
+        !equal(recordData.current,tableData)
       ) {
         // tabulatorRef.blockRedraw();
         // Promise.all([tabulatorRef.updateOrAddData(tableData), tabulatorRef.deleteRow(recordData.current.slice(tableData.length).map((v) => v[props.indexField]))]).then(() => {
@@ -129,22 +155,15 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         recordData.current = tableData;
       }
     }
-    requestAnimationFrame(() => {
-      tabulatorRef.element.classList.remove("hidden")
-    })
   };
 
   const handleAddExtraEvents = () => {
-    tabulatorRef.on('rowDeleted', (row: RowComponent) => {
-      const curTableData = row.getTable().getData('visible');
-
-      transformYInputElem(curTableData);
+    tabulatorRef.on('dataChanged', (data) => {
+      transformYInputElem(data);
     });
 
-    tabulatorRef.on('dataChanged', (data) => {
-      const visibleDataLen = tabulatorRef.getData('visible').length;
-
-      if (data.length === visibleDataLen + 1) {
+    tabulatorRef.on('dataProcessed', (data) => {
+      if (data.length === 0) {
         transformYInputElem(data);
       }
     });
@@ -152,13 +171,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   useEffect(() => {
     responsiveTabulator();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    actionId,
-    JSON.stringify(columnDefs),
-    JSON.stringify(tableData),
-    enableIndexedDBQuery,
-  ]);
+  }, [JSON.stringify(columnDefs, null, 2), JSON.stringify(tableData, null, 2)]);
 
   useEffect(() => {
     transformYInputElem();
@@ -173,24 +186,48 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   useEffect(() => {
     if (
       !tabulatorRef ||
-      JSON.stringify(commonOptions) ===
-        JSON.stringify(JSON.stringify(commonOptionsRef.current))
+      equal(commonOptions,commonOptionsRef.current)
     ) {
       return;
     }
-    commonOptionsRef.current = commonOptions;
 
-    initTable();
-  }, [JSON.stringify(commonOptions)]);
+    commonOptionsRef.current = commonOptions;
+  }, [JSON.stringify(commonOptions, null, 2)]);
 
   useEffect(() => {
-    if (!tabulatorRef || !actionId || !isRemote) return;
+    if (!tableMode) {
+      modeRef.current = tableMode;
+    }
 
-    const curAjax = tabulatorRef.getAjaxUrl?.();
-    console.log('curAjax', curAjax);
-    curAjax && tabulatorRef.setData(curAjax);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actionId, !tabulatorRef, isRemote]);
+    if (tableMode === modeRef.current) return;
+
+    modeRef.current = tableMode;
+    // const newId = genTabulatorUUID();
+
+    // setMainId(newId);
+
+    return () => {
+      modeRef.current = null;
+      commonOptionsRef.current = null;
+      wrapperRef.current = null;
+      inputWrapRef.current = null;
+    };
+  }, [tableMode]);
+  // console.log(
+  //   '!containerRef.current',
+  //   !containerRef.current,
+  //   '!holdEle',
+  //   !holdEle
+  // );
+  // useEffect(() => {
+  //   if (containerRef.current && tabulatorRef) {
+  //     setExtraInputContainer(containerRef.current);
+  //   }
+
+  //   return () => {
+  //     containerRef.current = null;
+  //   };
+  // }, [tabulatorRef, mainId, containerRef.current]);
 
   function handleSelectRowData(record) {
     const { id: _key, ...rest } = record || {};
@@ -212,30 +249,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     setExtraInputCreated(true);
   };
 
-  const renderExtraInput = useCallback(() => {
-    const holdEle = document.getElementById(`extra-input-markup-${mainId}`);
-
-    if (tableMode !== 'editable' || !holdEle) return null;
-
-    return createPortal(
-      <ExternalInputContainer ref={inputWrapRef}>
-        <CustomTableSelect
-          onSelectRowData={handleSelectRowData}
-          {...props}
-          onCreated={handleExtraInputCreated}
-        />
-      </ExternalInputContainer>,
-      holdEle
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mainId, tableMode, JSON.stringify(props), tabulatorRef]);
-
-  if (
-    isEmpty(tableData) &&
-    !actionId &&
-    isEmpty(columnDefs) &&
-    !enableIndexedDBQuery
-  ) {
+  if (isEmpty(tableData) && isEmpty(columnDefs)) {
     return (
       <div
         style={{
@@ -256,11 +270,9 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   return (
     <div
-      style={{
-        position: 'relative',
-        // height: '100%',
-        flex: 1,
-      }}
+      id={`table-container-${mainId}`}
+      ref={containerRef}
+      className={tableMode === 'editable' ? 'h-full' : 'flex-1'}
     >
       <TabulatorContainer
         tableMode={tableMode}
@@ -272,8 +284,18 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         data-instance={mainId}
         className={classNames}
       />
-      {tableMode === 'editable' && <div id={`extra-input-markup-${mainId}`} />}
-      {renderExtraInput()}
+      {tableMode === 'editable' &&
+        containerRef.current !== null &&
+        createPortal(
+          <ExternalInputContainer ref={inputWrapRef} key={mainId}>
+            <CustomTableSelect
+              onSelectRowData={handleSelectRowData}
+              {...props}
+              onCreated={handleExtraInputCreated}
+            />
+          </ExternalInputContainer>,
+          containerRef.current
+        )}
     </div>
   );
 };

@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
+    "build:vite": "turbo build:vite",
     "dev": "turbo dev",
     "vite:dev": "turbo vite:dev",
     "lint": "turbo lint",
@@ -11,7 +12,8 @@
     "clean": "turbo clean && rm -rf node_modules",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo build --filter=fusion-tabulator && changeset publish"
+    "release:tabulator": "turbo build --filter=fusion-tabulator && changeset publish",
+    "release:excel": "turbo build --filter=fusion-excel && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 import { CellComponent } from 'tabulator-tables';
 import styled from 'styled-components';
-// import { createRoot } from 'react-dom/client';
 import ReactDOM from 'react-dom';
 import { DatePicker } from '@arco-design/web-react';
 import dayjs from 'dayjs';
@@ -17,7 +16,7 @@ interface CustomDatePickerProps {
   cancel: VoidFunction;
 }
 
-type DateMode = 'date' | 'month' | 'year';
+// type DateMode = 'date' | 'month' | 'year';
 
 const DEFAULT_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
@@ -28,7 +27,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = (props) => {
     mode = 'date',
     format = DEFAULT_FORMAT,
   } = editorParams || {};
-  // const datePickerRef = useRef<string>(initValue);
+
   const defaultValue =
     initValue && dayjs(initValue, format).isValid()
       ? initValue

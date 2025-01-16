@@ -1,4 +1,5 @@
 import { defineConfig } from 'tsup';
+// import { visualizer } from 'rollup-plugin-visualizer';
 // import pkg from './package.json';
 
 const handleBuildSuccess = async () => {
@@ -18,8 +19,9 @@ export default defineConfig({
   clean: true,
   outDir: 'lib',
   minify: 'terser',
+  treeshake: true,
   onSuccess: handleBuildSuccess,
-  external: ['react', 'react-dom', 'lodash', '@arco-design/web-react'],
+  external: ['react', 'react-dom', 'lodash', '@arco-design/web-react',"day.js","axios","fast-deep-equal"],
   platform: 'browser',
   format: 'esm',
   dts: true,

@@ -1,25 +1,27 @@
 import { TabulatorFull as Tabulator, Options } from 'tabulator-tables';
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import ReactDOM from 'react-dom';
+import diff from 'microdiff';
 
 import ExtendTabulator from '../../ExtendTabulator';
 import { DroplistWrapper } from './styles';
 import { genTabulatorUUID } from 'utils/index';
-import Dexie from 'dexie';
-import dbDexie from 'src/tabulator/utils/dbDexie';
-import { isArray } from 'lodash';
+import { isArray, isFunction } from 'lodash';
 
 interface TableSelectProps {
   onRef?: (ref: Tabulator) => void;
   uniformProps: Record<string, any>;
+  onExtraInputValueChanged?: CallableFunction;
 }
 
 export const TableSelect: FC<TableSelectProps> = (props) => {
-  const { onRef, uniformProps } = props;
+  const { onRef, uniformProps, onExtraInputValueChanged } = props;
   const [mainId] = useState(genTabulatorUUID());
   const instanceRef = useRef<Tabulator>();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const { quickAddConfigs } = uniformProps;
+  const { data: tableData } = quickAddConfigs || {};
 
   const initTabulator = () => {
     // mounted DOM element
@@ -32,12 +34,36 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
     onRef?.(instanceRef.current);
   };
 
+  useEffect(() => {
+    if (!instanceRef.current || !isFunction(onExtraInputValueChanged)) return;
+
+    if (isArray(tableData)) {
+      const currentTableData = instanceRef.current.getData('all');
+      // edge case 1
+      if (tableData.length === 0 && currentTableData.length === 0) {
+        instanceRef.current.replaceData(tableData);
+        return;
+      }
+      // firstly, compare two data length
+      if (currentTableData.length !== tableData.length) {
+        instanceRef.current.replaceData(tableData);
+        return;
+      }
+
+      if (diff(tableData, currentTableData).length > 0) {
+        instanceRef.current.replaceData(tableData);
+      }
+    }
+  }, [tableData, instanceRef, onExtraInputValueChanged]);
+
   // reset table column definitions
   useEffect(() => {
     initTabulator();
 
     return () => {
       instanceRef.current?.destroy();
+      instanceRef.current = null;
+      wrapperRef.current = null;
     };
   }, []);
 
@@ -56,19 +82,16 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
 };
 
 function genInitOptions(uniformProps: Record<string, any>): Options & {
-  dexie?: Dexie;
   tableName?: string;
 } {
-  const { quickAddConfigs, enableIndexedDBQuery, indexdbConfigs } =
-    uniformProps;
+  const { quickAddConfigs } = uniformProps;
 
   const {
     data = [],
     columns = [],
-    isRemoteQuery,
     uniqueKey = 'id',
+    subTableLayout = 'fitDataStretch',
   } = quickAddConfigs || {};
-  const { dropdownIndexedDBTableName } = indexdbConfigs || {};
 
   // generates initial options
   const commonOptions: Options & {
@@ -83,11 +106,13 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     // layout: 'fitColumns',
     // layout: 'fitDataTable',
     // layout: 'fitData',
-    layout: 'fitDataStretch',
+    layout: subTableLayout,
     height: '320px',
     // selectable: 1,
     selectableRows: 1,
+    selectable: 'highlight',
     selectableRowsRollingSelection: false,
+    selectableRangeRows: false,
     rowHeight: 32,
     renderHorizontal: 'virtual',
     renderVertical: 'virtual',
@@ -98,34 +123,6 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
       navDown: false,
     },
   };
-
-  if (enableIndexedDBQuery) {
-    const colDefs: {
-      columns?: any[];
-      autoColumns?: true;
-    } = {};
-
-    if (isArray(columns) && columns.length > 0) {
-      colDefs.columns = columns;
-    } else {
-      colDefs.autoColumns = true;
-    }
-
-    return {
-      dexie: dbDexie.getDexie(),
-      tableName: dropdownIndexedDBTableName,
-      ...colDefs,
-      ...commonOptions,
-    };
-  }
-
-  if (isRemoteQuery) {
-    return {
-      data: [],
-      columns: [],
-      ...commonOptions,
-    };
-  }
 
   return {
     data: isArray(data) ? data : [],

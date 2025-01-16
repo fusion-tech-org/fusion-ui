@@ -1,10 +1,6 @@
 import { CellComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
 import { isFunction, isNumber, isString, isUndefined } from 'lodash';
 
-import { DexieModule } from './custom-modules/DexieModule';
-// import { AdvertModule } from './custom-modules/AdvertModule';
-// import { ExternalInputModule } from './custom-modules/ExternalInputModule';
-
 import zhCNLang from 'langs/zh-cn.json';
 import { Message } from '@arco-design/web-react';
 import { convertExpressionByRule, simpleExecExpression } from './utils';
@@ -17,7 +13,7 @@ import { convertExpressionByRule, simpleExecExpression } from './utils';
 /**
  * register modules
  */
-Tabulator.registerModule(DexieModule);
+// Tabulator.registerModule(DexieModule);
 
 // Tabulator.registerModule(ExternalInputModule);
 // Tabulator.registerModule(AdvertModule);
@@ -71,6 +67,59 @@ Tabulator.extendModule('format', 'formatters', {
     // const curRow = cell.getRow();
     return span.cloneNode(true); //make the contents of the cell bold
   },
+  checkbox: function (cell: CellComponent, formatterParams, _onRendered) {
+    const cellValue:
+      | Array<{
+          label: string;
+          value: any;
+        }>
+      | undefined = cell.getValue();
+    const { linkColumn } = formatterParams || {};
+
+    if (!Array.isArray(cellValue) || cellValue.length === 0) {
+      return '';
+    }
+
+    function genCheckboxList() {
+      const formatCellValue = cellValue.filter(
+        ({ label, value }) => !(!label || !value)
+      );
+      const curRowData = cell.getData();
+      const mapValues: any[] = curRowData[linkColumn] || [];
+
+      let htmlStr = '';
+
+      formatCellValue.forEach(({ label, value }) => {
+        const labelClasses = mapValues.includes(value)
+          ? 'arco-checkbox arco-checkbox-checked'
+          : 'arco-checkbox';
+        const spanClasses = mapValues.includes(value)
+          ? 'arco-icon-hover-disabled'
+          : '';
+        htmlStr += `
+          <label class="${labelClasses}">
+            <input type="checkbox" value="${value}" data-action="checkbox" data-actionid="${value}">
+            <span class="arco-icon-hover arco-checkbox-icon-hover ${spanClasses} arco-checkbox-mask-wrapper">
+              <div class="arco-checkbox-mask">
+                <svg class="arco-checkbox-mask-icon" aria-hidden="true" focusable="false" viewBox="0 0 1024 1024" width="200" height="200" fill="currentColor"><path d="M877.44815445 206.10060629a64.72691371 64.72691371 0 0 0-95.14856334 4.01306852L380.73381888 685.46812814 235.22771741 533.48933518a64.72691371 64.72691371 0 0 0-92.43003222-1.03563036l-45.82665557 45.82665443a64.72691371 64.72691371 0 0 0-0.90617629 90.61767965l239.61903446 250.10479331a64.72691371 64.72691371 0 0 0 71.19960405 15.14609778 64.33855261 64.33855261 0 0 0 35.08198741-21.23042702l36.24707186-42.71976334 40.5190474-40.77795556-3.36579926-3.49525333 411.40426297-486.74638962a64.72691371 64.72691371 0 0 0-3.88361443-87.64024149l-45.3088404-45.43829334z" p-id="840"></path></svg>
+              </div>
+            </span>
+            <span class="arco-checkbox-text">${label}</span>
+          </label>
+        `;
+      });
+
+      return htmlStr;
+    }
+
+    const innerHTML = genCheckboxList();
+
+    return `
+      <span class="arco-checkbox-group arco-checkbox-group-direction-horizontal flex flex-wrap">
+        ${innerHTML}
+      </span>
+    `;
+  },
   placeholder: function (cell: CellComponent, formatterParams, _onRendered) {
     const cellValue = cell.getValue();
     const {
@@ -92,6 +141,7 @@ Tabulator.extendModule('format', 'formatters', {
       }
 
       const cellColDef = cell.getColumn().getDefinition();
+
       const { editorParams } = cellColDef;
       const { values = [] } = (editorParams || {}) as Record<string, any>;
 
@@ -190,9 +240,10 @@ Tabulator.extendModule('format', 'formatters', {
   tags: function (cell, formatterParams, _onRendered) {
     const cellValue = cell.getValue();
     const {
-        separator = ',',
-        size = 'default', // 'small' | 'default' | 'medium' | 'large'
-        colors = {},
+      separator = ',',
+      size = 'default', // 'small' | 'default' | 'medium' | 'large'
+      colors = {},
+      // colorList = [],
     } = formatterParams || {};
 
     // 检查 cellValue 是否有效
@@ -222,18 +273,19 @@ Tabulator.extendModule('format', 'formatters', {
 
     return container; // 返回构建的 DOM 元素
   },
+  //? 覆盖tabulator-tables自带的,提升解析效率
   plaintext: function (cell) {
     const cellValue = cell.getValue();
     return createText(cellValue);
   },
   lookup: function(cell, formatterParams, onRendered) {
-  var value = cell.getValue();
-  if (typeof formatterParams[value] === "undefined") {
-    console.warn("Missing display value for " + value);
-    return  createText(value);
+    var value = cell.getValue();
+    if (typeof formatterParams[value] === "undefined") {
+      console.warn("Missing display value for " + value);
+      return  createText(value);
+    }
+    return createText(formatterParams[value]);
   }
-  return createText(formatterParams[value]);
-}
   // tickbox: function (_cell: CellComponent, _formatterParams, _onRendered) {
   //   // cell.getColumn().getDefinition().cellClick = function (e, cell) {
   //   //   // e.stopPropagation();
@@ -249,13 +301,6 @@ Tabulator.extendModule('accessor', 'accessors', {
     return Math.floor(value); //return the new value for the cell data.
   },
 });
-
-// extending requests
-// Tabulator.extendModule("ajax", "defaultConfig", {
-//   type: "POST",
-//   contentType : "application/json; charset=utf-8",
-
-// });
 
 // extending Column Calculation
 

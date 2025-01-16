@@ -28,7 +28,7 @@ export default defineConfig({
     cors: true,
   },
   build: {
-    outDir: '/Users/xiongyangyang/app/lowcode-console/fs-console/src/fusion-tabulator',
+    outDir: 'lib',
     sourcemap: true,
      minify: false, // 禁用压缩
     lib: {
@@ -40,7 +40,7 @@ export default defineConfig({
     },
     rollupOptions: {
       // 确保外部化处理那些你不想打包进库的依赖
-      external: ['react', 'react-dom'],
+      external: ['react', 'react-dom', 'lodash', '@arco-design/web-react',"day.js","axios","fast-deep-equal"],
       output: {
         // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
         assetFileNames: (assetInfo) => {

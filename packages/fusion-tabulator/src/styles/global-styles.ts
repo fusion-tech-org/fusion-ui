@@ -1,3 +1,4 @@
+import { TableMode } from 'src/tabulator/interface';
 import styled from 'styled-components';
 
 export const FilterContainer = styled.div`
@@ -25,20 +26,28 @@ export const Main = styled.div`
   min-height: 200px;
 `;
 
-export const TableContainer = styled.div`
-  flex: 1;
-  width: 100%;
-  height: 100%;
-`;
-
-export const Container = styled.div<{
-  'widget-id': string;
-  appMode: string;
+export const TableContainer = styled.div<{
+  tableMode: TableMode;
 }>`
   position: relative;
   width: 100%;
+  ${(props) =>
+    props.tableMode === 'normal' ? 'flex: 1; height: 100%;' : 'height: 100%;'}
   overflow-y: auto;
-  /* height: 100%; */
-  /* padding-right: ${({ appMode }) => (appMode === 'EDIT' ? '40px' : 0)}; */
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+`;
+
+export const Container = styled.div<{
+  tableMode: TableMode;
+}>`
+  position: relative;
+  width: 100%;
+  ${(props) =>
+    props.tableMode === 'normal' ? 'height: 100%;flex: 1;' : 'height: 100%;'}
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
 `;
