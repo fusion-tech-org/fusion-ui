@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { isArray, isEmpty, isUndefined } from 'lodash';
+import { isArray, isEmpty } from 'lodash';
 import { Empty } from '@arco-design/web-react';
 import { createPortal } from 'react-dom';
 
@@ -34,7 +34,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     tableMode = 'normal',
     uniformProps = {},
   } = props;
-  const { headerVisible = true, commonOptions = {} } = uniformProps;
+  const {
+    headerVisible = true,
+    commonOptions = {},
+    enableColumnGroup = false,
+  } = uniformProps;
   const commonOptionsRef = useRef(commonOptions);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const inputWrapRef = useRef<HTMLDivElement | null>(null);
@@ -45,9 +49,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
   const [mainId] = useState(tabulatorId);
-
-  const recordColumns = useRef<ReactTabulatorProps['columns']>();
-  const recordData = useRef<ReactTabulatorProps['data']>();
   const [extraInputCreated, setExtraInputCreated] = useState(false);
   const { tablePosition, tabulatorRef, initTable } = useTabulator({
     ref: wrapperRef,
@@ -94,11 +95,6 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       return;
     }
 
-    //! 避免tabulator的重绘,重要！！！
-    tabulatorRef.element.classList.add('hidden');
-    requestAnimationFrame(() => {
-      tabulatorRef.element.classList.remove('hidden');
-    });
     // const curData = tabulatorRef.getData();
 
     if (isArray(tableData)) {
@@ -120,28 +116,20 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       }
     }
 
-    if (
-      !isUndefined(columnDefs) &&
-      isArray(columnDefs) &&
-      !equal(recordColumns.current, columnDefs)
-    ) {
-      const formatColumns = customEditorAndFormatterPipe(columnDefs);
-      try {
-        tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
-        recordColumns.current = columnDefs;
-        tabulatorRef.replaceData(tableData);
-        recordData.current = tableData;
-      } catch (error) {
-        console.log('setColumns failed: ', error, formatColumns);
-      }
-    } else {
-      if (!isUndefined(tableData) && !equal(recordData.current, tableData)) {
-        // tabulatorRef.blockRedraw();
-        // Promise.all([tabulatorRef.updateOrAddData(tableData), tabulatorRef.deleteRow(recordData.current.slice(tableData.length).map((v) => v[props.indexField]))]).then(() => {
-        //     tabulatorRef.restoreRedraw();
-        // })
-        tabulatorRef.replaceData(tableData);
-        recordData.current = tableData;
+    if (isArray(columnDefs)) {
+      if (!equal(prevColumnDefRef.current, columnDefs)) {
+        const formatColumns = customEditorAndFormatterPipe(
+          columnDefs,
+          appMode,
+          enableColumnGroup
+        );
+        try {
+          tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
+          prevColumnDefRef.current = columnDefs;
+        } catch (error) {
+          console.log('setColumns failed: ', error, formatColumns);
+          prevColumnDefRef.current = [];
+        }
       }
     }
   };
@@ -173,7 +161,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   }, [tabulatorRef]);
 
   useEffect(() => {
-    if (!tabulatorRef || equal(commonOptions, commonOptionsRef.current)) {
+    if (
+      !tabulatorRef ||
+      JSON.stringify(commonOptions) ===
+        JSON.stringify(JSON.stringify(commonOptionsRef.current))
+    ) {
       return;
     }
 
@@ -188,6 +180,9 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     if (tableMode === modeRef.current) return;
 
     modeRef.current = tableMode;
+    // const newId = genTabulatorUUID();
+
+    // setMainId(newId);
 
     return () => {
       modeRef.current = null;
@@ -197,6 +192,21 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       prevColumnDefRef.current = [];
     };
   }, [tableMode]);
+  // console.log(
+  //   '!containerRef.current',
+  //   !containerRef.current,
+  //   '!holdEle',
+  //   !holdEle
+  // );
+  // useEffect(() => {
+  //   if (containerRef.current && tabulatorRef) {
+  //     setExtraInputContainer(containerRef.current);
+  //   }
+
+  //   return () => {
+  //     containerRef.current = null;
+  //   };
+  // }, [tabulatorRef, mainId, containerRef.current]);
 
   function handleSelectRowData(record) {
     const { id: _key, ...rest } = record || {};
