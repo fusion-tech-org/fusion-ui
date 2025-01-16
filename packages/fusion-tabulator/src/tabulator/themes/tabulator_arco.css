@@ -69,11 +69,16 @@ body {
   box-sizing: border-box;
   flex-direction: column;
   justify-content: flex-start;
-  border-right: 1px solid #aaa;
+  border-right: 1px solid #dee2e6;
   background: #fff;
   text-align: left;
   vertical-align: bottom;
   overflow: hidden;
+  background-color: transparent;
+}
+
+.tabulator .tabulator-header .tabulator-col:last-child {
+  border-right: none;
 }
 
 .tabulator .tabulator-header .tabulator-col.tabulator-moving {
@@ -525,10 +530,10 @@ body {
   /* font-size: 16px; */
 }
 
-.tabulator .tabulator-alert .tabulator-alert-msg.tabulator-alert-state-msg {
+/* .tabulator .tabulator-alert .tabulator-alert-msg.tabulator-alert-state-msg { */
   /* border: 4px solid #333; */
   /* color: #000; */
-}
+/* } */
 
 .tabulator .tabulator-alert .tabulator-alert-msg.tabulator-alert-state-error {
   border: 4px solid #D00;
@@ -542,9 +547,9 @@ body {
   background-color: #fff;
 }
 
-.tabulator-row.tabulator-row-even {
+/* .tabulator-row.tabulator-row-even { */
   /* background-color: var(--color-fill-1); */
-}
+/* } */
 
 /* @media (hover: hover) and (pointer: fine) {
   .tabulator-row.tabulator-selectable:hover {
@@ -624,13 +629,19 @@ body {
   display: inline-block;
   position: relative;
   box-sizing: border-box;
-  padding: 4px;
+  /* padding: 4px; */
+  padding: 15px 12px;
   border-right: 1px solid #dee2e6;
   vertical-align: middle;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* .tabulator-row .tabulator-cell {
+  padding: 15px 12px;
+  border-right: none;
+} */
 
 .tabulator-row .cell-edit-disable {
     > div,
@@ -1274,11 +1285,6 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
   color: inherit;
 }
 
-.tabulator .tabulator-header .tabulator-col {
-  border-right: none;
-  background-color: transparent;
-}
-
 .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
   padding: 12px;
 }
@@ -1649,12 +1655,6 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 .tabulator-row {
   min-height: 40px;
   border-bottom: 1px solid #dee2e6;
-}
-
-.tabulator-row .tabulator-cell {
-  /* default: 12px */
-  padding: 15px 12px;
-  border-right: none;
 }
 
 .tabulator-row .tabulator-cell:last-of-type {
