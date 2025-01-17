@@ -21,6 +21,7 @@ import { customEditorAndFormatterPipe } from './genInitOptions';
  * **/
 // import diff from 'microdiff';
 import equal from 'fast-deep-equal';
+import diff from 'microdiff';
 
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
@@ -49,6 +50,9 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
   const [mainId] = useState(tabulatorId);
+
+  const recordColumns = useRef<ReactTabulatorProps["columns"]>();
+  const recordData = useRef<ReactTabulatorProps["data"]>();
   const [extraInputCreated, setExtraInputCreated] = useState(false);
   const { tablePosition, tabulatorRef, initTable } = useTabulator({
     ref: wrapperRef,
@@ -87,6 +91,15 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   // const holdEle = document.getElementById(`table-container-${mainId}`);
 
+  const replaceData = useCallback((...args: Parameters<typeof tabulatorRef.replaceData>) => {
+    //! 避免tabulator的重绘,重要！！！
+    tabulatorRef.element.classList.add("hidden")
+    tabulatorRef.replaceData(...args);
+    setTimeout(function showTabulator() {
+      tabulatorRef.element.classList.remove("hidden")
+    },10)
+  },[tabulatorRef])
+
   const responsiveTabulator = () => {
     if (isEmpty(tableData) && isEmpty(columnDefs)) return;
 
@@ -95,44 +108,42 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       return;
     }
 
+
     // const curData = tabulatorRef.getData();
 
-    if (isArray(tableData)) {
-      const currentTableData = tabulatorRef.getData('all');
 
-      // edge case 1
-      if (tableData.length === 0 && currentTableData.length === 0) {
-        tabulatorRef.replaceData(tableData);
+
+    if (
+      isArray(columnDefs) &&
+      JSON.stringify(recordColumns.current) !== JSON.stringify(columnDefs) //因为在columnDefs定义了函数，不能使用equal
+    ) {
+      const formatColumns = customEditorAndFormatterPipe(
+        columnDefs,
+        appMode,
+        enableColumnGroup
+      );
+      try {
+        // console.log(diff(recordColumns.current || {}, columnDefs || {}),"diff")
+        tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
+        recordColumns.current = columnDefs;
+        replaceData(tableData);
+        recordData.current = tableData;
         return;
+      } catch (error) {
+        console.log('setColumns failed: ', error, formatColumns);
       }
-      // firstly, compare two data length
-      if (currentTableData.length !== tableData.length) {
-        tabulatorRef.replaceData(tableData);
-        return;
-      }
-
-      if (!equal(tableData, currentTableData)) {
-        tabulatorRef.replaceData(tableData);
-      }
-    }
-
-    if (isArray(columnDefs)) {
-      if (!equal(prevColumnDefRef.current, columnDefs)) {
-        const formatColumns = customEditorAndFormatterPipe(
-          columnDefs,
-          appMode,
-          enableColumnGroup
-        );
-        try {
-          tabulatorRef.setColumns(formatColumns); // overwrite existing columns with new columns definition array
-          prevColumnDefRef.current = columnDefs;
-        } catch (error) {
-          console.log('setColumns failed: ', error, formatColumns);
-          prevColumnDefRef.current = [];
-        }
+    } else {
+      if (
+        isArray(tableData)&&
+        !equal(recordData.current, tableData)
+      ) {
+        // console.log(diff(recordData.current, tableData),"diff")
+        replaceData(tableData);
+        recordData.current = tableData;
       }
     }
   };
+
 
   const handleAddExtraEvents = () => {
     tabulatorRef.on('dataChanged', (data) => {
@@ -163,8 +174,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   useEffect(() => {
     if (
       !tabulatorRef ||
-      JSON.stringify(commonOptions) ===
-        JSON.stringify(JSON.stringify(commonOptionsRef.current))
+      equal(commonOptions, commonOptionsRef.current)
     ) {
       return;
     }
