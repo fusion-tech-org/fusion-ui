@@ -93,11 +93,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
   const replaceData = useCallback((...args: Parameters<typeof tabulatorRef.replaceData>) => {
     //! 避免tabulator的重绘,重要！！！
-    tabulatorRef.element.classList.add("hidden")
+    tabulatorRef.blockRedraw();
     tabulatorRef.replaceData(...args);
-    setTimeout(function showTabulator() {
-      tabulatorRef.element.classList.remove("hidden")
-    },10)
+    requestAnimationFrame(function showTabulator() {
+      tabulatorRef.restoreRedraw();
+    })
   },[tabulatorRef])
 
   const responsiveTabulator = () => {

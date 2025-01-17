@@ -39,11 +39,11 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
 
     const replaceData = useCallback((...args: Parameters< Tabulator["replaceData"]>) => {
       //! 避免tabulator的重绘,重要！！！
-      instanceRef.current.element.classList.add("hidden")
+      instanceRef.current.blockRedraw();
       instanceRef.current.replaceData(...args);
-      setTimeout(function showTabulator() {
-        instanceRef.current.element.classList.remove("hidden")
-      },10)
+      requestAnimationFrame(function showTabulator() {
+        instanceRef.current.restoreRedraw();
+      })
     }, [])
 
   useEffect(() => {
