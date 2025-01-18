@@ -2,8 +2,6 @@ import { TabulatorFull as Tabulator, Options } from 'tabulator-tables';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import ReactDOM from 'react-dom';
-import equal from 'fast-deep-equal';
-
 import ExtendTabulator from '../../ExtendTabulator';
 import { DroplistWrapper } from './styles';
 import { genTabulatorUUID } from 'utils/index';
