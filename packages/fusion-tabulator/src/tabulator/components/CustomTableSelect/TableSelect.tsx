@@ -1,13 +1,13 @@
 import { TabulatorFull as Tabulator, Options } from 'tabulator-tables';
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useRef } from 'react';
 import ReactDOM from 'react-dom';
-import equal from 'fast-deep-equal';
-
 import ExtendTabulator from '../../ExtendTabulator';
 import { DroplistWrapper } from './styles';
 import { genTabulatorUUID } from 'utils/index';
 import { isArray, isFunction } from 'lodash';
+import { ReactTabulatorProps } from 'src/tabulator/interface';
+import equal from 'fast-deep-equal';
 
 interface TableSelectProps {
   onRef?: (ref: Tabulator) => void;
@@ -22,6 +22,7 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const { quickAddConfigs } = uniformProps;
   const { data: tableData } = quickAddConfigs || {};
+  const recordData = useRef<ReactTabulatorProps["data"]>();
 
   const initTabulator = () => {
     // mounted DOM element
@@ -34,26 +35,25 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
     onRef?.(instanceRef.current);
   };
 
+    const replaceData = useCallback((...args: Parameters< Tabulator["replaceData"]>) => {
+      //! 避免tabulator的重绘,重要！！！
+      instanceRef.current.blockRedraw();
+      instanceRef.current.replaceData(...args);
+      requestAnimationFrame(function showTabulator() {
+        instanceRef.current.restoreRedraw();
+      })
+    }, [])
+
   useEffect(() => {
     if (!instanceRef.current || !isFunction(onExtraInputValueChanged)) return;
 
-    if (isArray(tableData)) {
-      const currentTableData = instanceRef.current.getData('all');
-      // edge case 1
-      if (tableData.length === 0 && currentTableData.length === 0) {
-        instanceRef.current.replaceData(tableData);
-        return;
+    if (
+        isArray(tableData)&&
+        !equal(recordData.current, tableData)
+    ) {
+        replaceData(tableData);
+        recordData.current = tableData;
       }
-      // firstly, compare two data length
-      if (currentTableData.length !== tableData.length) {
-        instanceRef.current.replaceData(tableData);
-        return;
-      }
-
-      if (equal(tableData, currentTableData)) {
-        instanceRef.current.replaceData(tableData);
-      }
-    }
   }, [tableData, instanceRef, onExtraInputValueChanged]);
 
   // reset table column definitions
