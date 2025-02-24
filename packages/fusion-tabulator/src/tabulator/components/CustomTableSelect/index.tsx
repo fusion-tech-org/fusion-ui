@@ -58,7 +58,7 @@ export const CustomTableSelect = (props) => {
 
     const curTableData = tabulatorRef.current.getData();
     const finalData = filteredData.length > 0 ? filteredData : curTableData;
-    const uniqueKeys = map(finalData, (item) => item[uniqueKey]).filter(
+    const uniqueKeys = map(finalData, (item) => item?.[uniqueKey]).filter(
       Boolean
     );
 
@@ -206,7 +206,7 @@ export const CustomTableSelect = (props) => {
 
   const handelDataFiltered = (_filters: Filter[], rows: RowComponent[]) => {
     const rowData = rows.map((row) => row.getData());
-    const firstItemKey = rowData[0][uniqueKey];
+    const firstItemKey = rowData?.[0]?.[uniqueKey];
 
     setFilteredData(rowData);
 
