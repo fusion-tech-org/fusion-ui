@@ -1,4 +1,4 @@
-body {
+/* body {
   --arcoblue-6: 22,93,255;
   --gray-2: 242,243,245;
   --gray-10: 29,33,41;
@@ -6,7 +6,7 @@ body {
   --color-neutral-2: rgb(var(--gray-2));
   --custom-header-color: var(--color-neutral-2);;
   --primary-6: var(--arcoblue-6);
-}
+} */
 
 .tabulator {
   position: relative;
