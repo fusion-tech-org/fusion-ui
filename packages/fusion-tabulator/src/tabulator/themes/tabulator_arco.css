@@ -1,12 +1,12 @@
-/* body {
-  --arcoblue-6: 22,93,255;
-  --gray-2: 242,243,245;
-  --gray-10: 29,33,41;
-  --color-fill-1: rgb(247, 248, 250);
-  --color-neutral-2: rgb(var(--gray-2));
-  --custom-header-color: var(--color-neutral-2);;
-  --primary-6: var(--arcoblue-6);
-} */
+body {
+  --tabulator-arcoblue-6: 22,93,255;
+  --tabulator-gray-2: 242,243,245;
+  --tabulator-gray-10: 29,33,41;
+  --tabulator-color-fill-1: rgb(247, 248, 250);
+  --tabulator-color-neutral-2: rgb(var(--tabulator-gray-2));
+  --custom-tabulator-header-color: var(--tabulator-color-neutral-2);;
+  --tabulator-primary-6: var(--tabulator-arcoblue-6);
+}
 
 .tabulator {
   position: relative;
@@ -39,7 +39,7 @@
   box-sizing: border-box;
   width: 100%;
   /* border-bottom: 1px solid #dee2e6; */
-  background-color: var(--custom-header-color);
+  background-color: var(--custom-tabulator-header-color);
   color: #555;
   /* font-weight: bold; */
   white-space: nowrap;
@@ -132,10 +132,10 @@
   border-radius: 2px;
   background: #fff;
   font-size: 14px;
-  color: rgb(var(--gray-10));
+  color: rgb(var(--tabulator-gray-10));
 
   &:focus {
-    border-color: rgb(var(--primary-6));
+    border-color: rgb(var(--tabulator-primary-6));
   }
 }
 
@@ -200,7 +200,7 @@
 @media (hover: hover) and (pointer: fine) {
   .tabulator .tabulator-header .tabulator-col.tabulator-sortable.tabulator-col-sorter-element:hover {
     cursor: pointer;
-    background-color: var(--color-neutral-2);
+    background-color: var(--tabulator-color-neutral-2);
   }
 }
 
@@ -406,7 +406,7 @@
   box-sizing: border-box;
   width: 100%;
   text-align: left;
-  background: var(--color-neutral-2) !important;
+  background: var(--tabulator-color-neutral-2) !important;
  
   /* border-bottom: 1px solid #dee2e6; */
   border-top: 1px solid #dee2e6;
@@ -416,7 +416,7 @@
 .tabulator .tabulator-footer .tabulator-calcs-holder .tabulator-row {
   display: inline-block;
   /* background: #f3f3f3 !important; */
-  background: var(--color-neutral-2) !important;
+  background: var(--tabulator-color-neutral-2) !important;
 }
 
 .tabulator .tabulator-footer .tabulator-calcs-holder .tabulator-row .tabulator-col-resize-handle {
@@ -532,10 +532,10 @@
   /* font-size: 16px; */
 }
 
-.tabulator .tabulator-alert .tabulator-alert-msg.tabulator-alert-state-msg {
+/* .tabulator .tabulator-alert .tabulator-alert-msg.tabulator-alert-state-msg { */
   /* border: 4px solid #333; */
   /* color: #000; */
-}
+/* } */
 
 .tabulator .tabulator-alert .tabulator-alert-msg.tabulator-alert-state-error {
   border: 4px solid #D00;
@@ -550,12 +550,12 @@
 }
 
 .tabulator-row.tabulator-row-even {
-  /* background-color: var(--color-fill-1); */
+  background-color: var(--tabulator-color-fill-1);
 }
 
 /* @media (hover: hover) and (pointer: fine) {
   .tabulator-row.tabulator-selectable:hover {
-    background-color: var(--color-fill-1);
+    background-color: var(--tabulator-color-fill-1);
     cursor: pointer;
   }
 } */
@@ -682,7 +682,7 @@
 }
 
 .tabulator-row .tabulator-cell.tabulator-editing {
-  border: 1px solid rgb(var(--primary-6));
+  border: 1px solid rgb(var(--tabulator-primary-6));
   outline: none;
   padding: 0;
 }
@@ -1359,8 +1359,8 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 }
 
 .tabulator .tabulator-footer .tabulator-page.active {
-  border-color: rgb(var(--primary-6));
-  background-color: rgb(var(--primary-6));
+  border-color: rgb(var(--tabulator-primary-6));
+  background-color: rgb(var(--tabulator-primary-6));
   color: #fff;
 }
 
@@ -1779,7 +1779,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 }
 
 .tabulator .tabulator-cell-edit-text:hover {
-  border-color: rgb(var(--primary-6));
+  border-color: rgb(var(--tabulator-primary-6));
 }
 
 .tabulator .tabulator-cell-edit-style::after {
