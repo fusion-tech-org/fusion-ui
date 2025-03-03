@@ -5,7 +5,7 @@ body {
   --tabulator-color-fill-1: rgb(247, 248, 250);
   --tabulator-color-neutral-2: rgb(var(--tabulator-gray-2));
   --custom-tabulator-header-color: var(--tabulator-color-neutral-2);;
-  --tabulator-primary-6: var(--tabulator-arcoblue-6);
+  --tabulator-primary-6: var(--primary-6);
 }
 
 .tabulator {
