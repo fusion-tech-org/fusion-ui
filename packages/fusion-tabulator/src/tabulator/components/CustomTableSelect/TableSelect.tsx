@@ -90,7 +90,7 @@ function genInitOptions(uniformProps: Record<string, any>): Options & {
     data = [],
     columns = [],
     uniqueKey = 'id',
-    subTableLayout = 'fitDataStretch',
+    subTableLayout = 'fitData',
   } = quickAddConfigs || {};
 
   // generates initial options
