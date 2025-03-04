@@ -1286,7 +1286,7 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 }
 
 .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
-  padding: 12px;
+  padding: 8px;
 }
 
 .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-sorter {
