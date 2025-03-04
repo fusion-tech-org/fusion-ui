@@ -21,8 +21,7 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
   const instanceRef = useRef<Tabulator>();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const { quickAddConfigs } = uniformProps;
-  const { data: tableData } = quickAddConfigs || {};
-  const recordData = useRef<ReactTabulatorProps["data"]>();
+  const { data: tableData, maxWidth = 720 } = quickAddConfigs || {};
 
   const initTabulator = () => {
     // mounted DOM element
@@ -35,25 +34,25 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
     onRef?.(instanceRef.current);
   };
 
-    const replaceData = useCallback((...args: Parameters< Tabulator["replaceData"]>) => {
+  const replaceData = useCallback(
+    (...args: Parameters<Tabulator['replaceData']>) => {
       //! 避免tabulator的重绘,重要！！！
       instanceRef.current.blockRedraw();
       instanceRef.current.replaceData(...args);
       requestAnimationFrame(function showTabulator() {
         instanceRef.current.restoreRedraw();
-      })
-    }, [])
+      });
+    },
+    []
+  );
 
   useEffect(() => {
     if (!instanceRef.current || !isFunction(onExtraInputValueChanged)) return;
 
-    if (
-        isArray(tableData)&&
-        !equal(recordData.current, tableData)
-    ) {
-        replaceData(tableData);
-        recordData.current = tableData;
-      }
+    if (isArray(tableData) && !equal(recordData.current, tableData)) {
+      replaceData(tableData);
+      recordData.current = tableData;
+    }
   }, [tableData, instanceRef, onExtraInputValueChanged]);
 
   // reset table column definitions
@@ -68,13 +67,13 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
   }, []);
 
   return (
-    <DroplistWrapper>
+    <DroplistWrapper
+      className={`h-full overflow-auto min-h-[150px] max-h-[360px] max-w-[${maxWidth}px]`}
+    >
       <div
         ref={wrapperRef}
-        style={{
-          height: '100%',
-        }}
         id={mainId}
+        className="h-full"
         data-instance={mainId}
       />
     </DroplistWrapper>
