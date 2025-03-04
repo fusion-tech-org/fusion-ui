@@ -8,11 +8,13 @@ export const InputWrapper = styled.div`
   align-items: center;
 `;
 
-export const DroplistWrapper = styled.div`
+export const DroplistWrapper = styled.div<{
+  maxWidth: number;
+}>`
   position: relative;
-  /* min-height: 150px;
+  min-height: 150px;
   max-height: 360px;
-  max-width: 720px; */
+  max-width: ${({ maxWidth }) => `${maxWidth}px`};
   border: 1px solid #f5f5f5;
   border-radius: 12px;
   scrollbar-width: auto;
