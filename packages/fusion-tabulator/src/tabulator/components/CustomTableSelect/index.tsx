@@ -30,6 +30,7 @@ export const CustomTableSelect = (props) => {
     data,
     disableQuickInput = false,
     quickDropdownPlaceholder = DEFAULT_EXTRA_INPUT_PLACEHOLD,
+    maxWidth = 720,
   } = quickAddConfigs || {};
 
   const hideDroplist = () => {
@@ -252,6 +253,7 @@ export const CustomTableSelect = (props) => {
         <DroplistWrapper
           ref={dropdownRef}
           onMouseEnter={() => setInZone(true)}
+          maxWidth={maxWidth}
           onMouseLeave={handleMouseLeaveDropdown}
         >
           <TableSelect
