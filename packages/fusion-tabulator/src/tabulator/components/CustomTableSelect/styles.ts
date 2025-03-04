@@ -17,7 +17,10 @@ export const DroplistWrapper = styled.div<{
   max-width: ${({ maxWidth }) => `${maxWidth}px`};
   border: 1px solid #f5f5f5;
   border-radius: 12px;
-  scrollbar-width: auto;
+
+  * {
+    scrollbar-width: auto !important;
+  }
 
   &::after {
     content: '';
