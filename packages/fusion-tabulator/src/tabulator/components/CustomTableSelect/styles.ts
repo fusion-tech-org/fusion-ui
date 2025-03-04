@@ -22,6 +22,11 @@ export const DroplistWrapper = styled.div<{
     scrollbar-width: auto !important;
   }
 
+  .tabulator-tableholder {
+    height: calc(100% - 42px) !important;
+    max-height: calc(100% - 42px) !important;
+  }
+
   &::after {
     content: '';
     position: absolute;
