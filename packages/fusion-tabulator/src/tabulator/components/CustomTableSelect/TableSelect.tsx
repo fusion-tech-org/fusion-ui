@@ -68,7 +68,7 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
 
   return (
     <DroplistWrapper
-      className={`h-full overflow-auto min-h-[150px] max-h-[360px] max-w-[${maxWidth}px]`}
+      className={`h-full min-h-[150px] max-h-[360px] max-w-[${maxWidth}px]`}
     >
       <div
         ref={wrapperRef}
