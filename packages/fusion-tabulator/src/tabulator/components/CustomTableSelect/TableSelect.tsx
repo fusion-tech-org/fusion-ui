@@ -21,7 +21,8 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
   const instanceRef = useRef<Tabulator>();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const { quickAddConfigs } = uniformProps;
-  const { data: tableData } = quickAddConfigs || {};
+  const { data: tableData, maxWidth = 720 } = quickAddConfigs || {};
+  const recordData = useRef<ReactTabulatorProps['data']>();
 
   const initTabulator = () => {
     // mounted DOM element
@@ -63,16 +64,21 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
       instanceRef.current?.destroy();
       instanceRef.current = null;
       wrapperRef.current = null;
+      recordData.current = null;
     };
   }, []);
 
   return (
-    <div
-      ref={wrapperRef}
-      id={mainId}
-      className="h-full"
-      data-instance={mainId}
-    />
+    <DroplistWrapper
+      className={`h-full overflow-auto min-h-[150px] max-h-[360px] max-w-[${maxWidth}px]`}
+    >
+      <div
+        ref={wrapperRef}
+        id={mainId}
+        className="h-full"
+        data-instance={mainId}
+      />
+    </DroplistWrapper>
   );
 };
 
