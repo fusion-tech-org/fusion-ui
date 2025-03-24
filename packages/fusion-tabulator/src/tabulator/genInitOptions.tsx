@@ -33,7 +33,7 @@ export const genInitOptions = (
     tableMode = 'editable',
     appMode,
     uniformProps,
-    indexField
+    indexField,
   } = tabulatorProps;
   let { commonOptions = {} } = uniformProps || {};
   const { headerVisible = true, enableColumnGroup = false } =
@@ -139,7 +139,7 @@ export const genInitOptions = (
     // ...options // props.options are passed to Tabulator's options.
     ...availableCommonOptions,
     showInput: tableMode === 'editable' ? true : false,
-    index:indexField
+    index: indexField,
   } as Options;
 };
 
@@ -162,8 +162,8 @@ const genGeneralOptions = (
     selectableRowsRollingSelection: false, //disable rolling selection
     renderHorizontal: 'virtual',
     renderVertical: 'virtual',
-    dataTree: true,
-    dataTreeStartExpanded: true,
+    // dataTree: true,
+    // dataTreeStartExpanded: true,
     // langs: {
     //   zh: zhCNLang,
     // },

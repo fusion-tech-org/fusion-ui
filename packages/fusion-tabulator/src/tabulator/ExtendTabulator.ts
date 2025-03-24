@@ -1,5 +1,5 @@
 import { CellComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
-import { isFunction, isNumber, isString, isUndefined } from 'lodash';
+import { isFunction, isNumber, isUndefined } from 'lodash';
 
 import zhCNLang from 'langs/zh-cn.json';
 import { Message } from '@arco-design/web-react';
@@ -22,44 +22,44 @@ import { convertExpressionByRule, simpleExecExpression } from './utils';
  */
 
 function genEditStyle(cellValue) {
-      // 创建外层div
-    const outerDiv = document.createElement('div');
-    outerDiv.style.position = 'relative';
-    outerDiv.style.opacity = '1';
+  // 创建外层div
+  const outerDiv = document.createElement('div');
+  outerDiv.style.position = 'relative';
+  outerDiv.style.opacity = '1';
 
-    // 创建第一个子div，并设置class和内容
-    const textDiv = document.createElement('div');
-    textDiv.className = 'tabulator-cell-edit-text';
-    textDiv.textContent = cellValue; // 将cellValue插入到div中
+  // 创建第一个子div，并设置class和内容
+  const textDiv = document.createElement('div');
+  textDiv.className = 'tabulator-cell-edit-text';
+  textDiv.textContent = cellValue; // 将cellValue插入到div中
 
-    // 创建第二个子div，并设置class
-    const styleDiv = document.createElement('div');
-    styleDiv.className = 'tabulator-cell-edit-style';
+  // 创建第二个子div，并设置class
+  const styleDiv = document.createElement('div');
+  styleDiv.className = 'tabulator-cell-edit-style';
 
-    // 将子div添加到外层div中
-    outerDiv.appendChild(textDiv);
-    outerDiv.appendChild(styleDiv);
+  // 将子div添加到外层div中
+  outerDiv.appendChild(textDiv);
+  outerDiv.appendChild(styleDiv);
 
-    // 将外层div添加到页面中的某个元素内，例如body
-    document.body.appendChild(outerDiv);
-    return outerDiv;
+  // 将外层div添加到页面中的某个元素内，例如body
+  document.body.appendChild(outerDiv);
+  return outerDiv;
 }
 
-function createText(content:string) {
-   const el = document.createDocumentFragment();
+function createText(content: string) {
+  const el = document.createDocumentFragment();
   el.textContent = content;
   return el;
 }
 
 const span = (() => {
   const span = document.createElement('span');
-span.className = 'tabulator-row-del-icon';
-span.style.cursor = 'pointer';
-span.style.color = '#666';
-// 将svg添加到span中
-span.innerHTML = ` <svg data-action="del-row-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 48 48" aria-hidden="true" focusable="false" stroke-linecap="butt" stroke-linejoin="miter" class="arco-icon arco-icon-close-circle" style="font-size: 24px;"><path d="m17.643 17.643 6.364 6.364m0 0 6.364 6.364m-6.364-6.364 6.364-6.364m-6.364 6.364-6.364 6.364M42 24c0 9.941-8.059 18-18 18S6 33.941 6 24 14.059 6 24 6s18 8.059 18 18Z"></path>       </svg>`;
-return span;
-})()
+  span.className = 'tabulator-row-del-icon';
+  span.style.cursor = 'pointer';
+  span.style.color = '#666';
+  // 将svg添加到span中
+  span.innerHTML = ` <svg data-action="del-row-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 48 48" aria-hidden="true" focusable="false" stroke-linecap="butt" stroke-linejoin="miter" class="arco-icon arco-icon-close-circle" style="font-size: 24px;"><path d="m17.643 17.643 6.364 6.364m0 0 6.364 6.364m-6.364-6.364 6.364-6.364m-6.364 6.364-6.364 6.364M42 24c0 9.941-8.059 18-18 18S6 33.941 6 24 14.059 6 24 6s18 8.059 18 18Z"></path>       </svg>`;
+  return span;
+})();
 
 // extendiing formatter
 Tabulator.extendModule('format', 'formatters', {
@@ -251,24 +251,27 @@ Tabulator.extendModule('format', 'formatters', {
 
     const toArr = cellValue.split(separator);
     const container = document.createElement('div');
-    container.className = 'arco-space arco-space-horizontal arco-space-align-center';
+    container.className =
+      'arco-space arco-space-horizontal arco-space-align-center';
 
-    toArr.forEach(tag => {
-        const tagItem = document.createElement('div');
-        tagItem.className = 'arco-space-item';
-        tagItem.style.marginRight = '6px';
+    toArr.forEach((tag) => {
+      const tagItem = document.createElement('div');
+      tagItem.className = 'arco-space-item';
+      tagItem.style.marginRight = '6px';
 
-        const tagDiv = document.createElement('div');
-        tagDiv.className = `arco-tag arco-tag-${colors[tag] || 'gray'} arco-tag-checked arco-tag-size-${size}`;
+      const tagDiv = document.createElement('div');
+      tagDiv.className = `arco-tag arco-tag-${
+        colors[tag] || 'gray'
+      } arco-tag-checked arco-tag-size-${size}`;
 
-        const tagContent = document.createElement('span');
-        tagContent.className = 'arco-tag-content';
-        tagContent.textContent = tag; // 设置标签文本
+      const tagContent = document.createElement('span');
+      tagContent.className = 'arco-tag-content';
+      tagContent.textContent = tag; // 设置标签文本
 
-        // 构建 DOM 结构
-        tagDiv.appendChild(tagContent);
-        tagItem.appendChild(tagDiv);
-        container.appendChild(tagItem);
+      // 构建 DOM 结构
+      tagDiv.appendChild(tagContent);
+      tagItem.appendChild(tagDiv);
+      container.appendChild(tagItem);
     });
 
     return container; // 返回构建的 DOM 元素
@@ -278,14 +281,14 @@ Tabulator.extendModule('format', 'formatters', {
     const cellValue = cell.getValue();
     return createText(cellValue);
   },
-  lookup: function(cell, formatterParams, onRendered) {
+  lookup: function (cell, formatterParams, onRendered) {
     var value = cell.getValue();
-    if (typeof formatterParams[value] === "undefined") {
-      console.warn("Missing display value for " + value);
-      return  createText(value);
+    if (typeof formatterParams[value] === 'undefined') {
+      console.warn('Missing display value for ' + value);
+      return createText(value);
     }
     return createText(formatterParams[value]);
-  }
+  },
   // tickbox: function (_cell: CellComponent, _formatterParams, _onRendered) {
   //   // cell.getColumn().getDefinition().cellClick = function (e, cell) {
   //   //   // e.stopPropagation();

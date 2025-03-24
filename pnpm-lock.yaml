@@ -389,8 +389,8 @@ importers:
         specifier: ^3.4.4
         version: 3.5.0
       tabulator-tables:
-        specifier: 5.6.1
-        version: 5.6.1
+        specifier: 6.3.1
+        version: 6.3.1
     devDependencies:
       '@antv/s2':
         specifier: ^1.54.1
@@ -8949,6 +8949,9 @@ packages:
 
   tabulator-tables@5.6.1:
     resolution: {integrity: sha512-DsmaZqEmlQS/NL5ZJbVtoaeYjJgofEFp+2er7+uwKerGwd/E2rZbeQgux4+Ab1dxNJcbptiX7oUiTwogOnUdgQ==}
+
+  tabulator-tables@6.3.1:
+    resolution: {integrity: sha512-qFW7kfadtcaISQIibKAIy0f3eeIXUVi8242Vly1iJfMD79kfEGzfczNuPBN/80hDxHzQJXYbmJ8VipI40hQtfA==}
 
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
@@ -20506,6 +20509,8 @@ snapshots:
   tabulator-tables@5.5.2: {}
 
   tabulator-tables@5.6.1: {}
+
+  tabulator-tables@6.3.1: {}
 
   tapable@2.2.1: {}
 
