@@ -1309,6 +1309,27 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
   color: #495057;
 }
 
+.tabulator-toggle {
+	box-sizing: border-box;
+
+	display: flex;
+	flex-direction: row;
+
+	border:1px solid #ccc;
+	background:#dcdcdc;
+
+	/* &.tabulator-toggle-on {
+		background:#1c6cc2;
+	} */
+	
+	.tabulator-toggle-switch{
+		box-sizing: border-box;
+		border:1px solid #ccc;
+		
+		background:#fff;
+	}
+}
+
 .tabulator .tabulator-header .tabulator-col .tabulator-header-filter input:focus {
   color: #495057;
   background-color: #fff;
