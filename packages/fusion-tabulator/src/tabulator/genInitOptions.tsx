@@ -9,6 +9,7 @@ import {
   RowComponent,
   CellComponent,
 } from 'tabulator-tables';
+import { DateTime } from 'luxon';
 import axios from 'axios';
 import { assign, isArray, isObject, isString, map } from 'lodash';
 
@@ -140,6 +141,9 @@ export const genInitOptions = (
     ...availableCommonOptions,
     showInput: tableMode === 'editable' ? true : false,
     index: indexField,
+    dependencies: {
+      DateTime: DateTime,
+    },
   } as Options;
 };
 
