@@ -48,13 +48,13 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
   );
 
   useEffect(() => {
-    if (!instanceRef.current || !isFunction(onExtraInputValueChanged)) return;
+    if (!instanceRef.current) return;
 
     if (isArray(tableData) && !equal(recordData.current, tableData)) {
       replaceData(tableData);
       recordData.current = tableData;
     }
-  }, [tableData, instanceRef, onExtraInputValueChanged]);
+  }, [tableData, instanceRef, replaceData]);
 
   // reset table column definitions
   useEffect(() => {
@@ -66,7 +66,7 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
       wrapperRef.current = null;
       recordData.current = null;
     };
-  }, [tableData?.length]);
+  }, []);
 
   return (
     <DroplistWrapper className={`h-full max-w-[${maxWidth}px]`}>
