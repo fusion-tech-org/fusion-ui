@@ -66,12 +66,10 @@ export const TableSelect: FC<TableSelectProps> = (props) => {
       wrapperRef.current = null;
       recordData.current = null;
     };
-  }, []);
+  }, [tableData?.length]);
 
   return (
-    <DroplistWrapper
-      className={`h-full overflow-auto min-h-[150px] max-h-[360px] max-w-[${maxWidth}px]`}
-    >
+    <DroplistWrapper className={`h-full max-w-[${maxWidth}px]`}>
       <div
         ref={wrapperRef}
         id={mainId}
