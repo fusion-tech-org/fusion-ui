@@ -4,6 +4,7 @@ import { isFunction, isNumber, isUndefined } from 'lodash';
 import zhCNLang from 'langs/zh-cn.json';
 import { Message } from '@arco-design/web-react';
 import { convertExpressionByRule, simpleExecExpression } from './utils';
+import _ from 'lodash';
 
 /**
  * default options
@@ -121,13 +122,18 @@ Tabulator.extendModule('format', 'formatters', {
     `;
   },
   placeholder: function (cell: CellComponent, formatterParams, _onRendered) {
-    const cellValue = cell.getValue();
+    let cellValue = cell.getValue();
     const {
       placeholder,
       color = '#A9AEB8',
       enableLookup = false,
       editStyle,
+      isInteger = false,
     } = formatterParams || {};
+
+    if (isInteger && _.isNumber(cellValue)) {
+      cellValue = _.round(cellValue);
+    }
 
     const text = createText(cellValue);
 
