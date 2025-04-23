@@ -3,6 +3,7 @@ import { TableMode } from './interface';
 
 export const TabulatorContainer = styled.div<{
   tableMode: TableMode;
+  maxContentHeight: number;
 }>`
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
@@ -15,8 +16,11 @@ export const TabulatorContainer = styled.div<{
   }
 
   .tabulator-table {
-    padding-bottom: ${({ tableMode }) =>
-    tableMode === 'editable' ? '36px !important' : 0};
+    /* padding-bottom: ${({ tableMode }) =>
+      tableMode === 'editable' ? '36px !important' : 0}; */
+    overflow: auto;
+    height: ${({ maxContentHeight }) => `${maxContentHeight}px !important`};
+    max-height: ${({ maxContentHeight }) => `${maxContentHeight}px !important`};
   }
 
   .tabulator-footer {

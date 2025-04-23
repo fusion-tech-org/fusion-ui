@@ -47,7 +47,7 @@ export interface ReactTabulatorProps {
   onExtraInputValueChanged?: (value: string) => void;
   actionId?: string;
   uniqueKey?: string; // the unique key for multi tabulator in one page
-  indexField: string,
+  indexField: string;
   enableRemote?: boolean;
   quickAddDropdownDefinitions?: {
     data: any[];
@@ -55,4 +55,5 @@ export interface ReactTabulatorProps {
   };
   uniformProps?: Record<string, any>;
   onEvents?: (eventName: string, data?: Record<string, any>) => void;
+  tableHeight: number;
 }

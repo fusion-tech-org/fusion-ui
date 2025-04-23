@@ -159,7 +159,7 @@ const genGeneralOptions = (
     height: '100%',
     maxHeight: '100%',
     reactiveData: true,
-    tabEndNewRow: true, // create empty new row on tab
+    tabEndNewRow: false, // create empty new row on tab
     locale: 'zh',
     selectableRows: selectableRows || 'highlight', // false, true, integer, highlight(default)
     // selectableRollingSelection: false, // disable rolling selection

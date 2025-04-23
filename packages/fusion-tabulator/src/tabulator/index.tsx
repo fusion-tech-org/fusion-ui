@@ -33,6 +33,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     onCustomSelectDropdownItem,
     tableMode = 'normal',
     uniformProps = {},
+    tableHeight,
   } = props;
   const {
     headerVisible = true,
@@ -49,6 +50,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
   const [mainId] = useState(tabulatorId);
+  const maxTableContentHeight =
+    tableMode === 'editable'
+      ? tableHeight - HEADER_HEIGHT - EXTRA_INPUT_HEIGHT
+      : tableHeight - HEADER_HEIGHT;
 
   const recordColumns = useRef<ReactTabulatorProps['columns']>();
   const recordData = useRef<ReactTabulatorProps['data']>();
@@ -83,9 +88,17 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         inputWrapRef.current.style.right = '0px';
       }
 
+      offsetHeight = Math.min(offsetHeight, maxTableContentHeight - ROW_HEIGHT);
+
       inputWrapRef.current.style.transform = `translateY(${offsetHeight}px)`;
     },
-    [tablePosition.height, tableMode, tableData?.length, headerVisible]
+    [
+      tablePosition.height,
+      tableMode,
+      tableData?.length,
+      headerVisible,
+      maxTableContentHeight,
+    ]
   );
 
   // const holdEle = document.getElementById(`table-container-${mainId}`);
@@ -253,7 +266,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     <div
       id={`table-container-${mainId}`}
       ref={containerRef}
-      className={tableMode === 'editable' ? 'h-full' : 'flex-1'}
+      className={tableMode === 'editable' ? 'h-full overflow-hidden' : 'flex-1'}
     >
       <TabulatorContainer
         tableMode={tableMode}
@@ -264,6 +277,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         id={mainId}
         data-instance={mainId}
         className={classNames}
+        maxContentHeight={maxTableContentHeight}
       />
       {tableMode === 'editable' &&
         containerRef.current !== null &&
