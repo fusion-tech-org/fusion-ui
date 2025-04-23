@@ -32,9 +32,7 @@ export const TableContainer = styled.div<{
   position: relative;
   width: 100%;
   ${(props) =>
-    props.tableMode === 'normal'
-      ? 'flex: 1; height: 100%; overflow-y: auto;'
-      : 'height: 100%;'}
+    props.tableMode === 'normal' ? 'flex: 1; height: 100%;' : 'height: 100%;'}
 
   display: flex;
   flex-direction: column;
@@ -47,9 +45,7 @@ export const Container = styled.div<{
   position: relative;
   width: 100%;
   ${(props) =>
-    props.tableMode === 'normal'
-      ? 'height: 100%;flex: 1; overflow-y: auto;'
-      : 'height: 100%;'}
+    props.tableMode === 'normal' ? 'height: 100%;flex: 1;' : 'height: 100%;'}
   display: flex;
   flex-direction: column;
   background-color: #fff;
