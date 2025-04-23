@@ -26,6 +26,7 @@ const renderCompByTableType = (
     tableMode,
     quickAddDropdownDefinitions,
     uniformProps,
+    tableHeight,
   } = props;
   const { data = [], ...restTabulatorOptions } = tabulatorOptions || {};
   switch (tableType) {
@@ -48,6 +49,7 @@ const renderCompByTableType = (
           enableRemote={enableRemote}
           uniformProps={uniformProps}
           quickAddDropdownDefinitions={quickAddDropdownDefinitions}
+          tableHeight={tableHeight}
         />
       );
     default:
@@ -62,6 +64,7 @@ const renderCompByTableType = (
           onUpdateWidgetMetaProperty={onUpdateWidgetMetaProperty}
           eventMaps={eventMaps['tabulator']}
           actionId={actionId}
+          tableHeight={tableHeight}
         />
       );
   }

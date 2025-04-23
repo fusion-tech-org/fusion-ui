@@ -15,10 +15,12 @@ export const TabulatorContainer = styled.div<{
     overflow: hidden;
   }
 
-  .tabulator-table {
-    /* padding-bottom: ${({ tableMode }) =>
-      tableMode === 'editable' ? '36px !important' : 0}; */
-    overflow: auto;
+  /* .tabulator-table {
+    padding-bottom: ${({ tableMode }) =>
+    tableMode === 'editable' ? '36px !important' : 0};
+  } */
+
+  .tabulator-tableholder {
     height: ${({ maxContentHeight }) => `${maxContentHeight}px !important`};
     max-height: ${({ maxContentHeight }) => `${maxContentHeight}px !important`};
   }

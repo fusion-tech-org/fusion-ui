@@ -33,6 +33,7 @@ export type RenderCompByTypeProps = {
   };
   uniformProps?: Record<string, any>;
   tableMode?: TableMode;
+  tableHeight: number;
 };
 
 export type RenderConfigByTypeProps = {
@@ -93,6 +94,7 @@ export interface TabulatorProps {
   enableRemote?: boolean;
   tableMode?: TableMode;
   onEvents?: (eventName: string, data?: Record<string, any>) => void;
+  tableHeight: number;
 }
 
 export type FusionTabulatorProps = RenderCompByTypeProps & TabulatorProps;
