@@ -10,7 +10,12 @@ import { ExternalInputContainer, TabulatorContainer } from './styles';
 import { CustomTableSelect } from './components/CustomTableSelect';
 import { ReactTabulatorProps } from './interface';
 import { useTabulator } from './useTabulator';
-import { EXTRA_INPUT_HEIGHT, HEADER_HEIGHT, ROW_HEIGHT } from './constants';
+import {
+  EXTRA_INPUT_HEIGHT,
+  HEADER_HEIGHT,
+  ROW_HEIGHT,
+  TABULATOR_FOOTER_HEIGHT,
+} from './constants';
 import { customEditorAndFormatterPipe } from './genInitOptions';
 /**
  *?
@@ -39,6 +44,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     headerVisible = true,
     commonOptions = {},
     enableColumnGroup = false,
+    enableColumnCalc = false,
   } = uniformProps;
   const commonOptionsRef = useRef(commonOptions);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -50,10 +56,14 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const modeRef = useRef<string | null>(null);
   const tabulatorId = genTabulatorUUID();
   const [mainId] = useState(tabulatorId);
-  const maxTableContentHeight =
+  let maxTableContentHeight =
     tableMode === 'editable'
       ? tableHeight - HEADER_HEIGHT - EXTRA_INPUT_HEIGHT - 2
       : tableHeight - HEADER_HEIGHT;
+
+  if (enableColumnCalc) {
+    maxTableContentHeight = maxTableContentHeight - TABULATOR_FOOTER_HEIGHT;
+  }
 
   const recordColumns = useRef<ReactTabulatorProps['columns']>();
   const recordData = useRef<ReactTabulatorProps['data']>();
