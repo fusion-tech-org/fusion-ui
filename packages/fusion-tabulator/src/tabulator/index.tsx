@@ -52,7 +52,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
   const [mainId] = useState(tabulatorId);
   const maxTableContentHeight =
     tableMode === 'editable'
-      ? tableHeight - HEADER_HEIGHT - EXTRA_INPUT_HEIGHT
+      ? tableHeight - HEADER_HEIGHT - EXTRA_INPUT_HEIGHT - 2
       : tableHeight - HEADER_HEIGHT;
 
   const recordColumns = useRef<ReactTabulatorProps['columns']>();
@@ -88,7 +88,7 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         inputWrapRef.current.style.right = '0px';
       }
 
-      offsetHeight = Math.min(offsetHeight, maxTableContentHeight - ROW_HEIGHT);
+      offsetHeight = Math.min(offsetHeight, tableHeight - EXTRA_INPUT_HEIGHT);
 
       inputWrapRef.current.style.transform = `translateY(${offsetHeight}px)`;
     },
