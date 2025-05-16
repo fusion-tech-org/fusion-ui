@@ -3,11 +3,18 @@ import { CustomDateEditor } from '../src/tabulator/editors/CustomDateEditor';
 import { CustomInputEditor } from '../src/tabulator/editors/CustomInputEditor';
 
 export const baseTableData: TabulatorTableData[] = [
-  { tuid: 1, id: 1, name: 'Oli Bob', age: '12', col: 'red', dob: '' },
+  {
+    tuid: 1,
+    id: 1,
+    name: 'https://images-1254102905.cos.ap-shanghai.myqcloud.com/articles/gitlab-transparent.png',
+    age: '12',
+    col: 'red',
+    dob: '',
+  },
   {
     tuid: 2,
     id: 2,
-    name: 'Mary May',
+    name: 'https://images-1254102905.cos.ap-shanghai.myqcloud.com/articles/gitlab-transparent.png',
     age: '1',
     col: 'blue',
     dob: '14/05/1982',
@@ -15,7 +22,7 @@ export const baseTableData: TabulatorTableData[] = [
   {
     tuid: 3,
     id: 3,
-    name: 'Christine Lobowski',
+    name: 'https://images-1254102905.cos.ap-shanghai.myqcloud.com/articles/gitlab-transparent.png',
     age: '42',
     col: 'green',
     dob: '22/05/1982',
@@ -23,7 +30,7 @@ export const baseTableData: TabulatorTableData[] = [
   {
     tuid: 4,
     id: 4,
-    name: 'Brendon Philips',
+    name: 'https://images-1254102905.cos.ap-shanghai.myqcloud.com/articles/gitlab-transparent.png',
     age: '125',
     col: 'orange',
     dob: '01/08/1980',
@@ -31,7 +38,7 @@ export const baseTableData: TabulatorTableData[] = [
   {
     tuid: 5,
     id: 5,
-    name: 'Margret Marmajuke',
+    name: 'https://images-1254102905.cos.ap-shanghai.myqcloud.com/articles/gitlab-transparent.png',
     age: '16',
     col: 'yellow',
     dob: '31/01/1999',
@@ -39,7 +46,13 @@ export const baseTableData: TabulatorTableData[] = [
 ];
 
 export const baseTableColumn: ColumnDefinition[] = [
-  { title: '姓名', field: 'name', width: 100 },
+  {
+    title: '姓名',
+    field: 'name',
+    width: 100,
+    formatter: 'picture',
+    formatterParams: { preview: true },
+  },
   { title: '年龄', field: 'age', hozAlign: 'left', formatter: 'progress' },
   { title: '最喜欢的颜色', field: 'col' },
   { title: '生日', field: 'dob', sorter: 'date', hozAlign: 'center' },

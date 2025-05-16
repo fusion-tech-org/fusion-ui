@@ -30,6 +30,10 @@ export const TabulatorContainer = styled.div<{
     border-bottom-right-radius: 8px;
     overflow: hidden;
   }
+
+  .arco-image-before-load .arco-image-img {
+    visibility: visible;
+  }
 `;
 
 export const ExternalInputContainer = styled.div<{

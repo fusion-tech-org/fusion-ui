@@ -1,10 +1,13 @@
 import { CellComponent, TabulatorFull as Tabulator } from 'tabulator-tables';
 import { isFunction, isNumber, isUndefined } from 'lodash';
+import { createRoot } from 'react-dom/client';
+import { Image } from '@arco-design/web-react';
 
 import zhCNLang from 'langs/zh-cn.json';
 import { Message } from '@arco-design/web-react';
 import { convertExpressionByRule, simpleExecExpression } from './utils';
 import _ from 'lodash';
+import { flushSync } from 'react-dom';
 
 /**
  * default options
@@ -302,6 +305,26 @@ Tabulator.extendModule('format', 'formatters', {
   //   // };
   //   return `<input type="checkbox" aria-label="Select Row" data-action="tickbox">`;
   // },
+  picture: function (cell, formatterParams, onRendered) {
+    const cellValue = cell.getValue();
+    const { preview = false, width = 32, height = 32 } = formatterParams || {};
+
+    const imgEle = document.createElement('div');
+    const root = createRoot(imgEle);
+
+    flushSync(() => {
+      root.render(
+        <Image
+          width={width}
+          height={height}
+          src={cellValue}
+          preview={preview}
+        />
+      );
+    });
+
+    return imgEle;
+  },
 });
 
 // extending accessors
