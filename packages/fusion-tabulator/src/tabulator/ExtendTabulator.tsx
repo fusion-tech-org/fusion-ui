@@ -67,8 +67,27 @@ const span = (() => {
 
 // extendiing formatter
 Tabulator.extendModule('format', 'formatters', {
-  delRowIcon: function () {
+  delRowIcon: function (cell: CellComponent, formatterParams) {
     // const curRow = cell.getRow();
+    const { disabledRule = '' } = formatterParams || {};
+
+    if (disabledRule) {
+      //get row data
+      const curRowData = cell.getRow().getData();
+
+      const execExpr = convertExpressionByRule(disabledRule, { ...curRowData });
+      console.log('execExpr', execExpr);
+
+      if (execExpr && !execExpr.includes('undefined')) {
+        const disableAction = simpleExecExpression(execExpr)();
+        // console.log('disableEditable', !disableEditable);
+
+        if (disableAction) {
+          return '';
+        }
+      }
+    }
+
     return span.cloneNode(true); //make the contents of the cell bold
   },
   checkbox: function (cell: CellComponent, formatterParams, _onRendered) {
