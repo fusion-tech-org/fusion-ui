@@ -60,7 +60,6 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
   // };
 
   const handleChange = (value, _option) => {
-    console.log('value', value, isMultiMode);
     selectedListRef.current = isMultiMode ? [...value] : value;
     // setSelectedItem((prev) => [...prev, value]);
   };
@@ -74,11 +73,6 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
 
   const handleBlur = () => {
     if (isMultiMode && selectedListRef.current.length > 0) {
-      console.log(
-        '🐬---',
-        selectedListRef.current.join(','),
-        selectedListRef.current
-      );
       onSelectItem(selectedListRef.current.join(','));
       return;
     }
@@ -138,6 +132,9 @@ export default function CustomMultiSelectEditor(
     // const curCol = cell.getColumn();
     // const colDef = curCol.getDefinition();
     const res = success(item);
+    if (!res) {
+      cell.setValue(item);
+    }
     console.log('handleSelectItem', item, res);
     // if (res) {
     //   cell.navigateNext();

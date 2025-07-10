@@ -277,7 +277,8 @@ Tabulator.extendModule('format', 'formatters', {
     } = formatterParams || {};
 
     // 检查 cellValue 是否有效
-    if (typeof cellValue !== 'string' || !cellValue) return placeholder;
+    if (typeof cellValue !== 'string' || !cellValue)
+      return `<span style="color: #a9aeb8">${placeholder}</span>`;
 
     let toArr = cellValue.split(separator);
 
