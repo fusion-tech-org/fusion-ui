@@ -271,13 +271,26 @@ Tabulator.extendModule('format', 'formatters', {
       separator = ',',
       size = 'default', // 'small' | 'default' | 'medium' | 'large'
       colors = {},
+      enableLookup = false,
       // colorList = [],
     } = formatterParams || {};
 
     // 检查 cellValue 是否有效
     if (typeof cellValue !== 'string' || !cellValue) return '';
 
-    const toArr = cellValue.split(separator);
+    let toArr = cellValue.split(separator);
+
+    if (toArr.length > 0 && enableLookup) {
+      const cellColDef = cell.getColumn().getDefinition();
+
+      const { editorParams } = cellColDef;
+      const { values = [] } = (editorParams || {}) as Record<string, any>;
+
+      toArr = toArr
+        .map((val) => values.filter((item) => item.value === val)?.[0]['label'])
+        .filter(Boolean);
+    }
+
     const container = document.createElement('div');
     container.className =
       'arco-space arco-space-horizontal arco-space-align-center';
