@@ -21,9 +21,10 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
   const {
     values = [],
     placeholder = '',
-    maxTagCount = 4,
+    maxTagCount = 5,
     mode,
     allowClear = false,
+    showSearch = true,
   } = editorParams || {};
   const finalValues = isFunction(values) ? values(rowData) : values;
   const selectedListRef = useRef<string[]>(initValue);
@@ -59,6 +60,7 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
   // };
 
   const handleChange = (value, _option) => {
+    console.log('value', value, isMultiMode);
     selectedListRef.current = isMultiMode ? [...value] : value;
     // setSelectedItem((prev) => [...prev, value]);
   };
@@ -72,6 +74,11 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
 
   const handleBlur = () => {
     if (isMultiMode && selectedListRef.current.length > 0) {
+      console.log(
+        '🐬---',
+        selectedListRef.current.join(','),
+        selectedListRef.current
+      );
       onSelectItem(selectedListRef.current.join(','));
       return;
     }
@@ -92,7 +99,7 @@ const MultiSelect: React.FC<MultiSelectProps> = (props) => {
         onBlur={handleBlur}
         trigger="focus"
         allowClear={allowClear}
-        showSearch
+        showSearch={showSearch}
         filterOption={(inputValue, option) =>
           option.props.value.toLowerCase().indexOf(inputValue.toLowerCase()) >=
             0 ||

@@ -272,11 +272,12 @@ Tabulator.extendModule('format', 'formatters', {
       size = 'default', // 'small' | 'default' | 'medium' | 'large'
       colors = {},
       enableLookup = false,
+      placeholder = '',
       // colorList = [],
     } = formatterParams || {};
 
     // 检查 cellValue 是否有效
-    if (typeof cellValue !== 'string' || !cellValue) return '';
+    if (typeof cellValue !== 'string' || !cellValue) return placeholder;
 
     let toArr = cellValue.split(separator);
 
