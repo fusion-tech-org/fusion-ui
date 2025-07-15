@@ -27,6 +27,8 @@ import { customEditorAndFormatterPipe } from './genInitOptions';
 // import diff from 'microdiff';
 import equal from 'fast-deep-equal';
 
+const SCROLLBAR_HEIGHT = 17;
+
 export const TabulatorReact = (props: ReactTabulatorProps) => {
   const {
     classNames,
@@ -91,7 +93,10 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
         ? HEADER_HEIGHT + len * ROW_HEIGHT + 1
         : len * ROW_HEIGHT + 1;
 
-      if (offsetHeight + EXTRA_INPUT_HEIGHT > tablePosition.height) {
+      if (
+        offsetHeight + EXTRA_INPUT_HEIGHT >
+        tablePosition.height - SCROLLBAR_HEIGHT
+      ) {
         offsetHeight = tablePosition.height - ROW_HEIGHT + 12;
         inputWrapRef.current.style.right = '14px';
       } else {
