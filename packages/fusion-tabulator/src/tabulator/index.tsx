@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useState, useEffect, useCallback } from 'react';
-import { isArray, isEmpty } from 'lodash';
+import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
+import _, { isArray, isEmpty } from 'lodash';
 import { Empty } from '@arco-design/web-react';
 import { createPortal } from 'react-dom';
 
@@ -79,6 +79,17 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
     // eventCallback: handleTableEventCallback,
   });
 
+  const calcRowHeight = useMemo(() => {
+    if (
+      _.isInteger(commonOptions.rowHeight) &&
+      commonOptions.rowHeight !== ROW_HEIGHT
+    ) {
+      return commonOptions.rowHeight;
+    }
+
+    return ROW_HEIGHT;
+  }, [commonOptions.rowHeight]);
+
   const transformYInputElem = useCallback(
     (realData?: any[]) => {
       if (
@@ -90,14 +101,11 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
 
       const len = realData?.length || tableData?.length || 0;
       let offsetHeight = headerVisible
-        ? HEADER_HEIGHT + len * ROW_HEIGHT + 1
-        : len * ROW_HEIGHT + 1;
+        ? HEADER_HEIGHT + len * calcRowHeight + 1
+        : len * calcRowHeight + 1;
 
-      if (
-        offsetHeight + EXTRA_INPUT_HEIGHT >
-        tablePosition.height - SCROLLBAR_HEIGHT
-      ) {
-        offsetHeight = tablePosition.height - ROW_HEIGHT + 12;
+      if (offsetHeight + EXTRA_INPUT_HEIGHT > tablePosition.height) {
+        offsetHeight = tablePosition.height - calcRowHeight + 12;
         inputWrapRef.current.style.right = '14px';
       } else {
         inputWrapRef.current.style.right = '0px';
@@ -113,6 +121,8 @@ export const TabulatorReact = (props: ReactTabulatorProps) => {
       tableData?.length,
       headerVisible,
       maxTableContentHeight,
+      tableHeight,
+      calcRowHeight,
     ]
   );
 
